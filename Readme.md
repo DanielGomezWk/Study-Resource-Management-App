@@ -1,10 +1,13 @@
 Project Title (Tentative): StudyBuddies
+
 Team Name: The Regular Expressionists
-Team Members: Abdullah Alshehri
-              Daniel Gomez
-              Craig Moir
-              Brandon Leger
+
+Team Members: Abdullah Alshehri,
+              Daniel Gomez,
+              Craig Moir,
+              Brandon Leger,
               Matthew Sirkot
+              
 Advisor: Michael C. Melusky
 
 Project Description:
