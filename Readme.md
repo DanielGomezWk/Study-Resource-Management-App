@@ -1,6 +1,4 @@
-Project Title (Tentative): StudyBuddies
-
-Team Name: The Regular Expressionists
+Project Title/Team Name: CubChat
 
 Team Members: Abdullah Alshehri,
               Daniel Gomez,
