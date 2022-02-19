@@ -1,3 +1,3 @@
 "scripts": {
-  "start": "cd phase4 && cd capstoneProject && node server.js"
+  "start": "cd phase4/capstoneProject && node server.js"
 }
