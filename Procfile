@@ -1,3 +1,3 @@
 "scripts": {
-  "start": "node ./phase4/capstoneProject/server.js"
+  "start": " cd phase4/capstoneProject/server.js"
 }
