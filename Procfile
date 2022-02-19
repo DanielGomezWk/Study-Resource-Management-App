@@ -1,3 +1,3 @@
 "scripts": {
-  "start": " cd phase4/capstoneProject"
+  "start": "cd phase4/capstoneProject"
 }
