@@ -5,21 +5,33 @@
   <title>Login</title>
 </head>
 <body>
-  <div class=".container-fluid">
-    <div class="row-md"></div>
-    <div class="row">
-      <div class="col"></div>
-      <div class="col">
-        <form action = "/" method = "post">
-          <label for="emailInput">Email:</label><br>
-          <input type="text" id = "emailInput" hint = "Enter your email here" /><br>
-          <label for="passInput">Password:</label><br>
-          <input type="password" name="passInput" value=""><br><br>
-          <input type="submit" value="Submit">
-        </form>
-      </div>
-      <div class="col"></div>
+<div class="container-fluid">
+  <div class="row justify-content-md-center">
+    <div class="col-2">
+      <h3>Login</h3>
+      <form action = "/" method = "post">
+        <label for="emailInput" class="form-label">Email:</label>
+        <input type="email" name="loginEmail" class="form-control" id = "emailInput" hint = "Enter your email here" />
+        <label for="passInput" class="form-label">Password:</label>
+        <input type="password" name="loginPassword" class="form-control">
+        <button type="submit" name="loginBtn" value="logging" class="btn btn-primary">Login</button>
+      </form>
     </div>
-    <div class="row-md"></div>
+    <div class="col-2">
+      <h3>Register</h3>
+      <form action = "/" method = "post">
+        <label for="emailInput" class="form-label">Email:</label>
+        <input type="email" name="registerEmail" class="form-control" id = "emailInput" hint = "Enter your email here" />
+        <label for="passInput" class="form-label">Password:</label>
+        <input type="password" name="registerPassword" class="form-control">
+        <label for="firstName">First Name:</label>
+        <input type="text" name="first" placeholder="John" class="form-control">
+        <label for="lastName">Last Name:</label>
+        <input type="text" name="last" placeholder="Wick" class="form-control">
+        <button type="submit" name="registerBtn" value="logging" class="btn btn-primary">Register</button>
+      </form>
+    </div>
+
   </div>
+</div>
 </body>
