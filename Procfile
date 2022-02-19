@@ -1,3 +1,4 @@
 "scripts": {
-  "web": "node .phase4/capstoneProject/server.js"
+  "server": "cd phase4/capstoneProject"
+  "web": "node server.js"
 }
