@@ -10,8 +10,9 @@ const client = new Client({
 
 client.connect();
 const query = `
-INSERT INTO garb(test)
-VALUES ('garbagedoe@gmail.com')
+CREATE TABLE garBAG(
+    name varchar
+)
 `;
 
 client.query(query, (err, res) => {
