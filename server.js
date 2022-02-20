@@ -38,20 +38,27 @@ const ejs = require("ejs");
 
 // user login/register Page
 app.get("/", (req, res) => {
-    res.render("login");
+  res.render("login");
 });
 
 // TEMP
 app.post("/", (req, res) => {
-    res.redirect("/group");
+  res.redirect("/home");
+});
+
+app.get("/home", (req, res) => {
+  res.render("homePage");
+});
+app.post("/home", (req, res) => {
+  res.redirect("/group");
 });
 
 app.get("/group", (req, res) => {
-    res.render("createGroup");
+  res.render("createGroup");
 });
 
 
 // launching app
 app.listen(3000, () => {
-    console.log("server is running");
+  console.log("server is running");
 });
