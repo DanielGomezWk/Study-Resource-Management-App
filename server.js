@@ -1,13 +1,13 @@
 //jshint esversion:6
-// const { Client } = require('pg');
+const { Client } = require('pg');
 
-// const client = new Client({
-//     user: 'dsaeotks',
-//     host: 'jelani.db.elephantsql.com',
-//     database: 'dsaeotks',
-//     password: '7jCyv7wSMTQOUTHTEsRNsvjOCOLSJ6h1',
-//     port: 5432,
-// });
+const client = new Client({
+    user: 'dsaeotks',
+    host: 'jelani.db.elephantsql.com',
+    database: 'dsaeotks',
+    password: '7jCyv7wSMTQOUTHTEsRNsvjOCOLSJ6h1',
+    port: 5432,
+});
 
 // client.connect();
 // const query = `
@@ -38,8 +38,7 @@ const ejs = require("ejs");
 
 // user login/register Page
 app.get("/", (req, res) => {
-  console.log("here");
-  res.sendFile(__dirname + "/login.html");
+  res.render("login");
 });
 
 // TEMP
@@ -47,23 +46,19 @@ app.post("/", (req, res) => {
   res.redirect("/home");
 });
 
-// app.get("/home", (req, res) => {
-//   res.render("homePage");
-// });
-// app.post("/home", (req, res) => {
-//   res.redirect("/group");
-// });
+app.get("/home", (req, res) => {
+  res.render("homePage");
+});
+app.post("/home", (req, res) => {
+  res.redirect("/group");
+});
 
-// app.get("/group", (req, res) => {
-//   res.render("createGroup");
-// });
+app.get("/group", (req, res) => {
+  res.render("createGroup");
+});
 
 
-// added server port
-let port = process.env.PORT;
-if (port == null || port == "") {
-  port = 3000;
-}
-app.listen(port, function() {
-  console.log("Server has started on port 3000");
+// launching app
+app.listen(3000, () => {
+  console.log("server is running");
 });
