@@ -46,16 +46,16 @@ app.post("/", (req, res) => {
   res.redirect("/home");
 });
 
-app.get("/home", (req, res) => {
-  res.render("homePage");
-});
-app.post("/home", (req, res) => {
-  res.redirect("/group");
-});
+// app.get("/home", (req, res) => {
+//   res.render("homePage");
+// });
+// app.post("/home", (req, res) => {
+//   res.redirect("/group");
+// });
 
-app.get("/group", (req, res) => {
-  res.render("createGroup");
-});
+// app.get("/group", (req, res) => {
+//   res.render("createGroup");
+// });
 
 
 // launching app
