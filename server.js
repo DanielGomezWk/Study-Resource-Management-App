@@ -1,13 +1,13 @@
 //jshint esversion:6
-const { Client } = require('pg');
+// const { Client } = require('pg');
 
-const client = new Client({
-    user: 'dsaeotks',
-    host: 'jelani.db.elephantsql.com',
-    database: 'dsaeotks',
-    password: '7jCyv7wSMTQOUTHTEsRNsvjOCOLSJ6h1',
-    port: 5432,
-});
+// const client = new Client({
+//     user: 'dsaeotks',
+//     host: 'jelani.db.elephantsql.com',
+//     database: 'dsaeotks',
+//     password: '7jCyv7wSMTQOUTHTEsRNsvjOCOLSJ6h1',
+//     port: 5432,
+// });
 
 // client.connect();
 // const query = `
