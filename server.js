@@ -38,6 +38,7 @@ const ejs = require("ejs");
 
 // user login/register Page
 app.get("/", (req, res) => {
+  console.log("here");
   res.render("login");
 });
 
