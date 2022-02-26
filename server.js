@@ -120,3 +120,32 @@ function login_register(req, res){
     });
   }
 }
+
+function makeGroup(req, res) {
+  let group = req.body.group;
+  let gId = group[i].groupId;
+  let leaderEmail = group[i].leader.Email;
+  let gDesc = group[i].groupDesc;
+  let gName = group[i].groupName;
+  let private = group[i].private;
+
+  const query = "INSERT INTO group_(groupid, leader,groupname, groupdesc, private) VALUES($1, $2, $3, $4, $5)";
+  const values = [gId, leaderEmail, gName, gDesc, private];
+
+  client.query(query, values, (err, response) => {
+    if (err) {
+      console.log(err.stack);
+    } else {
+      let leaderEmail = group[i].leader.email;
+      const query = "INSERT INTO member_(email, groupid, status, joindate, invitedate) VALUES($1, $2, $3, $4, $5)";
+      const values = [gId, leaderEmail, gName, gDesc, private];
+
+      client.query(query, values, (err, response) => {
+          if (err) {
+            console.log(err.stack);
+          } else {
+          }
+      });
+    }
+  });
+}
