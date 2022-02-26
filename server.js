@@ -1,6 +1,6 @@
 //jshint esversion:6
-const { Client } = require('pg');
 
+const { Client } = require('pg');
 const client = new Client({
     user: 'dsaeotks',
     host: 'jelani.db.elephantsql.com',
@@ -9,25 +9,7 @@ const client = new Client({
     port: 5432,
 });
 
-// client.connect();
-// const query = `
-// CREATE TABLE garBAG(
-//     name varchar
-// )
-// `;
-
-// client.query(query, (err, res) => {
-//     if (err) {
-//         console.error(err);
-//         return;
-//     }
-//     console.log('Table is successfully created');
-//     client.end();
-// });
-
-
-
-
+client.connect();
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
@@ -38,13 +20,82 @@ const ejs = require("ejs");
 
 // user login/register Page
 app.get("/", (req, res) => {
-  res.render("login");
+  let login_reg_status = {
+    status: "fine"
+  };
+  res.render("login", {status: JSON.stringify(login_reg_status)});
 });
 
-// TEMP
+// user post request
 app.post("/", (req, res) => {
-  res.redirect("/home");
+
+  login_register(req, res);
 });
+
+function login_register(req, res){
+  // grad the login info
+  let loginEmail = req.body.loginEmail;
+  let loginPass = req.body.loginPassword;
+
+  // grab the reg info
+  let regEmail = req.body.registerEmail;
+  let regPass = req.body.registerPassword;
+  let first = req.body.first;
+  let last = req.body.last;
+
+  // did the user register?
+  if (Object.keys(req.body).includes("registerBtn")){
+    // create a query
+    const query = "INSERT INTO users(email, password, first, last, bio, status, location, cubVotes) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *";
+    const values = [regEmail, regPass, first, last, "", false, "", 0];
+
+    // execute insertion
+    client.query(query, values, (err, response) => {
+      // if an error happens, the user is trying to use an email that already exists
+      if (err) {
+        console.log(err.stack);
+        let login_reg_status = {
+          status: "register-fail"
+        };
+        // send back to the login page
+        res.render("login", {status: JSON.stringify(login_reg_status)});
+      }
+      // register succuessful
+      else {
+        console.log(response.rows[0]);
+        let login_reg_status = {
+          status: "register-success"
+        };
+        // send back to the login page
+        res.render("login", {status: JSON.stringify(login_reg_status)});
+      }
+    });
+  }
+  // otherwise the user is trying to login
+  else {
+    const query = "SELECT email, password FROM users WHERE email = $1 AND password = $2";
+    const values = [loginEmail, loginPass];
+
+    client.query(query, values, (err, response) => {
+      if (err) console.log(err.stack);
+      else {
+        if (response.rows.length == 0){
+          let login_reg_status = {
+            status: "login-fail"
+          };
+          res.render("login", {status: JSON.stringify(login_reg_status)});
+        }
+        else {
+          console.log(response.rows);
+          res.redirect("/home");
+        }
+      }
+    });
+  }
+}
+
+
+
 
 app.get("/home", (req, res) => {
   res.render("homePage");
