@@ -12,10 +12,12 @@ const client = new Client({
 client.connect();
 const express = require("express");
 const bodyParser = require("body-parser");
+const session = require("express-session");
 const app = express();
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + "/public/"));
+app.use(session({secret: 'ssshhhhhh'}));
 const ejs = require("ejs");
 
 // user login/register Page
@@ -28,10 +30,33 @@ app.get("/", (req, res) => {
 
 // user post request
 app.post("/", (req, res) => {
-
   login_register(req, res);
 });
 
+app.get("/home", (req, res) => {
+  res.render("homePage");
+});
+app.post("/home", (req, res) => {
+
+  res.redirect("/group");
+});
+
+app.get("/group", (req, res) => {
+  console.log(req);
+  console.log("AYYY");
+  res.render("createGroup");
+});
+
+// added server port
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 3000;
+}
+app.listen(port, function() {
+  console.log("Server has started on port 3000");
+});
+
+// FUNCTIONS *********************************************************************
 function login_register(req, res){
   // grad the login info
   let loginEmail = req.body.loginEmail;
@@ -46,7 +71,7 @@ function login_register(req, res){
   // did the user register?
   if (Object.keys(req.body).includes("registerBtn")){
     // create a query
-    const query = "INSERT INTO users(email, password, first, last, bio, status, location, cubVotes) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *";
+    const query = "INSERT INTO users(email, password, first, last, bio, status, location, cubVotes) VALUES($1, $2, $3, $4, $5, $6, $7, $8)";
     const values = [regEmail, regPass, first, last, "", false, "", 0];
 
     // execute insertion
@@ -86,34 +111,12 @@ function login_register(req, res){
           res.render("login", {status: JSON.stringify(login_reg_status)});
         }
         else {
-          console.log(response.rows);
+          req.session.user = loginEmail;
+          console.log(req.session);
+          //console.log(response.rows);
           res.redirect("/home");
         }
       }
     });
   }
 }
-
-
-
-
-app.get("/home", (req, res) => {
-  res.render("homePage");
-});
-app.post("/home", (req, res) => {
-  res.redirect("/group");
-});
-
-app.get("/group", (req, res) => {
-  res.render("createGroup");
-});
-
-
-// added server port
-let port = process.env.PORT;
-if (port == null || port == "") {
-  port = 3000;
-}
-app.listen(port, function() {
-  console.log("Server has started on port 3000");
-});
