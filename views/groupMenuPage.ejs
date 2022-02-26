@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css">
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js" charset="utf-8"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script> --> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+
+
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <h1>All Groups</h1>
+
+    <div class="container-fluid">
+      <% let counter = 0;%>
+      <% let rowClosed; %>
+      <% groups.forEach((group) => { %>
+         <%# if we hit a 6th item, create a new row  %>
+        <% if (counter % 5 == 0) { %>
+        <div class="row justify-content-center">
+          <% rowClosed = false; %>
+        <% } %>
+        <%# start of group card   %>
+          <div class="col-sm">
+            <div class="card mb-3" style="width: 80%;">
+              <h2><%=group.group_name%></h2>
+              <p><%=group.group_desc%></p>
+              <button type="button" name="button" class="btn btn-primary btn-block">Join</button>
+            </div>
+          </div>
+          <% if (counter % 5 == 4) {%>
+            <% rowClosed = true %>
+        </div>
+          <%}%>
+          <% counter++; %>
+      <%});%>
+    </div>
+    <div id="groups">
+      <%=groups%>
+    </div>
+  </body>
+</html>
