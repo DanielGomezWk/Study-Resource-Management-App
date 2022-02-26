@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <head>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js" charset="utf-8"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js" charset="utf-8"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
   <title>Login</title>
 </head>
-<body>
+<body onload="message()">
   <div class="container-fluid">
     <div class="row align-items-center">
       <h1 class="text-center">Welcome to CubChat</h1>
@@ -38,4 +40,17 @@
 
     </div>
   </div>
+  <div id="login_register_status" style="display:none">
+    <%=status%>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+  <script>
+    function message(){
+      let status = JSON.parse(document.getElementById("login_register_status").innerHTML).status;
+      console.log(status);
+      if (status == "register-fail") alert("REGISTER FAILED: Pick a new email");
+      else if (status == "register-success") alert("REGISTER SUCCESSFUL!");
+      else if (status == "login-fail") alert("LOGIN FAILED: Incorrect Email/Password");
+    }
+  </script>
 </body>
