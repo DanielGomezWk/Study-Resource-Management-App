@@ -48,8 +48,18 @@ app.post("/home", (req, res) => {
   res.redirect("/group");
 });
 
+//group home page (currently make group page)
 app.get("/group", (req, res) => {
+  console.log(req);
+  console.log("AYYY");
   res.render("createGroup");
+});
+//make group post request
+app.post("/group", (req, res) => {
+  makeGroup(req, res);
+});
+app.post("/group", (req, res) => {
+  res.redirect("/home");
 });
 
 app.get("/groupMenuPage", (req, res) => {
@@ -133,4 +143,37 @@ function login_register(req, res){
       }
     });
   }
+}
+function makeGroup(req, res) {
+  let gId = Math.floor(Math.random() * 100000000);
+  let leaderEmail = req.session.email;
+  let gDesc = req.body.groupDesc;
+  let gName = req.body.groupName;
+  let priv = false;
+
+  const query = "INSERT INTO group_(group_id, leader, group_name, group_desc, private) VALUES($1, $2, $3, $4, $5)";
+  const values = [gId, leaderEmail, gName, gDesc, priv];
+
+  client.query(query, values, (err, response) => {
+    if (err) {
+      console.log("makeGroup broke!");
+      console.log("------------------------------------");
+      console.log(err.stack)
+    } else {
+      let joinDate = new Date;
+      let inviteDate = joinDate;
+      let status = true
+      const query = "INSERT INTO member_(email, groupid, status, joindate, invitedate) VALUES($1, $2, $3, $4, $5)";
+      const values = [leaderEmail, gId, status, joinDate, inviteDate];
+
+      client.query(query, values, (err, response) => {
+        if (err) {
+          console.log("makeGroup broke! again");
+          console.log(err.stack);
+        } else {
+          res.redirect("/home");
+        }
+      });
+    }
+  });
 }
