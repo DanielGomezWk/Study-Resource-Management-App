@@ -21,7 +21,7 @@
   <table>
     <tr>
       <td> <a href="/group"><input type="submit" name="Create a group" value="Create a group"></a></td>
-      <td> <input type="submit" name="Join a group" value="Join a group"></td>
+      <td> <a href="/groupMenuPage"><input type="submit" name="Join a group" value="Join a group"></a></td>
     </tr>
   </table>
 
@@ -40,9 +40,11 @@
       </tr>
   </table>
 
+  <div id="user" style=""><%=user%></div>
 
-
-
+  <script>
+    let user = JSON.parse(document.getElementById("user").innerHTML).status;
+  </script>
 
 </body>
 </html>
