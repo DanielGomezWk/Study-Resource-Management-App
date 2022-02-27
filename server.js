@@ -228,3 +228,28 @@ function joinGroup(req, res) {
     console.log(e.stack);
   }
 }
+function createBoard(req, res) {
+  let bId = req.body.boardId;
+  let bName = req.body.boardName;
+  let bDesc = req.body.boarDesc;
+
+  const query = "INSERT INTO board_(boardid, boardname, boarddesc) VALUES($1, $2, $3)";
+  const values = [bId, bName, bDesc];
+  try {
+    client.query(query, values);
+    
+    let gId = req.body.groupId;
+    const query = "INSERT INTO boardlist(boardid, groupid) VALUES($1, $2)";
+    const values = [bId, gId];
+    
+    try {
+      client.query(query, values);
+    } catch (e) {
+      console.log("---------------------------Insert boardlist board error stack------------------------------");
+      console.log(e.stack);
+    }
+  } catch (e) {
+    console.log("-------------------------Create Board Error Stack--------------------------");
+    console.log(e.stack);
+  }
+}
