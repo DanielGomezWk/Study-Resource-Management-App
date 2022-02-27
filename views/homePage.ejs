@@ -4,47 +4,92 @@
 <head>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js" charset="utf-8"></script>
-    <meta charset="UTF-8">
-    <title>Homepage</title>
+  <meta charset="UTF-8">
+  <title>Homepage</title>
 </head>
 <body>
-  <h1>User's Home Page:</h1>
-  <table>
-      <tr>
-        <td><img src="https://media.istockphoto.com/photos/professional-it-technical-support-specialist-and-software-developer-picture-id1316574211" alt="placeholder profile pic" width="200" height="200"></td>
-        <td><h3>firstName</h3><h3>lastName</h3></td>
-      </tr>
-  </table>
-  <h4> User bio information here</h4>
-  <br>
+<div class="row align-items-center">
+  <h1 class="text-center" id="nameBanner">Welcome, John!</h1>
+</div>
 
-  <table>
-    <tr>
-      <td> <a href="/group"><input type="submit" name="Create a group" value="Create a group"></a></td>
-      <td> <a href="/groupMenuPage"><input type="submit" name="Join a group" value="Join a group"></a></td>
-    </tr>
-  </table>
+<div class="row justify-content-md-center">
+  <div class="col-2">
+    <img src="https://media.istockphoto.com/photos/professional-it-technical-support-specialist-and-software-developer-picture-id1316574211" alt="placeholder profile pic" width="200" height="200">
+  </div>
+  <div class="col-3">
+    <h4> About me: </h4>
+    <p id = "bioText"> </p>
+    <h4 id="cubvotes"> </h4>
+    <form action = "/" method = "post">
+      <button type="submit" name="loginBtn" value="logging" class="btn btn-primary">Edit my personal details</button>
+    </form>
+  </div>
+</div>
 
-  <br>
-  <h2>User's Courses:</h2>
-  <table>
-      <tr>
-        <td><img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80" alt="" width="200" height="200"></td>
-        <td><img src="https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80" alt="" width="200" height="200"></td>
-        <td><img src="https://media.istockphoto.com/photos/young-man-yells-at-the-laptop-monitor-hes-got-a-big-problem-picture-id1327991995" alt="" width="200" height="200"></td>
-      </tr>
-      <tr>
-        <td>cs470</td>
-        <td>cs460</td>
-        <td>cs488</td>
-      </tr>
-  </table>
+<br>
+<br>
 
-  <div id="user" style=""><%=user%></div>
 
-  <script>
-    let user = JSON.parse(document.getElementById("user").innerHTML).status;
-  </script>
+<div class="container">
+  <div class="row">
+    <div class="col-6">
+      <h2 class="text-center">John's courses:</h2>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-2">
+      <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80" alt="" width="175">
+      <h5>CS 470</h5>
+    </div>
+    <div class="col-2">
+      <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80" alt="" width="175">
+      <h5>Chess Club</h5>
+    </div>
+    <div class="col-2">
+      <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80" alt="" width="175">
+      <h5>English 101</h5>
+    </div>
+  </div>
+
+
+
+  <div class="row justify-content-left">
+    <div class="col-3">
+      <form action = "/" method = "post">
+        <a href="/group"><button type="submit" name="createGrpBtn" value="logging" class="btn btn-primary">Create a Group</button></a>
+        <a href="/groupMenuPage.ejs"><button type="submit" name="joinGrpBtn" value="logging" class="btn btn-primary">Join a Group</button></a>
+       </form>
+    </div>
+  </div>
+</div>
+
+<div id="user" style="display:none"><%=user%></div>
+
+<script>
+  let user = JSON.parse(document.getElementById("user").innerHTML);
+
+  function foo(obj) {
+
+    let email = obj.email
+    let password = obj.password
+    let first = obj.first
+    let last = obj.last
+    let bio = obj.bio
+    let status = obj.status
+    let location = obj.location
+    let cubvotes = obj.cubvotes
+
+    document.getElementById("nameBanner").innerText = "Hello, " + first + "!"
+    document.getElementById("bioText").innerText = bio
+    document.getElementById("cubvotes").innerText = "My cubvotes: " + cubvotes
+  }
+
+  window.onload = () => {
+    foo(user)
+  }
+
+</script>
 
 </body>
 </html>
