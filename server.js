@@ -58,9 +58,6 @@ app.get("/group", (req, res) => {
 app.post("/group", (req, res) => {
   makeGroup(req, res);
 });
-app.post("/group", (req, res) => {
-  res.redirect("/home");
-});
 
 app.get("/groupMenuPage", (req, res) => {
   const query = "SELECT * FROM group_ WHERE private = false";
@@ -72,6 +69,27 @@ app.get("/groupMenuPage", (req, res) => {
     }
   });
 });
+
+app.post("/groupMenuPage", (req, res) => {
+  let id = req.body.group_id;
+
+  res.redirect("/groupPage/" + id);
+});
+
+app.get("/groupPage/:groupID", (req, res) => {
+  // save the group_id
+  const groupID = req.url.split("/groupPage/")[1];
+
+  // get the group info
+  const query = "SELECT * FROM group_ where group_id = $1";
+  const values = [groupID];
+
+  client.query(query, values, (err, response) => {
+    if (err) console.log(err.stack);
+    else res.render("groupHomePage", {group: response.rows[0]});
+  });
+});
+
 
 // added server port
 let port = process.env.PORT;
@@ -151,20 +169,16 @@ function makeGroup(req, res) {
   let gName = req.body.groupName;
   let priv = false;
 
-  //Creating new group
   const query = "INSERT INTO group_(group_id, leader, group_name, group_desc, private) VALUES($1, $2, $3, $4, $5)";
   const values = [gId, leaderEmail, gName, gDesc, priv];
 
   client.query(query, values, (err, response) => {
-
-    //Group unsuccessfully created
     if (err) {
       console.log("makeGroup broke!");
       console.log("------------------------------------");
-      console.log(err.stack)
-      res.redirect("/group")
+      console.log(err.stack);
     } else {
-      let joinDate = new Date;
+      let joinDate = new Date();
       let inviteDate = joinDate;
       let status = true;
       const query = "INSERT INTO member_(email, groupid, status, joindate, invitedate) VALUES($1, $2, $3, $4, $5)";
@@ -174,18 +188,6 @@ function makeGroup(req, res) {
         if (err) {
           console.log("makeGroup broke! again");
           console.log(err.stack);
-          const query = 'DELETE FROM "group_" WHERE ' +
-                                  '"group_id" = $1, ' +
-                                  '"leader" = $2, ' +
-                                  '"group_name" = $3, ' +
-                                  '"group_desc" = $4, ' +
-                                  '"private" = $5';
-          const values = [leaderEmail, gId, status, joinDate, inviteDate];
-          try {
-            client.query(query, values);
-          } catch (e) {
-            console.log(e.stack);
-          }
         } else {
           res.redirect("/home");
         }
