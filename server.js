@@ -170,6 +170,20 @@ function makeGroup(req, res) {
         if (err) {
           console.log("makeGroup broke! again");
           console.log(err.stack);
+          console.log("makeGroup broke! again");
+          console.log(err.stack);
+          const query = 'DELETE FROM "group_" WHERE ' +
+                                  '"group_id" = $1, ' +
+                                  '"leader" = $2, ' +
+                                  '"group_name" = $3, ' +
+                                  '"group_desc" = $4, ' +
+                                  '"private" = $5';
+          const values = [leaderEmail, gId, status, joinDate, inviteDate];
+          try {
+            client.query(query, values);
+          } catch (e) {
+            console.log(e.stack);
+          }
         } else {
           res.redirect("/home");
         }
