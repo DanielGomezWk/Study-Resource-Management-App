@@ -169,16 +169,20 @@ function makeGroup(req, res) {
   let gName = req.body.groupName;
   let priv = false;
 
+  //Creating new group
   const query = "INSERT INTO group_(group_id, leader, group_name, group_desc, private) VALUES($1, $2, $3, $4, $5)";
   const values = [gId, leaderEmail, gName, gDesc, priv];
 
   client.query(query, values, (err, response) => {
+
+    //Group unsuccessfully created
     if (err) {
       console.log("makeGroup broke!");
       console.log("------------------------------------");
-      console.log(err.stack);
+      console.log(err.stack)
+      res.redirect("/group")
     } else {
-      let joinDate = new Date();
+      let joinDate = new Date;
       let inviteDate = joinDate;
       let status = true;
       const query = "INSERT INTO member_(email, groupid, status, joindate, invitedate) VALUES($1, $2, $3, $4, $5)";
@@ -188,10 +192,39 @@ function makeGroup(req, res) {
         if (err) {
           console.log("makeGroup broke! again");
           console.log(err.stack);
+          const query = 'DELETE FROM "group_" WHERE ' +
+                                  '"group_id" = $1, ' +
+                                  '"leader" = $2, ' +
+                                  '"group_name" = $3, ' +
+                                  '"group_desc" = $4, ' +
+                                  '"private" = $5';
+          const values = [leaderEmail, gId, status, joinDate, inviteDate];
+          try {
+            client.query(query, values);
+          } catch (e) {
+            console.log(e.stack);
+          }
         } else {
           res.redirect("/home");
         }
       });
     }
   });
+}
+function joinGroup(req, res) {
+  let gId = req.body.groupId;
+  let email = req.session.email;
+  let status = true;
+  let jdate = new Date();
+  let idate = jdate;
+
+  const query = "INSERT INTO member_(email, groupid, status, joindate, invitedate) VALUES($1, $2, $3, $4, $5)";
+  const values = [email, gId, status, jdate, idate];
+
+  try {
+    client.query(query, values);
+  } catch (e) {
+    console.log("---------------------------Join Group error stack------------------------------");
+    console.log(e.stack);
+  }
 }
