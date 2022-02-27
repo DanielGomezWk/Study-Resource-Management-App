@@ -79,14 +79,44 @@ app.post("/groupMenuPage", (req, res) => {
 app.get("/groupPage/:groupID", (req, res) => {
   // save the group_id
   const groupID = req.url.split("/groupPage/")[1];
+  let group, events, boards;
 
   // get the group info
-  const query = "SELECT * FROM group_ where group_id = $1";
+  const query = "SELECT * FROM group_ WHERE group_id = $1";
   const values = [groupID];
-
   client.query(query, values, (err, response) => {
     if (err) console.log(err.stack);
-    else res.render("groupHomePage", {group: response.rows[0]});
+    else {
+      group = response.rows[0];
+
+      // get the events
+      const query2 = "SELECT * FROM event_ WHERE groupid = $1";
+      client.query(query2, values, (err, response) => {
+        if (err) console.log(err.stack);
+        else {
+          events = response.rows;
+
+          // get the boards
+          const query3 = "WITH boardTemp AS (" +
+                            "SELECT boardid FROM boardlist WHERE groupid = $1)" +
+                         "SELECT * FROM board natural join boardTemp";
+          client.query(query3, values, (err, response) => {
+            if (err) console.log(err.stack);
+            else {
+              boards = response.rows;
+
+              const groupObj = {
+                group: group,
+                events: events,
+                boards: boards
+              };
+
+              res.render("GroupHomePage", {group: JSON.stringify(groupObj)});
+            }
+          });
+        }
+      });
+    }
   });
 });
 
