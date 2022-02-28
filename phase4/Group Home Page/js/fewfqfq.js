@@ -1,28 +1,11 @@
-document.addEventListener('DOMContentLoaded', (event) => {
-    addIdToForm();
-    fillGroups();
-});
-function addIdToForm() {
-    let data =document.getElementById("group").innerHTML;
-    let obj = JSON.parse(data);
-    console.log(obj);
-    let postRoute = document.getElementById("groupID");
-    postRoute.value = obj.group.group_id;
-    console.log(obj.group.group_id);
+window.onload = () => {
+    createEvent({"name":"Study Time","date":"03 Mar 2022","desc":"Android Dreamin\'"});
+    createEvent({"name":"Compiler","date":"03 Mar 2022","desc":"Cram Time"});
+    createBoard({"name":"Course Questions","desc":"Have questions about course concepts?"}, {"author":"Daniel G","text":"How do I dynamically hide elements?", "date":"13:42 03 Mar 2022"})
+    createBoard({"name":"Homework Help","desc":"Have questions about homework?"}, {"author":"John D","text":"Please help!?", "date":"21:52 13 Mar 2022"})
+
 }
-function fillGroups() {
-    // let data =document.getElementById("group").innerHTML;
-    // let obj = JSON.parse(data);
-    // let boards = obj.boards;
-    //
-    // for (const ele in boards) {
-    //     createBoard(boards[ele].boardname, "cool");
-    // }
-    let data = document.getElementById("group").innerHTML;
-    data = JSON.parse(data);
-    data.boards.forEach((b) => createBoard(b));
-    data.events.forEach((e) => createEvent(e));
-}
+
 // Function to create event card
 function createEvent (event) {
     console.log(event);
@@ -34,15 +17,15 @@ function createEvent (event) {
     let eventCard = document.createElement("div");
     eventCard.className = "d-flex w-100 justify-content-between";
 
-    let eventName = document.createElement("h5");
-    eventName.innerText = event.eventname;
+    let eventName = document.createElement("h5")
+    eventName.innerText = event.name;
 
     let eventDate = document.createElement("small");
-    eventDate.innerText = event.eventdate;
+    eventDate.innerText = event.date;
 
     let eventDesc = document.createElement("p");
     eventDesc.className = "mb-1";
-    eventDesc.innerText = event.eventdesc;
+    eventDesc.innerText = event.desc;
 
     eventCard.appendChild(eventName);
     eventCard.appendChild(eventDate);
@@ -52,7 +35,7 @@ function createEvent (event) {
     document.getElementById("eventList").appendChild(eventAnchor);
 }
 
-function createBoard (board) {
+function createBoard (board, comment) {
 
     console.log(board);
 
@@ -67,15 +50,14 @@ function createBoard (board) {
 
     // First child of the card - the board's name
     let boardName = document.createElement("h5")
-    boardName.innerText = board.boardname;
+    boardName.innerText = board.name;
 
     // Second child of the card - the board's description
     let boardDesc = document.createElement("span");
     boardDesc.className = "mb-1";
-    boardDesc.innerText = board.boarddesc;
+    boardDesc.innerText = board.desc;
 
     // Third child of the card - the most recent comment
-    /*
     let commentContainer = document.createElement("div");
     commentContainer.className = "d-flex justify-content-between";
 
@@ -89,11 +71,11 @@ function createBoard (board) {
         // Populate the comment container
     commentContainer.appendChild(commentContent);
     commentContainer.appendChild(commentDate);
-    */
+
     // Put it all together
     boardAnchor.appendChild(boardName);
     boardAnchor.appendChild(boardDesc);
-    //boardAnchor.appendChild(commentContainer);
+    boardAnchor.appendChild(commentContainer);
 
     document.getElementById("boardList").appendChild(boardAnchor);
 }

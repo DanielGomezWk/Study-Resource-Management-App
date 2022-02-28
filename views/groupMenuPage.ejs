@@ -1,12 +1,62 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
-
-    <meta charset="utf-8">
-    <title></title>
-  </head>
+<head>
+  <meta charset="UTF-8">
+  <title>Group Home Page</title>
+  <!--Bootstrap & Icons-->
+  <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css"  media="screen,projection"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+</head>
   <body>
+  <!-- side & navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #6200EE">
+    <div class="container-fluid">
+      <div class="d-flex justify-content-start">
+        <!-- side bar toggler -->
+        <button class="btn float-end" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" role="button">
+          <i class="bi bi-list" style="color:#e8e8e8" data-bs-toggle="offcanvas" data-bs-target="#offcanvas"></i>
+        </button>
+        <a class="navbar-brand" href="#" style="color:#e8e8e8">
+          <!---
+            <i class="bi bi-house-fill" style="float:left; color:#e8e8e8"></i>
+          --->
+          Home
+        </a>
+      </div>
+      <div class="d-flex justify-content-end">
+        <a href="">
+          <i class="bi bi-geo-alt-fill" style="float:right; color:#e8e8e8"></i>
+        </a>
+        <a href="">
+          <i class="bi bi-bell-fill" style="float:right; color:#e8e8e8"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+  <div class="offcanvas offcanvas-start w-25" tabindex="-1" id="offcanvas" data-bs-keyboard="false" data-bs-backdrop="false" style="max-width: 250px;margin-top:55px">
+    <div class="offcanvas-header">
+      <h6 class="offcanvas-title d-none d-sm-block" id="offcanvas">Menu</h6>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body px-0">
+      <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-start" id="menu">
+        <li class="nav-item">
+          <a href="#" class="nav-link text-truncate">
+            <i class="fs-5 bi-house"></i><span class="ms-1 d-none d-sm-inline">Home</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link text-truncate">
+            <i class="fs-5 bi-grid"></i><span class="ms-1 d-none d-sm-inline">Personal Information</span></a>
+        </li>
+        <li>
+          <a href="#" class="nav-link text-truncate">
+            <i class="fs-5 bi-people"></i><span class="ms-1 d-none d-sm-inline">Course History</span> </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!-- End side & navbar -->
     <h1>All Groups</h1>
 
     <div class="container-fluid">
@@ -14,7 +64,7 @@
       <% let rowClosed; %>
       <% groups.forEach((group) => { %>
          <%# if we hit a 6th item, create a new row  %>
-        <% if (counter % 5 == 0) { %>
+        <% if (counter % 4 == 0) { %>
         <div class="row justify-content-center">
           <% rowClosed = false; %>
         <% } %>
@@ -26,12 +76,12 @@
                 <p class="card-text"><%=group.group_desc%></p>
                 <form action="/groupMenuPage" method="post">
                   <input type="text" name="group_id" style="display:none" value=<%=group.group_id%>>
-                  <button type="submit" name="button" class="btn btn-primary btn-block">Join</button>
+                  <button type="submit" style = "width: 100%" name="button" class="btn btn-primary btn-block">Join</button>
                 </form>
               </div>
             </div>
           </div>
-          <% if (counter % 5 == 4) {%>
+          <% if (counter % 4 == 3) {%>
             <% rowClosed = true %>
         </div>
           <%}%>
