@@ -2,29 +2,80 @@
 <html lang="en">
 
 <head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js" charset="utf-8"></script>
   <meta charset="UTF-8">
-  <title>Homepage</title>
+  <title>Group Home Page</title>
+  <!--Bootstrap & Icons-->
+  <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css"  media="screen,projection"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 </head>
 <body>
+
+<!-- side & navbar -->
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #6200EE">
+  <div class="container-fluid">
+    <div class="d-flex justify-content-start">
+      <!-- side bar toggler -->
+      <button class="btn float-end" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" role="button">
+        <i class="bi bi-list" style="color:#e8e8e8" data-bs-toggle="offcanvas" data-bs-target="#offcanvas"></i>
+      </button>
+      <a class="navbar-brand" href="#" style="color:#e8e8e8">
+        <!---
+          <i class="bi bi-house-fill" style="float:left; color:#e8e8e8"></i>
+        --->
+        Home
+      </a>
+    </div>
+    <div class="d-flex justify-content-end">
+      <a href="">
+        <i class="bi bi-geo-alt-fill" style="float:right; color:#e8e8e8"></i>
+      </a>
+      <a href="">
+        <i class="bi bi-bell-fill" style="float:right; color:#e8e8e8"></i>
+      </a>
+    </div>
+  </div>
+</nav>
+<div class="offcanvas offcanvas-start w-25" tabindex="-1" id="offcanvas" data-bs-keyboard="false" data-bs-backdrop="false" style="max-width: 250px;margin-top:55px">
+  <div class="offcanvas-header">
+    <h6 class="offcanvas-title d-none d-sm-block" id="offcanvas">Menu</h6>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body px-0">
+    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-start" id="menu">
+      <li class="nav-item">
+        <a href="#" class="nav-link text-truncate">
+          <i class="fs-5 bi-house"></i><span class="ms-1 d-none d-sm-inline">Home</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link text-truncate">
+          <i class="fs-5 bi-grid"></i><span class="ms-1 d-none d-sm-inline">Personal Information</span></a>
+      </li>
+      <li>
+        <a href="#" class="nav-link text-truncate">
+          <i class="fs-5 bi-people"></i><span class="ms-1 d-none d-sm-inline">Course History</span> </a>
+      </li>
+    </ul>
+  </div>
+</div>
+<!-- End side & navbar -->
 <div class="row align-items-center">
   <h1 class="text-center" id="nameBanner">Welcome, John!</h1>
 </div>
 
-<div class="row justify-content-md-center">
-  <div class="col-2">
-    <img src="https://media.istockphoto.com/photos/professional-it-technical-support-specialist-and-software-developer-picture-id1316574211" alt="placeholder profile pic" width="200" height="200">
-  </div>
-  <div class="col-3">
-    <h4> About me: </h4>
-    <p id = "bioText"> </p>
-    <h4 id="cubvotes"> </h4>
-    <form action = "/" method = "post">
-      <button type="submit" name="loginBtn" value="logging" class="btn btn-primary">Edit my personal details</button>
-    </form>
-  </div>
-</div>
+<!--<div class="row justify-content-md-center">-->
+<!--  <div class="col-2">-->
+<!--    <img src="https://media.istockphoto.com/photos/professional-it-technical-support-specialist-and-software-developer-picture-id1316574211" alt="placeholder profile pic" width="200" height="200">-->
+<!--  </div>-->
+<!--  <div class="col-3">-->
+<!--    <h4> About me: </h4>-->
+<!--    <p id = "bioText"> </p>-->
+<!--    <h4 id="cubvotes"> </h4>-->
+<!--    <form action = "/" method = "post">-->
+<!--      <button type="submit" name="loginBtn" value="logging" class="btn btn-primary">Edit my personal details</button>-->
+<!--    </form>-->
+<!--  </div>-->
+<!--</div>-->
 
 <br>
 <br>
@@ -33,7 +84,7 @@
 <div class="container">
   <div class="row">
     <div class="col-6">
-      <h2 class="text-center">John's courses:</h2>
+      <h2 class="text-center">John's groups:</h2>
     </div>
 
   </div>
