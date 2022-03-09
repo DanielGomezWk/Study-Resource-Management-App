@@ -122,7 +122,42 @@ app.get("/groupPage/:groupID", (req, res) => {
 
 app.post("/createEvent", (req, res) =>{
   createEvent(req, res);
+});
 
+app.get("/eventHomePage/:eventID", (req, res) =>{
+  // save the eventid
+  const eventID = req.url.split("/eventHomePage/")[1];
+
+  let event, attendees;
+
+  // get the event info
+  const query = "SELECT * FROM event_ WHERE eventid = $1";
+  const values = [eventID];
+  client.query(query, values, (err, response) => {
+    if (err) console.log(err.stack);
+    else {
+      event = response.rows[0];
+
+      // get the attendees
+      // get the event info and the list of attendees
+      const query2 = "WITH attendees AS (" +
+          "SELECT email FROM attend WHERE eventid = $1 and attending = true)" +
+          "SELECT first, last, bio, cubvotes FROM users natural join attendees";
+      client.query(query2, values, (err, response) => {
+        if (err) console.log(err.stack);
+        else {
+          attendees = response.rows;
+
+          const obj = {
+            event: event,
+            attendees: attendees
+          }
+          console.log(attendees);
+          res.render("eventHomePage", {obj: obj});
+        }
+      });
+    }
+  });
 });
 
 // added server port
