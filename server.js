@@ -120,6 +120,10 @@ app.get("/groupPage/:groupID", (req, res) => {
   });
 });
 
+app.post("/createEvent", (req, res) =>{
+  createEvent(req, res);
+
+});
 
 // added server port
 let port = process.env.PORT;
@@ -282,4 +286,33 @@ function createBoard(req, res) {
     console.log("-------------------------Create Board Error Stack--------------------------");
     console.log(e.stack);
   }
+}
+
+function createEvent(req, res){
+  let email = req.session.email;
+  let eName = req.body.eventName;
+  let eDesc = req.body.eventDesc;
+  let time = req.body.datetimes;
+  let gId = req.body.eGroupID;
+  let eId = Math.floor(Math.random() * 100000000);
+
+  // parse the dates and time
+  let startDate = time.substring(0,10);
+  let startTime = time.substring(11, 19);
+  let startUnix = Date.parse(startDate + " " +startTime);
+
+  let endDate = time.substring(22,32);
+  let endTime = time.substring(33);
+  let endUnix = Date.parse(endDate + " " + endTime);
+
+  //console.log(startDate + " " + startTime + " " + startUnix + "     " + endDate + " " + endTime + " " + endUni
+  const query = "INSERT INTO event_(eventid, eventname, eventdesc, starttime, endtime, startdate, enddate, host, groupid, startunix, endunix) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)";
+  const values = [eId, eName, eDesc, startTime, endTime, startDate, endDate, email, gId, startUnix, endUnix];
+  values.forEach(e => console.log(e));
+  client.query(query, values, (err, response) => {
+    if (err) console.log(err.stack);
+    else {
+      res.redirect("/groupPage/" + gId);
+    }
+  });
 }

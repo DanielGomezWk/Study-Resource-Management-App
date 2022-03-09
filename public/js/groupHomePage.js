@@ -5,10 +5,16 @@ document.addEventListener('DOMContentLoaded', (event) => {
 function addIdToForm() {
     let data =document.getElementById("group").innerHTML;
     let obj = JSON.parse(data);
-    console.log(obj);
+    //console.log(obj);
+    // submit group info
     let postRoute = document.getElementById("groupID");
     postRoute.value = obj.group.group_id;
-    console.log(obj.group.group_id);
+
+    // submit event info
+    let eventRoute = document.getElementById("eGroupID");
+    eventRoute.value = obj.group.group_id;
+
+    //console.log(obj.group.group_id);
 }
 function fillGroups() {
     // let data =document.getElementById("group").innerHTML;
@@ -25,7 +31,7 @@ function fillGroups() {
 }
 // Function to create event card
 function createEvent (event) {
-    console.log(event);
+    //console.log(event);
 
     let eventAnchor = document.createElement("a");
     eventAnchor.className = "list-group-item list-group-item-action";
@@ -38,7 +44,7 @@ function createEvent (event) {
     eventName.innerText = event.eventname;
 
     let eventDate = document.createElement("small");
-    eventDate.innerText = event.eventdate;
+    eventDate.innerText = event.startdate;
 
     let eventDesc = document.createElement("p");
     eventDesc.className = "mb-1";
@@ -54,7 +60,7 @@ function createEvent (event) {
 
 function createBoard (board) {
 
-    console.log(board);
+    //console.log(board);
 
     // Anchor that holds the card
     let boardAnchor = document.createElement("a");
