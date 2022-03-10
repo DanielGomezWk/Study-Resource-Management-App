@@ -113,31 +113,31 @@ app.get("/groupPage/:groupID", (req, res) => {
             else {
               boards = response.rows;
 
-              //get the posts
-              const query4 = "WITH groupPosts AS (" +
-                  "SELECT postid FROM postlist WHERE groupid = $1) " +
-                  "SELECT * FROM post natural join groupPosts";
-              client.query(query4, values, (err, response) => {
-                if (err) {
-                  console.log("Failed to grab Posts from Group");
-                  console.log("----------------------------------");
-                  console.log(err.stack);
-                  console.log("----------------------------------");
-                } else {
-                  posts = response.rows[0];
+              //json data to send back to group home page
+              const groupObj = {
+                group: group,
+                //posts: posts,
+                events: events,
+                boards: boards
+              };
 
-                  //json data to send back to group home page
-                  const groupObj = {
-                    group: group,
-                    posts: posts,
-                    events: events,
-                    boards: boards
-                  };
+              //sending data to groupHomePage
+              res.render("groupHomePage", {group: JSON.stringify(groupObj)});
 
-                  //sending data to groupHomePage
-                  res.render("groupHomePage", {group: JSON.stringify(groupObj)});
-                }
-              });
+              // //get the posts
+              // const query4 = "WITH groupPosts AS (" +
+              //     "SELECT postid FROM postlist WHERE groupid = $1) " +
+              //     "SELECT * FROM post natural join groupPosts";
+              // client.query(query4, values, (err, response) => {
+              //   if (err) {
+              //     console.log("Failed to grab Posts from Group");
+              //     console.log("----------------------------------");
+              //     console.log(err.stack);
+              //     console.log("----------------------------------");
+              //   } else {
+              //     posts = response.rows[0];
+              //   }
+              // });
             }
           });
         }
@@ -506,6 +506,10 @@ function createBoard(req, res) {
       });
     }
   });
+}
+function deleteBoard(req, res) {
+  let gId = req.body.groupID;
+  let bId = req.body.boardID;
 }
 function createEvent(req, res){
   let email = req.session.email;
