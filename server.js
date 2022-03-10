@@ -298,9 +298,9 @@ function createPost(req, res) {
       console.log(err.stack);
       console.log("------------------------------------------------------");
     } else {
+      //inserting post into postlist
       const query = "INSERT INTO postlist(boardid, postid) VALUES($1, $2)";
       const values = [bId, pId];
-
       client.query(query, values, (err, response) => {
         if (err) {
           console.log("insert to postlist after post creation error stack");
@@ -308,12 +308,44 @@ function createPost(req, res) {
           console.log(err.stack);
           console.log("------------------------------------------------------");
         } else {
+          //querying for firstname of user to send back to group home page
+          let query = "SELECT first FROM users WHERE email = $1";
+          let values = [email];
+          let firstname;
+          client.query(query, values, (err, response) => {
+            if (err) {
+              console.log("Error stack, could not successfully query user first name");
+              console.log("------------------------------------------------------");
+              console.log(err.stack);
+              console.log("------------------------------------------------------");
+            } else { firstname = response.rows[0]; }
+          });
+
+          //querying for lastname of user to send back to group home page
+          query = "SELECT last FROM users WHERE email = $1";
+          values = [email];
+          let lastname;
+          client.query(query, values, (err, response) => {
+            if (err) {
+              console.log("Error stack, could not successfully query user last name");
+              console.log("------------------------------------------------------");
+              console.log(err.stack);
+              console.log("------------------------------------------------------");
+            } else { lastname = response.rows[0]; }
+          });
+
+          //putting post information into object
           let newMessage = {
+            first: firstname.first,
+            last: lastname.last,
             message: msg,
             time: time,
             date: date
           }
+          //sending post to any user currently using the homepage
           io.emit('post', newMessage);
+
+          //sending object back to user
           res.json(newMessage);
         }
       });
