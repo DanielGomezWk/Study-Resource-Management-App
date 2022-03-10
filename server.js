@@ -123,22 +123,6 @@ app.get("/groupPage/:groupID", (req, res) => {
 
               //sending data to groupHomePage
               res.render("groupHomePage", {group: JSON.stringify(groupObj)});
-
-              console.log(groupid);
-              // //get the posts
-              // const query4 = "WITH groupPosts AS (" +
-              //     "SELECT postid FROM postlist WHERE groupid = $1) " +
-              //     "SELECT * FROM post natural join groupPosts";
-              // client.query(query4, values, (err, response) => {
-              //   if (err) {
-              //     console.log("Failed to grab Posts from Group");
-              //     console.log("----------------------------------");
-              //     console.log(err.stack);
-              //     console.log("----------------------------------");
-              //   } else {
-              //     posts = response.rows[0];
-              //   }
-              // });
             }
           });
         }
