@@ -78,8 +78,8 @@ function createEvent (event) {
     eventDate.innerText = date;
 
     let eventHost = document.createElement("p");
-    eventDesc.className = "mb-1";
-    eventDesc.innerText = "Host: " + event.host;
+    eventHost.className = "mb-1";
+    eventHost.innerText = "Host: " + event.host;
     
     let eventDesc = document.createElement("p");
     eventDesc.className = "mb-1";
