@@ -1,6 +1,35 @@
 document.addEventListener('DOMContentLoaded', (event) => {
+    console.log("about to load page!");
     addIdToForm();
     fillGroups();
+});
+socket.on('post', (newMessage) => {
+   console.log(newMessage);
+});
+$('#tempForm').click(function (e) {
+    e.preventDefault();
+    let msg = document.getElementById("messageTemp").value;
+    let userEmail = document.getElementById("emailTemp").value;
+    let bId = document.getElementById("boardIDTemp").value;
+    let gId = document.getElementById("groupIDTemp").value;
+    $.ajax({
+        type: 'POST',
+        url: '/groupPage/1',
+        data: {
+            message: msg,
+            email: userEmail,
+            boardID: bId,
+            groupID: gId
+        },
+        success: (result) => {
+            console.log("Message successfully sent to the server and returned!");
+            console.log(result);
+        },
+        error: () => {
+            console.log("Message was not successfully sent and/or returned!");
+        }
+    });
+    return false;
 });
 function addIdToForm() {
     let data =document.getElementById("group").innerHTML;
@@ -9,6 +38,17 @@ function addIdToForm() {
     let postRoute = document.getElementById("groupID");
     postRoute.value = obj.group.group_id;
     console.log(obj.group.group_id);
+
+    //TEMPORARY CODE FOR SHOWING OFF MESSAGING
+    //TODO: create proper containers/handling for messages
+    let email = document.getElementById("emailTemp");
+    let boardID = document.getElementById("boardIDTemp");
+    let reqType = document.getElementById("reqTypeTemp");
+    let groupID = document.getElementById("groupIDTemp");
+
+    email.value = "john@joe";
+    boardID.value = 40;
+    groupID.value = 1;
 }
 function fillGroups() {
     // let data =document.getElementById("group").innerHTML;
