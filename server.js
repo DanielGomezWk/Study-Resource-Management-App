@@ -124,6 +124,7 @@ app.get("/groupPage/:groupID", (req, res) => {
               //sending data to groupHomePage
               res.render("groupHomePage", {group: JSON.stringify(groupObj)});
 
+              console.log(groupid);
               // //get the posts
               // const query4 = "WITH groupPosts AS (" +
               //     "SELECT postid FROM postlist WHERE groupid = $1) " +
