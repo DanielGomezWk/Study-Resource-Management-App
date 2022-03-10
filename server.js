@@ -186,6 +186,16 @@ app.get("/eventHomePage/:eventID", (req, res) =>{
   });
 });
 
+// invite a user to an event
+app.post("/eventInviteUser", (req, res) =>{
+  const query = "INSERT INTO attend(email, eventid, attending) VALUES($1, $2, $3);"
+  const values = [req.body.userEmail, req.body.eventID, false];
+  client.query(query, values, (err, response) =>{
+    if (err) console.log(err.stack);
+    else res.redirect("/eventHomePage/" + req.body.eventID);
+  });
+});
+
 // added server port
 let port = process.env.PORT;
 if (port == null || port == "") {
