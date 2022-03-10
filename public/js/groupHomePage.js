@@ -51,13 +51,6 @@ function addIdToForm() {
     groupID.value = 1;
 }
 function fillGroups() {
-    // let data =document.getElementById("group").innerHTML;
-    // let obj = JSON.parse(data);
-    // let boards = obj.boards;
-    //
-    // for (const ele in boards) {
-    //     createBoard(boards[ele].boardname, "cool");
-    // }
     let data = document.getElementById("group").innerHTML;
     data = JSON.parse(data);
     data.boards.forEach((b) => createBoard(b));
@@ -66,20 +59,28 @@ function fillGroups() {
 // Function to create event card
 function createEvent (event) {
     console.log(event);
+    
+    let date = event.startdate + " " + event.starttime + " - " + event.enddate + " " + event.endtime;
+    let url = "http://cubchat3.herokuapp.com/eventHomePage/" + event.eventid;
 
     let eventAnchor = document.createElement("a");
     eventAnchor.className = "list-group-item list-group-item-action";
-    eventAnchor.href = "#"
+    eventAnchor.href = url;
 
     let eventCard = document.createElement("div");
     eventCard.className = "d-flex w-100 justify-content-between";
 
     let eventName = document.createElement("h5");
+    eventName.style.fontWeight = 600;
     eventName.innerText = event.eventname;
 
     let eventDate = document.createElement("small");
-    eventDate.innerText = event.eventdate;
+    eventDate.innerText = date;
 
+    let eventHost = document.createElement("p");
+    eventDesc.className = "mb-1";
+    eventDesc.innerText = "Host: " + event.host;
+    
     let eventDesc = document.createElement("p");
     eventDesc.className = "mb-1";
     eventDesc.innerText = event.eventdesc;
@@ -87,6 +88,7 @@ function createEvent (event) {
     eventCard.appendChild(eventName);
     eventCard.appendChild(eventDate);
     eventAnchor.appendChild(eventCard);
+    eventAnchor.appendChild(eventHost);
     eventAnchor.appendChild(eventDesc);
 
     document.getElementById("eventList").appendChild(eventAnchor);
