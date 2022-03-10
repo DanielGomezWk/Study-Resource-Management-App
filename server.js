@@ -141,6 +141,83 @@ app.post("/addBoard",(req, res) => {
   createBoard(req, res);
 });
 
+// invite a user to an event
+app.post("/eventInviteUser", (req, res) =>{
+  const query = "INSERT INTO attend(email, eventid, attending) VALUES($1, $2, $3);"
+  const values = [req.body.userEmail, req.body.eventID, false];
+  client.query(query, values, (err, response) =>{
+    if (err) console.log(err.stack);
+    else res.redirect("/eventHomePage/" + req.body.eventID);
+  });
+});
+
+
+app.post("/createEvent", (req, res) =>{
+  createEvent(req, res);
+});
+
+app.get("/eventHomePage/:eventID", (req, res) =>{
+  // save the eventid
+  const eventID = req.url.split("/eventHomePage/")[1];
+
+  let event, attendees, host, notInvited;
+
+  // get the event info
+  const query = "SELECT * FROM event_ WHERE eventid = $1";
+  const values = [eventID];
+  client.query(query, values, (err, response) => {
+    if (err) console.log(err.stack);
+    else {
+      event = response.rows[0];
+
+      // get the attendees
+      // get the event info and the list of attendees, both accepted and non accepted
+      const query2 = "WITH attendees AS (" +
+          "SELECT email FROM attend WHERE eventid = $1)" +
+          "SELECT first, last, bio, cubvotes FROM users natural join attendees";
+      client.query(query2, values, (err, response) => {
+        if (err) console.log(err.stack);
+        else {
+          attendees = response.rows;
+
+          // get the host information
+          const query3 = "SELECT * FROM users WHERE email = $1";
+          const values2 = [event.host];
+          client.query(query3, values2, (err, response) => {
+            if (err) console.log(err.stack);
+            else {
+              host = response.rows[0];
+
+              // get the list of people not invited in order to invite them
+              const query4 = "WITH uninvited AS (" +
+                  "SELECT email FROM users " +
+                  "EXCEPT " +
+                  "SELECT email from attend where eventid = $1)" +
+                  "SELECT * FROM users natural join uninvited";
+              client.query(query4, values, (err, response) =>{
+                if (err) console.log(err.stack);
+                else {
+                  notInvited = response.rows;
+
+                  // assemble the object
+                  const obj = {
+                    event: event,
+                    attendees: attendees,
+                    host: host,
+                    notInvited: notInvited
+                  }
+                  console.log(JSON.stringify(obj));
+                  res.render("eventHomePage", {obj: obj});
+                }
+              });
+            }
+          });
+        }
+      });
+    }
+  });
+});
+
 // FUNCTIONS *********************************************************************
 function login_register(req, res){
   // grad the login info
@@ -344,6 +421,34 @@ function createBoard(req, res) {
           res.redirect("/groupPage/" + gId);
         }
       });
+    }
+  });
+}
+function createEvent(req, res){
+  let email = req.session.email;
+  let eName = req.body.eventName;
+  let eDesc = req.body.eventDesc;
+  let time = req.body.datetimes;
+  let gId = req.body.eGroupID;
+  let eId = Math.floor(Math.random() * 100000000);
+
+  // parse the dates and time
+  let startDate = time.substring(0,10);
+  let startTime = time.substring(11, 19);
+  let startUnix = Date.parse(startDate + " " +startTime);
+
+  let endDate = time.substring(22,32);
+  let endTime = time.substring(33);
+  let endUnix = Date.parse(endDate + " " + endTime);
+
+  //console.log(startDate + " " + startTime + " " + startUnix + "     " + endDate + " " + endTime + " " + endUni
+  const query = "INSERT INTO event_(eventid, eventname, eventdesc, starttime, endtime, startdate, enddate, host, groupid, startunix, endunix) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)";
+  const values = [eId, eName, eDesc, startTime, endTime, startDate, endDate, email, gId, startUnix, endUnix];
+  values.forEach(e => console.log(e));
+  client.query(query, values, (err, response) => {
+    if (err) console.log(err.stack);
+    else {
+      res.redirect("/groupPage/" + gId);
     }
   });
 }
