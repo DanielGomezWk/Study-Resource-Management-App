@@ -128,7 +128,7 @@ app.get("/eventHomePage/:eventID", (req, res) =>{
   // save the eventid
   const eventID = req.url.split("/eventHomePage/")[1];
 
-  let event, attendees;
+  let event, attendees, host, notInvited;
 
   // get the event info
   const query = "SELECT * FROM event_ WHERE eventid = $1";
@@ -139,21 +139,47 @@ app.get("/eventHomePage/:eventID", (req, res) =>{
       event = response.rows[0];
 
       // get the attendees
-      // get the event info and the list of attendees
+      // get the event info and the list of attendees, both accepted and non accepted
       const query2 = "WITH attendees AS (" +
-          "SELECT email FROM attend WHERE eventid = $1 and attending = true)" +
+          "SELECT email FROM attend WHERE eventid = $1)" +
           "SELECT first, last, bio, cubvotes FROM users natural join attendees";
       client.query(query2, values, (err, response) => {
         if (err) console.log(err.stack);
         else {
           attendees = response.rows;
 
-          const obj = {
-            event: event,
-            attendees: attendees
-          }
-          console.log(attendees);
-          res.render("eventHomePage", {obj: obj});
+          // get the host information
+          const query3 = "SELECT * FROM users WHERE email = $1";
+          const values2 = [event.host];
+          client.query(query3, values2, (err, response) => {
+            if (err) console.log(err.stack);
+            else {
+              host = response.rows[0];
+
+              // get the list of people not invited in order to invite them
+              const query4 = "WITH uninvited AS (" +
+                  "SELECT email FROM users " +
+                  "EXCEPT " +
+                  "SELECT email from attend where eventid = $1)" +
+                  "SELECT * FROM users natural join uninvited";
+              client.query(query4, values, (err, response) =>{
+                if (err) console.log(err.stack);
+                else {
+                  notInvited = response.rows;
+
+                  // assemble the object
+                  const obj = {
+                    event: event,
+                    attendees: attendees,
+                    host: host,
+                    notInvited: notInvited
+                  }
+                  console.log(JSON.stringify(obj));
+                  res.render("eventHomePage", {obj: obj});
+                }
+              });
+            }
+          });
         }
       });
     }
