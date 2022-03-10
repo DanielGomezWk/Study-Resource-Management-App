@@ -87,7 +87,7 @@ app.post("/groupMenuPage", (req, res) => {
 app.get("/groupPage/:groupID", (req, res) => {
   // save the group_id
   const groupID = req.url.split("/groupPage/")[1];
-  let group, events, boards;
+  let group, posts, events, boards;
 
   // get the group info
   const query = "SELECT * FROM group_ WHERE group_id = $1";
@@ -113,13 +113,31 @@ app.get("/groupPage/:groupID", (req, res) => {
             else {
               boards = response.rows;
 
-              const groupObj = {
-                group: group,
-                events: events,
-                boards: boards
-              };
+              //get the posts
+              const query4 = "WITH groupPosts AS (" +
+                  "SELECT postid FROM postlist WHERE groupid = $1) " +
+                  "SELECT * FROM post natural join groupPosts";
+              client.query(query4, values, (err, response) => {
+                if (err) {
+                  console.log("Failed to grab Posts from Group");
+                  console.log("----------------------------------");
+                  console.log(err.stack);
+                  console.log("----------------------------------");
+                } else {
+                  posts = response.rows[0];
 
-              res.render("groupHomePage", {group: JSON.stringify(groupObj)});
+                  //json data to send back to group home page
+                  const groupObj = {
+                    group: group,
+                    posts: posts,
+                    events: events,
+                    boards: boards
+                  };
+
+                  //sending data to groupHomePage
+                  res.render("groupHomePage", {group: JSON.stringify(groupObj)});
+                }
+              });
             }
           });
         }
@@ -135,6 +153,9 @@ app.get("/groupPage/:groupID", (req, res) => {
 // });
 app.post("/groupPage/:groupID", (req, res) => {
   createPost(req, res);
+});
+app.post("/groupPageDeletePost/:groupID", (req, res) => {
+  deletePost(req, res);
 });
 //post request for creating new board
 app.post("/addBoard",(req, res) => {
@@ -352,6 +373,36 @@ function createPost(req, res) {
     }
   });
 
+}
+function deletePost(req, res) {
+  let pId = req.body.postID;
+
+  //removing post from postlist
+  const query = "DELETE FROM postlist WHERE postid = $1";
+  const values = [pId];
+
+  client.query(query, values, (err, response) => {
+    if (err) {
+      console.log("Failed to delete post from postlist");
+      console.log("------------------------------------");
+      console.log(err.stack);
+      console.log("------------------------------------");
+    } else {
+      //removing post from postlist
+      const query = "DELETE FROM post WHERE postid = $1";
+      const values = [pId];
+      client.query(query, values, (err, response) => {
+        if (err) {
+          console.log("Failed to delete post from post");
+          console.log("------------------------------------");
+          console.log(err.stack);
+          console.log("------------------------------------");
+        } else {
+          //handle response properly
+        }
+      });
+    }
+  });
 }
 function makeGroup(req, res) {
   let gId = Math.floor(Math.random() * 100000000);
