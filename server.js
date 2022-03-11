@@ -317,7 +317,7 @@ function displayBoard(req, res, boardID, groupID) {
           "WITH boardPostIDs as (" +
           "SELECT postid " +
           "FROM postlist WHERE boardid = $1) " +
-          "SELECT email, first, last, users.cubvotes, postid, postcontent, postdate, posttime, post.cubvotes " +
+          "SELECT email, first, last, users.cubvotes as uservotes, postid, postcontent, postdate, posttime, post.cubvotes as postvotes " +
           "FROM boardPostIDs natural join post, users " +
           "WHERE email = postowner";
       const values = [bId];
