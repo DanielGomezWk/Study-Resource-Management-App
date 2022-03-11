@@ -543,6 +543,24 @@ function createBoard(req, res) {
 function deleteBoard(req, res) {
   let gId = req.body.groupID;
   let bId = req.body.boardID;
+  let boardID = 1;
+// delete from post where postid in (select postid from postlist where boardid = 50);
+  // delete all associated posts,
+  const query = "DELETE FROM post WHERE postid IN (SELECT postid FROM postlist WHERE boardid = $1)"
+  const values = [boardID];
+  client.query(query, values, (err, response) => {
+    if (err) console.log(err.stack);
+    else {
+      // now delete the board from the boards, which will cascade delete the other thingy
+      const query2 = "DELETE FROM board WHERE boardid = $1";
+      client.query(query2, values, (err, response) => {
+        if (err) console.log(err.stack);
+        else {
+          // return the user somewhere?
+        }
+      });
+    }
+  });
 }
 function createEvent(req, res){
   let email = req.session.email;
