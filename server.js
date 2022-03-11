@@ -147,11 +147,11 @@ app.post("/groupPageDeletePost/:groupID", (req, res) => {
 });
 
 
-app.post("/groupPage/:groupID/:boardID", (req, res) => {
+app.get("/groupBoardPage/:groupID/:boardID", (req, res) => {
  let groupobj = req.url.split("/");
   let boardID = groupobj[groupobj.length - 1];
   let groupID = groupobj[groupobj.length - 2];
-  res.redirect("/groupPage/" + groupID + "/" + boardID);
+  res.redirect("/groupPage/" + groupID + "/groupBoardPage/" + boardID);
 });
 
 //get request for displaying board and posts page
@@ -165,6 +165,27 @@ app.get("/groupPage/:groupID/groupBoardPage/:boardID", (req, res) => {
 app.post("/addBoard",(req, res) => {
   createBoard(req, res);
 });
+
+//post request handling for giving a user a group invite
+app.post("/groupInviteUser", (req, res) => {
+  let userEmail = req.body.userEmail;
+  let inviteEmail = req.body.inviteEmail;
+  let groupID = req.body.groupID;
+  req.body.userEmail = email;
+  req.body.inviteEmail = inviteEmail;
+  res.redirect("/groupPage/" + groupID);
+});
+//get request handling for returning a notification for a group invite for a user
+app.get("/groupPage/:groupID", (req, res) => {
+  let groupID = (req.url.split("/"))[2];
+  let userEmail = req.body.userEmail;
+  let inviteEmail = req.body.inviteEmail;
+  req.body.userEmail = null;
+  req.body.inviteEmail = null;
+
+  groupInviteUser(req, res, userEmail, inviteEmail, groupID);
+});
+
 
 // invite a user to an event
 app.post("/eventInviteUser", (req, res) =>{
@@ -512,12 +533,13 @@ function joinGroup(req, groupID) {
   const query = "INSERT INTO member_(email, groupid, status, joindate, invitedate) VALUES($1, $2, $3, $4, $5)";
   const values = [email, gId, status, jdate, idate];
 
-  try {
-    client.query(query, values);
-  } catch (e) {
-    console.log("---------------------------Join Group error stack------------------------------");
-    console.log(e.stack);
-  }
+  client.query(query, values, (err, response) => {
+    if (err) {
+      console.log("---------------------------Join Group error stack------------------------------");
+      console.log(err.stack);
+    } else {
+    }
+  });
 }
 
 function createBoard(req, res) {
@@ -578,6 +600,38 @@ function deleteBoard(req, res) {
       });
     }
   });
+}
+
+function groupInviteUser(req, res, userEmail, inviteEmail, groupID) {
+  let sId = req.session.email;
+
+  if (userEmail === sId) {
+    let status = false;
+    let inviteDate = new Date;
+    let joinDate = inviteDate;
+    let moderator = false;
+    let banned = false;
+
+
+    let query =
+        "SELECT email " +
+        "FROM members_ " +
+        "WHERE groupid = ";
+    let values = [];
+
+    client.query(query, values, (err, response) => {
+      if (err) {
+
+      } else {
+
+      }
+    });
+  } else {
+    console.log("***************************************");
+    console.log("Invalid Invite Request:");
+    console.log("User \"" + userEmail + "\" is not the valid session holder");
+    console.log("***************************************");
+  }
 }
 function createEvent(req, res){
   let email = req.session.email;
