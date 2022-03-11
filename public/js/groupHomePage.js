@@ -38,13 +38,15 @@ $('#inviteButton').click(function (e) {
     let inviteEmail = document.getElementById("inviteEmailInvite").value;
     let userEmail = document.getElementById("userEmailInvite").value;
     let groupID = document.getElementById("groupIDInvite").value;
+    let reqTypeInvite = document.getElementById("reqTypeInvite").value;
     $.ajax({
         type: 'POST',
-        url: '/groupInvite',
+        url: '/groupInviteUser',
         data: {
             inviteEmail: inviteEmail,
             userEmail: userEmail,
             groupID: groupID,
+            reqTypeInvite
         },
         success: (result) => {
             console.log("Invite Request was successfully Sent!");
@@ -77,7 +79,9 @@ function addIdToForm() {
     let groupID = document.getElementById("groupIDTemp");
     let inviteGroupID = document.getElementById("groupIDInvite");
     let userEmailInvite = document.getElementById("userEmailInvite");
+    let reqTypeInvite = document.getElementById("reqTypeInvite");
 
+    reqTypeInvite.value = "userInviteGroup";
     inviteGroupID.value = 1;
     userEmailInvite.value = "john@joe";
     email.value = "john@joe";
