@@ -23,6 +23,12 @@ window.onload = () => {
     maxPages = Math.ceil(length / postsPerPage);
     currentPage = Math.ceil(length / postsPerPage);
 
+    // If there is only one page, there are no other pages to navigate to
+    if (currentPage === 1) {
+        document.getElementById("nextPageAnch").className = "page-item disabled";
+        document.getElementById("prevPageAnch").className = "page-item disabled";
+    }
+
     showPosts();
 
     // Builds EVERY post in the board - excessive
@@ -48,7 +54,7 @@ function showPosts() {
 
         // Build the posts
         for (let i = begin; i < end; i++) {
-            buildPost(data.post[i]);
+            buildPost(data.posts[i]);
         }
 }
 
