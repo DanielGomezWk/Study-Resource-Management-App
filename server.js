@@ -203,6 +203,23 @@ app.get("/groupPage/:groupID", (req, res) => {
   req.body.userEmail = null;
   req.body.inviteEmail = null;
 
+//post request handling for giving a user a group invite
+app.post("/groupInviteUser", (req, res) => {
+  let userEmail = req.body.userEmail;
+  let inviteEmail = req.body.inviteEmail;
+  let groupID = req.body.groupID;
+  req.body.userEmail = email;
+  req.body.inviteEmail = inviteEmail;
+  res.redirect("/groupPage/" + groupID);
+});
+//get request handling for returning a notification for a group invite for a user
+app.get("/groupPage/:groupID", (req, res) => {
+  let groupID = (req.url.split("/"))[2];
+  let userEmail = req.body.userEmail;
+  let inviteEmail = req.body.inviteEmail;
+  req.body.userEmail = null;
+  req.body.inviteEmail = null;
+
   groupInviteUser(req, res, userEmail, inviteEmail, groupID);
 });
 
@@ -691,6 +708,86 @@ function groupInviteUser(req, res, userEmail, inviteEmail, groupID) {
 
       } else {
 
+      }
+    });
+  } else {
+    console.log("***************************************");
+    console.log("Invalid Invite Request:");
+    console.log("User \"" + userEmail + "\" is not the valid session holder");
+    console.log("***************************************");
+  }
+}
+function groupInviteUser(req, res, userEmail, inviteEmail, groupID) {
+  let sId = req.session.email;
+
+  if (userEmail === sId) {
+    let status = false;
+    let inviteDate = new Date;
+    let joinDate = inviteDate;
+    let moderator = false;
+    let banned = false;
+
+
+    //querying to see if user who is sending invite is in the group member table
+    let query =
+        "SELECT email " +
+        "FROM members_ " +
+        "WHERE groupid = $1  email = $2";
+    let values = [groupID, userEmail];
+    client.query(query, values, (err, response) => {
+      if (err) {
+
+      } else {
+        if (response.rows !== null) {
+          console.log("Could not query user email from \"members_\"!");
+          console.log("-----------------------------------------------------");
+          console.log(err.stack);
+          console.log("-----------------------------------------------------");
+        }
+        else {
+          //inserting user into members_ table
+          let query =
+            "INSERT INTO members_ VALUES($1, $2, $3, $4, $5, $6, $7)";
+          let values = [inviteEmail, groupID, status, inviteDate, joinDate, moderator, banned];
+          client.query(query, values, (err, response) => {
+            if (err) {
+              console.log("User: " + inviteEmail + "=> cannot be insert into members_ table");
+              console.log("----------------------------------");
+              console.log(err.stack);
+              console.log("----------------------------------");
+            }
+            else {
+              let query =
+                  "SELECT group_name " +
+                  "FROM group_ " +
+                  "WHERE group_id = $1";
+              let values = [groupID];
+              client.query(query, values, (err, response) => {
+                if (err) {
+                  console.log("group_id: " + groupID + " => not in group_ table");
+                  console.log("----------------------------------");
+                  console.log(err.stack);
+                  console.log("----------------------------------");
+                } else {
+                  let groupname = response.rows[0];
+                  let invObj = {
+                    type: "groupInvite",
+                    groupName: groupname,
+                    groupID: groupID,
+                    inviteDate: inviteDate
+                  }
+
+                  //sending notification to invited user
+                  io.to(inviteEmail).emit(invObj);
+
+                  //notifying user that a request was sent to the invited user
+                  let data = { requestSent: true }
+                  res.json(data);
+                }
+              });
+            }
+          });
+        }
       }
     });
   } else {
