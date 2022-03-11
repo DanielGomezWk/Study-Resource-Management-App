@@ -8,6 +8,7 @@ let currentPage;
 let maxPages;
 let postsPerPage = 10;
 let data;
+let length;
 
 // Functions to run at the beginning of the page
 window.onload = () => {
@@ -20,6 +21,7 @@ window.onload = () => {
 
     // Retrieve which page we're on
     // and how many pages of posts exist
+    length = data.posts.length;
     maxPages = Math.ceil(length / postsPerPage);
     currentPage = Math.ceil(length / postsPerPage);
 
