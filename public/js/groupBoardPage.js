@@ -142,6 +142,8 @@ function buildPost (post) {
     scoreDiv.appendChild(reactButton);
     scoreDiv.appendChild(deleteButton);
 
+    scoreCol.appendChild(scoreDiv);
+
     // The right column of the row - contains the post's author, date/time, and post text
     let contentCol = document.createElement("div");
     contentCol.className = "col-11";
@@ -178,6 +180,13 @@ function buildPost (post) {
 
     contentCol.appendChild(postInfo);
     contentCol.appendChild(postContent);
+
+    row.appendChild(scoreCol);
+    row.appendChild(contentCol);
+
+    card.appendChild(row);
+
+    document.getElementById(postList).appendChild(card);
 }
 
 function buildBoardHeader (board) {
