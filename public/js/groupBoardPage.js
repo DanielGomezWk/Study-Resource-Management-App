@@ -30,9 +30,6 @@ window.onload = () => {
 
     showPosts();
 
-    // Builds EVERY post in the board - excessive
-    //data.posts.forEach((p) => buildPost(p));
-
     // Set the timeout - refreshes post content
     //setTimeout(async () => {
     //    await refreshPage();
@@ -65,6 +62,13 @@ function showPosts() {
 
 function showNext() {
     currentPage++;
+    // Enable the previous button
+    document.getElementById("prevPageAnch").className = "page-item";
+
+    // Change the current page
+    document.getElementById("currentPageBtn").innerText = currentPage;
+
+    // Disable the next button (if on the last page)
     if (currentPage === maxPages) {
         document.getElementById("nextPageAnch").className = "page-item disabled";
     }
@@ -72,6 +76,13 @@ function showNext() {
 }
 function showPrevious() {
     currentPage--;
+    // Enable the next button
+    document.getElementById("nextPageAnch").className = "page-item";
+
+    // Change the current page
+    document.getElementById("currentPageBtn").innerText = currentPage;
+
+    // Disable the previous button (if on the first page)
     if (currentPage === 1) {
         document.getElementById("prevPageAnch").className = "page-item disabled";
     }
