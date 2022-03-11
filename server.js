@@ -202,7 +202,7 @@ app.get("/groupPage/:groupID", (req, res) => {
   let inviteEmail = req.body.inviteEmail;
   req.body.userEmail = null;
   req.body.inviteEmail = null;
-
+});
 //post request handling for giving a user a group invite
 app.post("/groupInviteUser", (req, res) => {
   let userEmail = req.body.userEmail;
