@@ -91,6 +91,7 @@ async function refreshPage() {
 }
 
 function buildPost (post) {
+    console.log(post);
     // Give the card an ID so that it can be referenced later (for voting/deleting)
     // Parent card element
     let card = document.createElement("div");
