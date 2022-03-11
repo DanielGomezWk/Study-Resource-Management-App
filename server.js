@@ -116,7 +116,6 @@ app.get("/groupPage/:groupID", (req, res) => {
               //json data to send back to group home page
               const groupObj = {
                 group: group,
-                //posts: posts,
                 events: events,
                 boards: boards
               };
@@ -136,11 +135,22 @@ app.get("/groupPage/:groupID", (req, res) => {
 //   socket.emit('notification', notify); // Updates Live Notification
 //   res.send(notify);
 // });
-app.post("/groupPage/:groupID", (req, res) => {
+app.post("/groupPageCreatePost/:groupID", (req, res) => {
   createPost(req, res);
 });
 app.post("/groupPageDeletePost/:groupID", (req, res) => {
   deletePost(req, res);
+});
+app.post("/groupPage/:groupID", (req, res) => {
+  let boardID = req.body.boardID;
+  let groupID = req.url.split("/groupPage/")[1];
+  res.redirect("/groupPage/" + groupID + "/" + boardID);
+});
+app.get("/groupPage/:groupID/:boardID", (req, res) => {
+  let boardIDobj = req.url.split("/");
+  let boardID = boardIDobj[boardIDobj.length - 1];
+  let groupID = boardIDobj[boardIDobj.length - 2];
+  displayBoard(req, res, boardID, groupID);
 });
 //post request for creating new board
 app.post("/addBoard",(req, res) => {
@@ -284,6 +294,44 @@ function login_register(req, res){
       }
     });
   }
+}
+function displayBoard(req, res, boardID, groupID) {
+  console.log("i made it to displayBoard");
+  let bId = boardID;
+
+  console.log("BoardID: " + bId);
+  const query =
+      "SELECT * " +
+      "FROM board " +
+      "WHERE boardid = $1";
+  const values = [bId];
+  client.query(query, values, (err, response) => {
+    if (err) {
+      console.log("Failed to grab all posts from board");
+      console.log("---------------------------------");
+      console.log(err.stack);
+      console.log("---------------------------------");
+    } else {
+      let boardInfo = response.rows;
+      const query =
+          "WITH boardPostIDs as (" +
+          "SELECT postid " +
+          "FROM postlist WHERE boardid = $1) " +
+          "SELECT email, first, last, users.cubvotes, postid, postcontent, postdate, posttime, post.cubvotes " +
+          "FROM boardPostIDs natural join post, users " +
+          "WHERE email = postowner";
+      const values = [bId];
+      client.query(query, values, (err, response) => {
+        if (err) {
+          console.log(err.stack);
+        } else {
+          let postss = response.rows;
+          console.log({board: boardInfo, posts: postss });
+          res.send({board: boardInfo, posts: postss });
+        }
+      });
+    }
+  });
 }
 function createPost(req, res) {
   let email = req.body.email;

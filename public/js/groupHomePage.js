@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     addIdToForm();
     fillGroups();
 });
+
 socket.on('post', (newMessage) => {
    console.log(newMessage);
 });
@@ -14,7 +15,7 @@ $('#tempForm').click(function (e) {
     let gId = document.getElementById("groupIDTemp").value;
     $.ajax({
         type: 'POST',
-        url: '/groupPage/1',
+        url: '/groupPageCreatePost/1',
         data: {
             message: msg,
             email: userEmail,
@@ -53,7 +54,7 @@ function addIdToForm() {
 function fillGroups() {
     let data = document.getElementById("group").innerHTML;
     data = JSON.parse(data);
-    data.boards.forEach((b) => createBoard(b));
+    data.boards.forEach((b) => createBoard(b, data.group.group_id));
     data.events.forEach((e) => createEvent(e));
 }
 // Function to create event card
@@ -94,14 +95,14 @@ function createEvent (event) {
     document.getElementById("eventList").appendChild(eventAnchor);
 }
 
-function createBoard (board) {
+function createBoard (board, groupID) {
 
     console.log(board);
 
     // Anchor that holds the card
     let boardAnchor = document.createElement("a");
     boardAnchor.className = "list-group-item list-group-item-action";
-    boardAnchor.href = "#"
+    boardAnchor.href = "/groupPage/" + groupID + "/" + board.boardid;
 
     // Card that holds the info
     let boardCard = document.createElement("div");
