@@ -401,6 +401,9 @@ function login_register(req, res){
           res.render("login", {status: JSON.stringify(login_reg_status)});
         }
         else {
+          io.on("connection", socket => {
+            socket.join(loginEmail);
+          });
           req.session.email = loginEmail;
           res.redirect("/home");
         }
