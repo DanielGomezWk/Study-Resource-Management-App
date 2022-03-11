@@ -44,11 +44,10 @@ function showPosts() {
         let end = begin + (postsPerPage - 1);
 
         // Prevent out-of-bounds errors by using whichever comes sooner
-        if (end > length)
-            let end = length;
+        end = Math.min(end, length - 1);
 
         // Build the posts
-        for (let i = (currentPage - 1) * postsPerPage; i < data.posts.length; i++) {
+        for (let i = begin; i < end; i++) {
             buildPost(data.post[i]);
         }
 }
