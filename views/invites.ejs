@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>User Home Page</title>
+    <!--Bootstrap & Icons-->
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css"  media="screen,projection"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+</head>
+<body>
+
+<%-include("partials/navAndSidebar")-%>
+
+<div class="row align-items-center">
+    <h1 class="text-center" id="nameBanner">All Invites</h1>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-6">
+            <h1>Group Invitations</h1>
+            <!--display every group invite in its own card-->
+            <% obj.groups.forEach((group) => { %>
+                <div class="card mb-3" style="width: 18rem; height: 15rem">
+                    <div class="card-body">
+                        <h2 class="card-title"><%=group.group_name%></h2>
+                        <p class="card-text"><%=group.group_desc%></p>
+                        <form  action="/joinGroup/<%=group.group_id%>">
+                            <button type="submit" style = "width: 100%" name="button" class="btn btn-primary btn-block">Join</button>
+                        </form>
+                        <form  action="/declineGroup/<%=group.group_id%>">
+                            <button type="submit" class = "btn btn-danger">Decline</button>
+                        </form>
+                    </div>
+                </div>
+            <%});%>
+        </div>
+
+        <div class="col-lg-6">
+            <h1>Event Invitations</h1>
+            <!--display every group invite in its own card-->
+            <% obj.events.forEach((event) => { %>
+                <div class="card mb-3" style="width: 18rem; height: 15rem">
+                    <div class="card-body">
+                        <h2 class="card-title"><%=event.eventname%></h2>
+                        <h3 class="card-title"><%=event.startdate%> <%=event.starttime%></h3>
+                        <p class="card-text"><%=event.eventdesc%></p>
+                        <form  action="/joinEvent/<%=event.eventid%>">
+                            <button type="submit" style = "width: 100%" name="button" class="btn btn-primary btn-block">Join</button>
+                        </form>
+                        <form  action="/declineEvent/<%=event.eventid%>">
+                            <button type="submit" class = "btn btn-danger">Decline</button>
+                        </form>
+                    </div>
+                </div>
+            <%});%>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
