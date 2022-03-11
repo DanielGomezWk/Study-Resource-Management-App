@@ -68,7 +68,6 @@ app.get("/home", (req, res) => {
               user: user,
               groups: groups
             }
-            console.log(obj);
             res.render("homePage", {obj: obj});
           }
         });
@@ -107,7 +106,7 @@ app.post("/groupMenuPage", (req, res) => {
 app.get("/groupPage/:groupID", (req, res) => {
   let reqType = req.session.reqType;
   if (reqType === "groupMenuPage") {
-    req.session.reqType = null
+    req.session.reqType = null;
     // save the group_id
     const groupID = req.url.split("/groupPage/")[1];
     let group, posts, events, boards;
@@ -157,10 +156,11 @@ app.get("/groupPage/:groupID", (req, res) => {
   } else {
     req.session.reqType = null;
     let groupID = (req.url.split("/"))[2];
-    let userEmail = req.body.userEmail;
-    let inviteEmail = req.body.inviteEmail;
-    req.body.userEmail = null;
-    req.body.inviteEmail = null;
+    let userEmail = req.session.userEmail;
+    let inviteEmail = req.session.inviteEmail;
+    req.session.userEmail = null;
+    req.session.inviteEmail = null;
+    userInviteGroup(req, res, userEmail, inviteEmail, groupID);
   }
 });
 // Send Notification API
@@ -201,7 +201,7 @@ app.post("/groupInviteUser", (req, res) => {
   req.session.reqType = req.body.reqType;
   req.session.userEmail = req.body.userEmail;
   req.session.inviteEmail = req.body.inviteEmail;
-  res.redirect("/groupPage/" + groupID);
+  res.redirect("/groupPage/" + req.body.groupID);
 });
 //get request handling for returning a notification for a group invite for a user
 app.get("/groupPage/:groupID", (req, res) => {
@@ -679,7 +679,8 @@ function deleteBoard(req, res) {
     }
   });
 }
-function groupInviteUser(req, res, userEmail, inviteEmail, groupID) {
+//  Inviting a user to a group
+function userInviteGroup(req, res, userEmail, inviteEmail, groupID) {
   let sId = req.session.email;
 
   if (userEmail === sId) {
@@ -698,18 +699,22 @@ function groupInviteUser(req, res, userEmail, inviteEmail, groupID) {
     let values = [groupID, userEmail];
     client.query(query, values, (err, response) => {
       if (err) {
-
+        console.log("email: " + userEmail + ", groupID: " + groupID + " => could not query for email in members_ table with previous values");
+        console.log(err.stack);
       } else {
-        if (response.rows !== null) {
-          console.log("Could not query user email from \"members_\"!");
+        //the user inviting the person is NOT in the group
+        console.log(response.rows[0].email);
+        if (response.rows[0].email === null) {
+          console.log("Could not query user email from \"member_\"!");
           console.log("-----------------------------------------------------");
           console.log(err.stack);
           console.log("-----------------------------------------------------");
         }
+        //the user inviting the person IS in the group
         else {
           //inserting user into members_ table
           let query =
-            "INSERT INTO members_ VALUES($1, $2, $3, $4, $5, $6, $7)";
+            "INSERT INTO member_ VALUES($1, $2, $3, $4, $5, $6, $7)";
           let values = [inviteEmail, groupID, status, inviteDate, joinDate, moderator, banned];
           client.query(query, values, (err, response) => {
             if (err) {
