@@ -141,15 +141,20 @@ app.post("/groupPageCreatePost/:groupID", (req, res) => {
 app.post("/groupPageDeletePost/:groupID", (req, res) => {
   deletePost(req, res);
 });
-app.post("/groupPage/:groupID", (req, res) => {
-  let boardID = req.body.boardID;
-  let groupID = req.url.split("/groupPage/")[1];
+
+
+app.post("/groupPage/:groupID/:boardID", (req, res) => {
+ let groupobj = req.url.split("/");
+  let boardID = groupobj[groupobj.length - 1];
+  let groupID = groupobj[groupobj.length - 2];
   res.redirect("/groupPage/" + groupID + "/" + boardID);
 });
-app.get("/groupPage/:groupID/:boardID", (req, res) => {
+
+//get request for displaying board and posts page
+app.get("/groupPage/:groupID/groupBoardPage/:boardID", (req, res) => {
   let boardIDobj = req.url.split("/");
   let boardID = boardIDobj[boardIDobj.length - 1];
-  let groupID = boardIDobj[boardIDobj.length - 2];
+  let groupID = boardIDobj[boardIDobj.length - 3];
   displayBoard(req, res, boardID, groupID);
 });
 //post request for creating new board
@@ -296,10 +301,7 @@ function login_register(req, res){
   }
 }
 function displayBoard(req, res, boardID, groupID) {
-  console.log("i made it to displayBoard");
   let bId = boardID;
-
-  console.log("BoardID: " + bId);
   const query =
       "SELECT * " +
       "FROM board " +
@@ -326,8 +328,11 @@ function displayBoard(req, res, boardID, groupID) {
           console.log(err.stack);
         } else {
           let postss = response.rows;
-          console.log({board: boardInfo, posts: postss });
-          res.send({board: boardInfo, posts: postss });
+          let data = {
+            boardInfo: boardInfo,
+            posts: postss
+          }
+          res.render("groupBoardPage",{data: JSON.stringify(data)});
         }
       });
     }
@@ -407,6 +412,7 @@ function createPost(req, res) {
   });
 
 }
+//TODO: need to update once table that keeps track of cubvotes is created (maybe)
 function deletePost(req, res) {
   let pId = req.body.postID;
 
@@ -421,7 +427,7 @@ function deletePost(req, res) {
       console.log(err.stack);
       console.log("------------------------------------");
     } else {
-      //removing post from postlist
+      //removing post from post
       const query = "DELETE FROM post WHERE postid = $1";
       const values = [pId];
       client.query(query, values, (err, response) => {
@@ -436,6 +442,13 @@ function deletePost(req, res) {
       });
     }
   });
+}
+function cubvote(req, res) {
+  let pID = req.body.postID;
+  let email = req.body.email;
+  let sID = req.session.email;
+
+  //TODO: need to create table that tracks people who cubvoted already before querying
 }
 function makeGroup(req, res) {
   let gId = Math.floor(Math.random() * 100000000);

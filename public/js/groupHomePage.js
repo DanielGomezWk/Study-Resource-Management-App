@@ -32,6 +32,54 @@ $('#tempForm').click(function (e) {
     });
     return false;
 });
+
+$('#tempForm').click(function (e) {
+    e.preventDefault();
+    let msg = document.getElementById("messageTemp").value;
+    let userEmail = document.getElementById("emailTemp").value;
+    let bId = document.getElementById("boardIDTemp").value;
+    let gId = document.getElementById("groupIDTemp").value;
+    $.ajax({
+        type: 'POST',
+        url: '/groupPageCreatePost/1',
+        data: {
+            message: msg,
+            email: userEmail,
+            boardID: bId,
+            groupID: gId
+        },
+        success: (result) => {
+            console.log("Message successfully sent to the server and returned!");
+            console.log(result);
+        },
+        error: () => {
+            console.log("Message was not successfully sent and/or returned!");
+        }
+    });
+    return false;
+});
+
+// $('#inviteButton').click(function (e) {
+//     e.preventDefault();
+//     let email = document.getElementById("email").value;
+//     $.ajax({
+//         type: 'POST',
+//         url: '/groupPage/1/',
+//         data: {
+//             message: msg,
+//             email: userEmail,
+//         },
+//         success: (result) => {
+//             console.log("Message successfully sent to the server and returned!");
+//             console.log(result);
+//         },
+//         error: () => {
+//             console.log("Message was not successfully sent and/or returned!");
+//         }
+//     });
+//     return false;
+// });
+
 function addIdToForm() {
     let data =document.getElementById("group").innerHTML;
     let obj = JSON.parse(data);
@@ -44,9 +92,10 @@ function addIdToForm() {
     //TODO: create proper containers/handling for messages
     let email = document.getElementById("emailTemp");
     let boardID = document.getElementById("boardIDTemp");
-    let reqType = document.getElementById("reqTypeTemp");
     let groupID = document.getElementById("groupIDTemp");
+    let inviteGroupID = document.getElementById("groupIDInvite");
 
+    inviteGroupID.value = 1;
     email.value = "john@joe";
     boardID.value = 40;
     groupID.value = 1;

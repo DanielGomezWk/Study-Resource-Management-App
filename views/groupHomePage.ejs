@@ -107,6 +107,7 @@
         </div>
         <button type="button" id = "tempForm" class="btn btn-primary">Submit</button>
     </form>
+
     <!--Button container -->
     <div id="buttonContainer" class="row">
         <div id="leftButtonSpacer" class="col-sm-0 col-md-3 col-lg-4"> </div>
@@ -115,7 +116,16 @@
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Create Board
             </button>
-            <button type="button" class="btn btn-primary">Invite User</button>
+            <div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Invite Person</label>
+                    <input type="text" name = "email" class="form-control" id="emailInvite" placeholder="Enter email">
+                </div>
+                <div class="form-group" style = "display: none" style = "visibility: collapse">
+                    <input id = "groupIDInvite" type="text" name = "groupID" class="form-control">
+                </div>
+                <button type="button" id = "inviteButton" class="btn btn-primary">Invite User</button>
+            </div>
             <button type="button" class="btn btn-primary">Edit Board Info</button>
         </div>
         <div id="rightButtonSpacer" class="col-sm-0 col-md-3 col-lg-4"> </div>
