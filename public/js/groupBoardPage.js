@@ -186,7 +186,7 @@ function buildPost (post) {
 
     card.appendChild(row);
 
-    document.getElementById(postList).appendChild(card);
+    document.getElementById("postList").appendChild(card);
 }
 
 function buildBoardHeader (board) {
