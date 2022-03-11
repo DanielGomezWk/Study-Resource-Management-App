@@ -1,14 +1,72 @@
+// TODO:
+// - Add post creation
+// - Add pagination
+// - Add post reacting
+// - Add post deletion
+
+let currentPage;
+let maxPages;
+let postsPerPage = 10;
+let data;
+
+// Functions to run at the beginning of the page
 window.onload = () => {
-    let data = JSON.parse(document.getElementById("data").innerText);
+    // Parse the data initially sent to the page
+    data = JSON.parse(document.getElementById("data").innerText);
     console.log(data);
 
+    // Build the persistent header post [board title & description]
     buildBoardHeader(data.boardInfo[0]);
-    data.posts.forEach((p) => buildPost(p));
 
-    setTimeout(async () => {
-        await refreshPage();
-    }, 15000);
+    // Retrieve which page we're on
+    // and how many pages of posts exist
+    maxPages = Math.ceil(length / postsPerPage);
+    currentPage = Math.ceil(length / postsPerPage);
+
+    showPosts();
+
+    // Builds EVERY post in the board - excessive
+    //data.posts.forEach((p) => buildPost(p));
+
+    // Set the timeout - refreshes post content
+    //setTimeout(async () => {
+    //    await refreshPage();
+    //}, 15000);
 };
+
+// Displays posts according to the current page and the posts per page the user wishes to see
+function showPosts() {
+        // Wipe the inner HTML of the post list - removes all currently displayed posts
+        document.getElementById("postList").innerHTML = "";
+
+        // Find the beginning post index for the current page
+        let begin = (currentPage - 1) * postsPerPage;
+        let end = begin + (postsPerPage - 1);
+
+        // Prevent out-of-bounds errors by using whichever comes sooner
+        if (end > length)
+            let end = length;
+
+        // Build the posts
+        for (let i = (currentPage - 1) * postsPerPage; i < data.posts.length; i++) {
+            buildPost(data.post[i]);
+        }
+}
+
+function showNext() {
+    currentPage++;
+    if (currentPage === maxPages) {
+        document.getElementById("nextPageAnch").className = "page-item disabled";
+    }
+    showPosts();
+}
+function showPrevious() {
+    currentPage--;
+    if (currentPage === 1) {
+        document.getElementById("prevPageAnch").className = "page-item disabled";
+    }
+    showPosts();
+}
 
 async function refreshPage() {
     let url = window.location.pathname;
@@ -28,7 +86,6 @@ async function refreshPage() {
 }
 
 function buildPost (post) {
-
     // Give the card an ID so that it can be referenced later (for voting/deleting)
     // Parent card element
     let card = document.createElement("div");
@@ -50,19 +107,29 @@ function buildPost (post) {
     reactButton.type = "button";
     reactButton.className = "btn btn-primary btn-sm";
 
+    // TODO - Make the delete button appear only for the author of the post, admins, and moderators
+    let deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.className = "btn btn-danger btn-sm";
+
     // Set the score in this container to the post's current score
     let cubVoteContainer = document.createElement("small");
     cubVoteContainer.innerText = post.postvotes;
 
-    let buttonIcon = document.createElement("i");
-    buttonIcon.className="bi bi-hand-thumbs-up-fill";
+    let reactIcon = document.createElement("i");
+    reactIcon.className="bi bi-hand-thumbs-up-fill";
 
-    // Attach the icon to the button,
+    let delIcon = document.createElement("i");
+    delIcon.className="bi bi-trash-fill";
+
+    // Attach the icons to the buttons,
     // the score to the container,
     // and the button to the container
-    reactButton.appendChild(buttonIcon);
+    reactButton.appendChild(reactIcon);
+    deleteButton.appendChild(delIcon);
     scoreDiv.appendChild(cubVoteContainer);
     scoreDiv.appendChild(reactButton);
+    scoreDiv.appendChild(deleteButton);
 
     // The right column of the row - contains the post's author, date/time, and post text
     let contentCol = document.createElement("div");
