@@ -85,9 +85,13 @@ app.post("/groupMenuPage", (req, res) => {
   res.redirect("/groupPage/" + id);
 });
 app.get("/groupPage/:groupID", (req, res) => {
+
   // save the group_id
   const groupID = req.url.split("/groupPage/")[1];
   let group, posts, events, boards;
+
+  // the user has joined the group
+  joinGroup(req, groupID);
 
   // get the group info
   const query = "SELECT * FROM group_ WHERE group_id = $1";
@@ -209,13 +213,12 @@ app.get("/eventHomePage/:eventID", (req, res) =>{
             else {
               host = response.rows[0];
 
-              // get the list of people not invited in order to invite them
-              const query4 = "WITH uninvited AS (" +
-                  "SELECT email FROM users " +
+              // get the list of people not invited, who belong to the group, in order to invite them
+              const query4 = "SELECT email FROM member_ where groupid = $1 " +
                   "EXCEPT " +
-                  "SELECT email from attend where eventid = $1)" +
-                  "SELECT * FROM users natural join uninvited";
-              client.query(query4, values, (err, response) =>{
+                  "SELECT email from attend where eventid = $2"
+              const values3 = [event.groupid, eventID];
+              client.query(query4, values3, (err, response) =>{
                 if (err) console.log(err.stack);
                 else {
                   notInvited = response.rows;
@@ -499,8 +502,8 @@ function makeGroup(req, res) {
     }
   });
 }
-function joinGroup(req, res) {
-  let gId = req.body.groupId;
+function joinGroup(req, groupID) {
+  let gId = groupID;
   let email = req.session.email;
   let status = true;
   let jdate = new Date();
@@ -516,6 +519,7 @@ function joinGroup(req, res) {
     console.log(e.stack);
   }
 }
+
 function createBoard(req, res) {
   let bId = Math.floor(Math.random() * 100000000);
   let bName = req.body.boardName;
