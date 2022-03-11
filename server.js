@@ -694,8 +694,8 @@ function userInviteGroup(req, res, userEmail, inviteEmail, groupID) {
     //querying to see if user who is sending invite is in the group member table
     let query =
         "SELECT email " +
-        "FROM members_ " +
-        "WHERE groupid = $1  email = $2";
+        "FROM member_ " +
+        "WHERE groupid = $1 AND email = $2";
     let values = [groupID, userEmail];
     client.query(query, values, (err, response) => {
       if (err) {
@@ -707,8 +707,6 @@ function userInviteGroup(req, res, userEmail, inviteEmail, groupID) {
         if (response.rows[0].email === null) {
           console.log("Could not query user email from \"member_\"!");
           console.log("-----------------------------------------------------");
-          console.log(err.stack);
-          console.log("-----------------------------------------------------");
         }
         //the user inviting the person IS in the group
         else {
@@ -718,7 +716,7 @@ function userInviteGroup(req, res, userEmail, inviteEmail, groupID) {
           let values = [inviteEmail, groupID, status, inviteDate, joinDate, moderator, banned];
           client.query(query, values, (err, response) => {
             if (err) {
-              console.log("User: " + inviteEmail + "=> cannot be insert into members_ table");
+              console.log("User: " + inviteEmail + "=> cannot be insert into member_ table");
               console.log("----------------------------------");
               console.log(err.stack);
               console.log("----------------------------------");
