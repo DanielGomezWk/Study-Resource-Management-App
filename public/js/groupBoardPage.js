@@ -16,9 +16,6 @@ window.onload = () => {
     data = JSON.parse(document.getElementById("data").innerText);
     console.log(data);
 
-    // Build the persistent header post [board title & description]
-    buildBoardHeader(data.boardInfo[0]);
-
     // Retrieve which page we're on
     // and how many pages of posts exist
     length = data.posts.length;
@@ -47,9 +44,15 @@ function showPosts() {
         // Wipe the inner HTML of the post list - removes all currently displayed posts
         document.getElementById("postList").innerHTML = "";
 
+        // Build the persistent header post [board title & description]
+        buildBoardHeader(data.boardInfo[0]);
+
         // Find the beginning post index for the current page
         let begin = (currentPage - 1) * postsPerPage;
         let end = begin + (postsPerPage - 1);
+
+        console.log(begin);
+        console.log(end);
 
         // Prevent out-of-bounds errors by using whichever comes sooner
         end = Math.min(end, length - 1);
