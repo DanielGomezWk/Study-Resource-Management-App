@@ -45,15 +45,35 @@ app.post("/", (req, res) => {
   login_register(req, res);
 });
 
+// user home page
 app.get("/home", (req, res) => {
   const query = "SELECT * FROM users WHERE email = $1";
   const values = [req.session.email];
+  var user, events, groups;
+
+  // getting the user's information
   client.query(query, values, (err, response) => {
-    if (err) console.log(err);
+    if (err) console.log(err.stack);
     else {
-      res.render("homePage", {user: JSON.stringify(response.rows[0])});
-    }
-  });
+      user = response.rows[0];
+
+        // getting the groups they are a part of
+        const query2 = "WITH groupsInvited AS (SELECT * FROM member_ WHERE email = $1 and status = true) " +
+            "SELECT * FROM group_ JOIN groupsInvited ON group_.group_id = groupsInvited.groupid "
+        client.query(query2, values, (err, response) => {
+          if (err) console.log(err.stack);
+          else {
+            groups = response.rows;
+            const obj = {
+              user: user,
+              groups: groups
+            }
+            console.log(obj);
+            res.render("homePage", {obj: obj});
+          }
+        });
+      }
+    });
 });
 
 app.post("/home", (req, res) => {
@@ -262,6 +282,53 @@ app.get("/eventHomePage/:eventID", (req, res) =>{
     }
   });
 });
+
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!! INVITE PAGE RELATED GET AND POST ROUTES !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//invite page for the user
+app.get("/invites", (req, res) => {
+  showInvites(req, res);
+});
+
+// accept group invitation
+app.get("/joinGroup/:groupID", (req, res) => {
+  const query = "UPDATE member_ SET status = true WHERE email = $1 AND groupid = $2";
+  const values = [req.session.email, req.url.split(/(\d+)/)[1]];
+  client.query(query, values, (err, response) => {
+    if (err) console.log(err.stack);
+    else res.redirect("/invites");
+  });
+});
+
+// decline group invitation
+app.get("/declineGroup/:groupID", (req, res) => {
+  const query = "DELETE FROM member_ WHERE email = $1 AND groupid = $2";
+  const values = [req.session.email, req.url.split(/(\d+)/)[1]];
+  client.query(query, values, (err, response) => {
+    if (err) console.log(err.stack);
+    else res.redirect("/invites");
+  });
+});
+
+// accept event invite
+app.get("/joinEvent/:eventID", (req, res) => {
+  const query = "UPDATE attend SET attending = true WHERE email = $1 AND eventid = $2";
+  const values = [req.session.email, req.url.split(/(\d+)/)[1]];
+  client.query(query, values, (err, response) => {
+    if (err) console.log(err.stack);
+    else res.redirect("/invites");
+  });
+});
+
+// decline event invitation
+app.get("/declineEvent/:eventID", (req, res) => {
+  const query = "DELETE FROM attend WHERE email = $1 AND eventid = $2";
+  const values = [req.session.email, req.url.split(/(\d+)/)[1]];
+  client.query(query, values, (err, response) => {
+    if (err) console.log(err.stack);
+    else res.redirect("/invites");
+  });
+});
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!! INVITE PAGE RELATED GET AND POST ROUTES !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 // FUNCTIONS *********************************************************************
 function login_register(req, res){
@@ -658,6 +725,52 @@ function createEvent(req, res){
     if (err) console.log(err.stack);
     else {
       res.redirect("/groupPage/" + gId);
+    }
+  });
+}
+
+
+function showInvites(req, res){
+
+  // get email
+  const query = "SELECT * FROM users WHERE email = $1";
+  const values = [req.session.email];
+  var user, events, groups;
+
+  // getting the user's information
+  client.query(query, values, (err, response) => {
+    if (err) console.log(err.stack);
+    else {
+      user = response.rows[0];
+
+      // getting the events they've been invited to // can change
+      const query2 = "WITH eventsInvited AS (SELECT * FROM attend WHERE email = $1 and attending = false) " +
+          "SELECT * FROM event_ natural join eventsInvited";
+      client.query(query2, values, (err, response) => {
+        if (err) console.log(err.stack);
+        else {
+          console.log(values[0]);
+          console.log(response.rows);
+          events = response.rows;
+
+          // getting the groups they have been invited to // can change
+          const query3 = "WITH groupsInvited AS (SELECT * FROM member_ WHERE email = $1 and status = false) " +
+              "SELECT * FROM group_ JOIN groupsInvited ON group_.group_id = groupsInvited.groupid "
+          client.query(query3, values, (err, response) => {
+            if (err) console.log(err.stack);
+            else {
+              groups = response.rows;
+              const obj = {
+                user: user,
+                events: events,
+                groups: groups
+              }
+              console.log(obj);
+              res.render("invites", {obj: obj});
+            }
+          });
+        }
+      });
     }
   });
 }
