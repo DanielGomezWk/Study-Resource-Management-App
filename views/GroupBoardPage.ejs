@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Board Page</title>
+    <!--Bootstrap & Icons-->
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css"  media="screen,projection"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+</head>
+<body>
+
+    <!-- side & navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #6200EE">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-start">
+                <!-- side bar toggler -->
+                <button class="btn float-end" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" role="button">
+                    <i class="bi bi-list" style="color:#e8e8e8" data-bs-toggle="offcanvas" data-bs-target="#offcanvas"></i>
+                </button>
+                <a class="navbar-brand" href="#" style="color:#e8e8e8">
+                    <!---
+                      <i class="bi bi-house-fill" style="float:left; color:#e8e8e8"></i>
+                    --->
+                    Home
+                </a>
+            </div>
+            <div class="d-flex justify-content-end">
+                <a href="">
+                    <i class="bi bi-geo-alt-fill" style="float:right; color:#e8e8e8"></i>
+                </a>
+                <a href="">
+                    <i class="bi bi-bell-fill" style="float:right; color:#e8e8e8"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+    <div class="offcanvas offcanvas-start w-25" tabindex="-1" id="offcanvas" data-bs-keyboard="false" data-bs-backdrop="false" style="max-width: 250px;margin-top:55px">
+        <div class="offcanvas-header">
+            <h6 class="offcanvas-title d-none d-sm-block" id="offcanvas">Menu</h6>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body px-0">
+            <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-start" id="menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link text-truncate">
+                        <i class="fs-5 bi-house"></i><span class="ms-1 d-none d-sm-inline">Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link text-truncate">
+                        <i class="fs-5 bi-grid"></i><span class="ms-1 d-none d-sm-inline">Personal Information</span></a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link text-truncate">
+                        <i class="fs-5 bi-people"></i><span class="ms-1 d-none d-sm-inline">Course History</span> </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- End side & navbar -->
+
+    <div id="siteContainer" class="row" style="padding-top: 50px">
+        <!-- Spacer to the left-->
+        <div id="leftSpacer" class="col-sm-0 col-md-1 col-lg-1"> </div>
+        <!--Container for Boards-->
+        <div id="boardContainer" class="col-sm-12 col-md-10 col-lg-10">
+            <div id="groupCard" class="card">
+                <div id="groupName" class="card-header">
+                    Board Name
+                </div>
+                <div id="postList" class="card-body">
+                    <!--<div class="list-group-item">
+                        <div class="row">
+                            <div class="col-1 justify-content-center">
+                                <div class="d-inline-flex w-100 flex-fill justify-content-center">
+                                    <button id="up" type="button" class="btn btn-primary btn-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-thumbs-up-fill" viewBox="0 0 16 16">
+                                            <path d="M6.956 1.745C7.021.81 7.908.087 8.864.325l.261.066c.463.116.874.456 1.012.965.22.816.533 2.511.062 4.51a9.84 9.84 0 0 1 .443-.051c.713-.065 1.669-.072 2.516.21.518.173.994.681 1.2 1.273.184.532.16 1.162-.234 1.733.058.119.103.242.138.363.077.27.113.567.113.856 0 .289-.036.586-.113.856-.039.135-.09.273-.16.404.169.387.107.819-.003 1.148a3.163 3.163 0 0 1-.488.901c.054.152.076.312.076.465 0 .305-.089.625-.253.912C13.1 15.522 12.437 16 11.5 16H8c-.605 0-1.07-.081-1.466-.218a4.82 4.82 0 0 1-.97-.484l-.048-.03c-.504-.307-.999-.609-2.068-.722C2.682 14.464 2 13.846 2 13V9c0-.85.685-1.432 1.357-1.615.849-.232 1.574-.787 2.132-1.41.56-.627.914-1.28 1.039-1.639.199-.575.356-1.539.428-2.59z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-11">
+                                <div class="d-inline-flex w-100 justify-content-between">
+                                    <div>
+                                        <span style="font-weight: bold">Bran Leger</span>
+                                        <span> - </span>
+                                        <span>38923</span>
+                                    </div>
+                                    <small>Date + Time</small>
+                                </div>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec nibh vel lacus pretium aliquet. Praesent et scelerisque dui, vel ornare purus. Morbi nulla dui, efficitur eu tellus et, tempor tincidunt velit. Fusce auctor varius sapien, et luctus libero feugiat at. Duis vel ante molestie lorem laoreet vulputate non ac orci. Donec sodales nibh eu lacus consequat tincidunt. Integer ac augue eget metus pulvinar hendrerit non ut sem. Vivamus eget lobortis metus, nec dictum justo. Cras justo sem, aliquet nec lobortis at, facilisis quis erat. Pellentesque nulla turpis, consequat id nulla quis, consequat varius magna. Nam nec tempor quam. Suspendisse sit amet nisi vel turpis auctor aliquam. Quisque sed ante efficitur, pulvinar lorem eget, venenatis turpis.
+
+                                    Sed accumsan justo id gravida pulvinar. Mauris eget erat ac velit tristique pretium eu non sapien. Pellentesque aliquet lacus nec erat eleifend venenatis eleifend id quam. Maecenas elit nibh, convallis eu dui sit amet, congue lacinia turpis. Integer sollicitudin libero ut odio blandit, eget feugiat nisi finibus. Aliquam erat volutpat. Suspendisse dictum sit amet quam sit amet sagittis. Proin non mauris id turpis condimentum ornare. Integer a tempus sapien. Fusce aliquam massa vel augue fermentum molestie. Maecenas mattis sit amet ligula vitae vulputate. Suspendisse odio enim, mattis molestie sodales at, consequat ornare nibh. Proin imperdiet efficitur libero. Praesent nunc ipsum, consequat at rutrum id, iaculis ac velit. Morbi at nibh nec leo volutpat malesuada. Fusce vel congue urna.
+                                </p>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+                <!-- Pagination navbar -->
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Previous</a>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+        </div>
+
+        <!-- Spacer to the Right-->
+        <div id="rightSpacer" class="col-sm-0 col-md-1 col-lg-1"> </div>
+    </div>
+
+    <!--Button container -->
+    <div id="buttonContainer" class="row">
+        <div id="leftButtonSpacer" class="col-sm-0 col-md-3 col-lg-4"> </div>
+        <div id="boardButtons" class="col-sm-12 col-md-6 col-lg-4">
+            <button type="button" class="btn btn-primary">Create Board</button>
+            <button type="button" class="btn btn-primary">Invite User</button>
+            <button type="button" class="btn btn-primary">Edit Board Info</button>
+        </div>
+        <div id="rightButtonSpacer" class="col-sm-0 col-md-3 col-lg-4"> </div>
+    </div>
+    <script type="text/javascript" src="js/GroupBoardPage.js"></script>
+    <script type="text/javascript" src="js/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+</body>
+</html>
