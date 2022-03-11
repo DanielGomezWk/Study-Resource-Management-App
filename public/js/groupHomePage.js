@@ -151,7 +151,7 @@ function createBoard (board, groupID) {
     // Anchor that holds the card
     let boardAnchor = document.createElement("a");
     boardAnchor.className = "list-group-item list-group-item-action";
-    boardAnchor.href = "/groupPage/" + groupID + "/" + board.boardid;
+    boardAnchor.href = "/groupBoardPage/" + groupID + "/" + board.boardid;
 
     // Card that holds the info
     let boardCard = document.createElement("div");
