@@ -152,7 +152,7 @@
     console.log(typeof user);
     socket.on('connection', function() {
        // Connected, let's sign-up for to receive messages for this room
-       socket.emit('user', { user: JSON.stringify(user) });
+       socket.emit('user', user);
     });
   }
 
