@@ -7,6 +7,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
 socket.on('post', (newMessage) => {
    console.log(newMessage);
 });
+
+socket.on('invitedToGroup', (invObj) => {
+    console.log(invObj);
+});
 $('#tempForm').click(function (e) {
     e.preventDefault();
     let msg = document.getElementById("messageTemp").value;
