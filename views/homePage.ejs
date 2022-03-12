@@ -90,15 +90,15 @@
       <script src='/fullcalendar/packages/core/main.js'></script>
       <script src='/fullcalendar/packages/interaction/main.js'></script>
       <script src='/fullcalendar/packages/daygrid/main.js'></script>
-<div id="user" style="display:none"><%=sObj%></div>
+<div id="sObj" style="display:none"><%=sObj%></div>
       <script>
 
 
 
         document.addEventListener('DOMContentLoaded', function() {
           var calendarEl = document.getElementById('calendar');
-          var obj = JSON.parse(document.getElementById("user").innerHTML);
-          console.log(document.getElementById("user").innerHTML);
+          var obj = JSON.parse(document.getElementById("sObj").innerHTML);
+          console.log(document.getElementById("sObj").innerHTML);
 
           var eventList = [];
 
