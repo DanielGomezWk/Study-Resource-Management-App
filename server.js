@@ -125,6 +125,9 @@ app.post("/groupMenuPage", (req, res) => {
 });
 app.get("/groupPage/:groupID", (req, res) => {
   let reqType = req.session.reqType;
+  console.log("*********************************");
+  console.log(reqType);
+  console.log("**********************************");
   if (reqType === "groupMenuPage") {
     req.session.reqType = null;
     // save the group_id
