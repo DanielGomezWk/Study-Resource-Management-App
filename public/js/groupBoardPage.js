@@ -72,8 +72,12 @@ function showNext() {
     // Change the current page
     document.getElementById("currentPageBtn").innerText = currentPage;
 
+    console.log("currentPage: " + currentPage);
+    console.log("maxPages: " + maxPages);
+    console.log(currentPage === maxPages);
     // Disable the next button (if on the last page)
     if (currentPage === maxPages) {
+        console.log("in");
         document.getElementById("nextPageAnch").onclick = "";
         document.getElementById("nextPageAnch").className = "page-item disabled";
     }
@@ -88,8 +92,13 @@ function showPrevious() {
     // Change the current page
     document.getElementById("currentPageBtn").innerText = currentPage;
 
+    console.log("currentPage: " + currentPage);
+    console.log("maxPages: " + maxPages);
+    console.log(currentPage === 1);
+
     // Disable the previous button (if on the first page)
     if (currentPage === 1) {
+        console.log("in");
         document.getElementById("prevPageAnch").onclick = "";
         document.getElementById("prevPageAnch").className = "page-item disabled";
     }
