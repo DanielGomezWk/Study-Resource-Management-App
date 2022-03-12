@@ -151,7 +151,7 @@
     
     socket.on('connection', function() {
        // Connected, let's sign-up for to receive messages for this room
-       socket.emit('user', user);
+       socket.emit('user', JSON.stringify(user));
     });
   }
 
