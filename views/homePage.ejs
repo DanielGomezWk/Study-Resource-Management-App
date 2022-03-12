@@ -144,12 +144,15 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js"></script>
 <script src= "/socket.io/socket.io.js"></script>
 <script>
-  var socket = io();
+  var socket = io.connect();
 
   window.onload = () => {
     let user  = document.getElementById("user").innerHTML;
-    // Connected, let's sign-up for to receive messages for this room
-    socket.emit('connection', user);
+    
+    socket.on('connection', function() {
+       // Connected, let's sign-up for to receive messages for this room
+       socket.emit('user', user);
+    });
   }
 
 </script>
