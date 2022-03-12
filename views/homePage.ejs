@@ -183,18 +183,13 @@
 <script src= "/socket.io/socket.io.js"></script>
 <script>
   var socket = io();
-  console.log(document.getElementById("user").innerHTML);
-  let d = document.getElementById("user").innerHTML;
-  console.log(d);
-  console.log(d.user);
 
   window.onload = () => {
     let user  = document.getElementById("user").innerHTML;
-    let session = user.user.email;
 
     socket.on('connect', function() {
       // Connected, let's sign-up for to receive messages for this room
-      socket.emit('user', session);
+      socket.emit('user', user);
     });
   }
 
