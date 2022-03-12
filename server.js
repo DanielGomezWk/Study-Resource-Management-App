@@ -36,6 +36,7 @@ const io = socket(server);
 io.sockets.on('connection', function(socket) {
     // once a client has connected, we expect to get a ping from them saying what room they want to join
     console.log("IN CONNECTION NAMESPACE");
+  console.log("stringified socket: " + JSON.stringify(socket));
   console.log("socket obj: " + socket);
   console.log("socket[0] obj: " + socket[0]);
     console.log("about to to enter socket.on user");
