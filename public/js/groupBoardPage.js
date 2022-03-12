@@ -70,7 +70,7 @@ function showNext() {
     document.getElementById("prevPageAnch").setAttribute("onclick", "showNext()");
 
     // Change the current page
-    document.getElementById("currentPageBtn").innerText = currentPage;
+    document.getElementById("currentPageAnch").innerText = currentPage;
 
     console.log("currentPage: " + currentPage);
     console.log("maxPages: " + maxPages);
@@ -90,7 +90,7 @@ function showPrevious() {
     document.getElementById("nextPageAnch").setAttribute("onclick", "showNext()");
 
     // Change the current page
-    document.getElementById("currentPageBtn").innerText = currentPage;
+    document.getElementById("currentPageAnch").innerText = currentPage;
 
     console.log("currentPage: " + currentPage);
     console.log("maxPages: " + maxPages);
