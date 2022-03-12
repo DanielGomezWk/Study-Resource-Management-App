@@ -104,7 +104,10 @@ async function refreshPage() {
     let args = url.split("/");
     let groupID = args[args.length - 2];
     let boardID = args[args.length - 1];
-    let data = await $.get("/groupPage/" + groupID + "/groupBoardPage/" + boardID);
+    console.log("refreshing")
+    document.outerHTML = await $.get("/groupPage/" + groupID + "/groupBoardPage/" + boardID);
+    
+    /*
     console.log("refresh data: " + data);
     // Wipe the post list
     document.getElementById("postList").innerHTML("");
@@ -123,6 +126,7 @@ async function refreshPage() {
     for (let i = begin; i < end; i++) {
         buildPost(data.posts[i]);
     }
+    */
 }
 
 function buildPost (post) {
