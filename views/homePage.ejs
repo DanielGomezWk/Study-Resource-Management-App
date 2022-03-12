@@ -186,11 +186,8 @@
 
   window.onload = () => {
     let user  = document.getElementById("user").innerHTML;
-
-    socket.on('connection', function() {
-      // Connected, let's sign-up for to receive messages for this room
-      socket.emit('user', user);
-    });
+    // Connected, let's sign-up for to receive messages for this room
+    socket.emit('connection', user);
   }
 
 </script>
