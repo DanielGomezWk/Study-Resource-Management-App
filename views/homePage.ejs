@@ -183,6 +183,7 @@
 <script src= "/socket.io/socket.io.js"></script>
 <script>
   var socket = io();
+  console.log(document.getElementById("user").innerHTML);
   let user = JSON.parse(document.getElementById("user").innerHTML);
 
   function foo(obj) {
