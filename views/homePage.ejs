@@ -150,9 +150,10 @@
     let user  = document.getElementById("user").innerHTML;
     console.log("this is user: " + user);
     console.log(typeof user);
+    console.log(user.toJSON());
     socket.on('connection', function() {
        // Connected, let's sign-up for to receive messages for this room
-       socket.emit('user', user);
+       socket.emit('user', user.toJSON());
     });
   }
 
