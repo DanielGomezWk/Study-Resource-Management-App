@@ -33,9 +33,9 @@ window.onload = () => {
     showPosts();
 
     // Set the timeout - refreshes post content
-    //setTimeout(async () => {
-    //    await refreshPage();
-    //}, 15000);
+    setTimeout(async () => {
+        await refreshPage();
+    }, 15000);
 };
 
 // Displays posts according to the current page and the posts per page the user wishes to see
@@ -104,16 +104,25 @@ async function refreshPage() {
     let args = url.split("/");
     let groupID = args[args.length - 2];
     let boardID = args[args.length - 1];
-    let data = await $.get("/groupPage/" + groupID + "/" + boardID);
-
+    let data = await $.get("/groupPage/" + groupID + "/groupBoardPage/" + boardID);
+    console.log("refresh data: " + data);
     // Wipe the post list
     document.getElementById("postList").innerHTML("");
 
-    // Header post
-    buildBoardHeader(data.board);
+    // Build the persistent header post [board title & description]
+    buildBoardHeader(data.boardInfo[0]);
 
-    // Build them again
-    data.forEach((p) => buildPost(p));
+    // Find the beginning post index for the current page
+    let begin = (currentPage - 1) * postsPerPage;
+    let end = begin + (postsPerPage - 1);
+
+    // Prevent out-of-bounds errors by using whichever comes sooner
+    end = Math.min(end, length - 1);
+
+    // Build the posts
+    for (let i = begin; i < end; i++) {
+        buildPost(data.posts[i]);
+    }
 }
 
 function buildPost (post) {
