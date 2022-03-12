@@ -23,7 +23,7 @@ window.onload = () => {
     currentPage = Math.ceil(length / postsPerPage);
 
     // Set the current page number
-    document.getElementById("currentPageBtn").innerText = currentPage;
+    document.getElementById("currentPageAnch").innerText = currentPage;
 
     // If there is only one page, there are no other pages to navigate to
     if (currentPage === 1) {
@@ -70,7 +70,7 @@ function showNext() {
     document.getElementById("prevPageAnch").setAttribute("onclick", "showNext()");
 
     // Change the current page
-    document.getElementById("currentPageAnch").innerText = currentPage;
+    document.getElementById("currentPageBtn").innerText = currentPage;
 
     console.log("currentPage: " + currentPage);
     console.log("maxPages: " + maxPages);
@@ -90,7 +90,7 @@ function showPrevious() {
     document.getElementById("nextPageAnch").setAttribute("onclick", "showNext()");
 
     // Change the current page
-    document.getElementById("currentPageAnch").innerText = currentPage;
+    document.getElementById("currentPageBtn").innerText = currentPage;
 
     console.log("currentPage: " + currentPage);
     console.log("maxPages: " + maxPages);
