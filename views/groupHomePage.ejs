@@ -6,6 +6,7 @@
     <!--Bootstrap & Icons-->
     <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css"  media="screen,projection"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link type="text/css" rel="stylesheet" href="/css/daterangepicker.css" media="screen,projection"/>
 </head>
 <body>
 
@@ -68,6 +69,7 @@
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Create Board
             </button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#eventModal">Create Event</button>
             <div>
                 <div class="form-group">
                     <label for="exampleInputPassword1">Invite Person</label>
@@ -116,13 +118,76 @@
         </div>
     </div>
 
+<!-- Create Event Modal -->
+<div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Create Event</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id ="postReq" action = "/createEvent" method = "post">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Name of Event</label>
+                        <input type= "text" name = "eventName" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Board name">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Event Description</label>
+                        <input type="text" name = "eventDesc" class="form-control" id="exampleInputPassword1" placeholder="Enter Board Desc">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Set Date and Time</label>
+                        <input type="text" name="datetimes" class="form-control" />
+                    </div>
+                    <div class="form-group" style = "display: none" style = "visibility: collapse">
+                        <input id = "eGroupID" type="text" name = "eGroupID" class="form-control">
+                    </div>
+                    <div class="form-group" style = "display: none" style = "visibility: collapse">
+                        <input id = "start" type="text" name = "start" class="form-control">
+                    </div>
+                    <div class="form-group" style = "display: none" style = "visibility: collapse">
+                        <input id = "end" type="text" name = "end" class="form-control">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
     <div id="group" style = "display: none"><%=group%></div>
     <script src= "/socket.io/socket.io.js"></script>
     <script> 
         var socket = io();
+        let gId = JSON.parse(document.getElementById("group").innerHTML);
+        socket.on(gId.group.group_id, (inviteRequest) => { userInvited(inviteRequest)});
     </script>
     <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js"></script>
     <script src="/js/groupHomePage.js"></script>
+<script type="text/javascript" src="/js/moment.min.js"></script>
+<script type="text/javascript" src="/js/daterangepicker.min.js"></script>
+
+<script>
+    $(function() {
+        $('input[name="datetimes"]').daterangepicker({
+            timePicker: true,
+            startDate: moment().startOf('hour'),
+            endDate: moment().startOf('hour').add(32, 'hour'),
+            locale: {
+                format: 'MM/DD/YYYY hh:mm A'
+            }
+        }, (start, end, label) =>{
+            console.log(start + "  " + end);
+            $("#start").val(start);
+            $("#end").val(end);
+        });
+    });
+    // let groupId = JSON.parse($("#group").html()).group.group_id;
+    // let postRoute = $("eGroupID");
+    // postRoute.value = groupId;
+</script>
 </body>
 </html>
