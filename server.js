@@ -222,6 +222,8 @@ app.post("/addBoard",(req, res) => {
 //post request handling for giving a user a group invite
 app.post("/groupInviteUser", (req, res) => {
   req.session.reqType = req.body.reqType;
+  console.log("reqType from body: " + req.body.reqType);
+  console.log("reqType from Session: " + req.body.reqType);
   req.session.userEmail = req.body.userEmail;
   req.session.inviteEmail = req.body.inviteEmail;
   res.redirect("/groupPage/" + req.body.groupID);
