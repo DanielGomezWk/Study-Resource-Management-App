@@ -33,14 +33,11 @@ const server = app.listen(port, function() {
 const io = socket(server);
 
 // handle incoming connections from clients
-io.sockets.on('connection', function(socket) {
-  // once a client has connected, we force them to join a room labeled as their own session id
-  console.log("USER HAS CONNECTED TO SOCKET SERVER");
-  console.log(socket);
-  socket.on('user', function(session) {
-    console.log("CREATING ROOM: " + session);
-    socket.join(session);
-  });
+io.sockets.on('connection', function(session) {
+    // once a client has connected, we force them to join a room labeled as their own session id
+    console.log("USER HAS CONNECTED TO SOCKET SERVER");
+    io.join(session);
+  }
 });
 
 // user login/register Page
