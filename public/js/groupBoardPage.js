@@ -22,6 +22,9 @@ window.onload = () => {
     maxPages = Math.ceil(length / postsPerPage);
     currentPage = Math.ceil(length / postsPerPage);
 
+    // Set the current page number
+    document.getElementById("currentPageBtn").innerText = currentPage;
+
     // If there is only one page, there are no other pages to navigate to
     if (currentPage === 1) {
         document.getElementById("nextPageAnch").className = "page-item disabled";
@@ -64,12 +67,14 @@ function showNext() {
     currentPage++;
     // Enable the previous button
     document.getElementById("prevPageAnch").className = "page-item";
+    document.getElementById("prevPageAnch").setAttribute("onclick", "showNext()");
 
     // Change the current page
     document.getElementById("currentPageBtn").innerText = currentPage;
 
     // Disable the next button (if on the last page)
     if (currentPage === maxPages) {
+        document.getElementById("nextPageAnch").onclick = "";
         document.getElementById("nextPageAnch").className = "page-item disabled";
     }
     showPosts();
@@ -78,12 +83,14 @@ function showPrevious() {
     currentPage--;
     // Enable the next button
     document.getElementById("nextPageAnch").className = "page-item";
+    document.getElementById("nextPageAnch").setAttribute("onclick", "showNext()");
 
     // Change the current page
     document.getElementById("currentPageBtn").innerText = currentPage;
 
     // Disable the previous button (if on the first page)
     if (currentPage === 1) {
+        document.getElementById("prevPageAnch").onclick = "";
         document.getElementById("prevPageAnch").className = "page-item disabled";
     }
     showPosts();
