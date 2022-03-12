@@ -149,6 +149,7 @@
   window.onload = () => {
     let user  = document.getElementById("user").innerHTML;
     console.log("this is user: " + user);
+    console.log(typeof user);
     socket.on('connection', function() {
        // Connected, let's sign-up for to receive messages for this room
        socket.emit('user', { user: JSON.stringify(user) });
