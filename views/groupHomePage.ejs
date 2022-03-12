@@ -71,10 +71,16 @@
             <div>
                 <div class="form-group">
                     <label for="exampleInputPassword1">Invite Person</label>
-                    <input type="text" name = "email" class="form-control" id="emailInvite" placeholder="Enter email">
+                    <input type="text" name = "inviteEmail" class="form-control" id="inviteEmailInvite" placeholder="Enter email">
                 </div>
                 <div class="form-group" style = "display: none" style = "visibility: collapse">
                     <input id = "groupIDInvite" type="text" name = "groupID" class="form-control">
+                </div>
+                <div class="form-group" style = "display: none" style = "visibility: collapse">
+                    <input id = "userEmailInvite" type="text" name = "userEmail" class="form-control">
+                </div>
+                <div class="form-group" style = "display: none" style = "visibility: collapse">
+                    <input id = "reqTypeInvite" type="text" name = "reqType" class="form-control">
                 </div>
                 <button type="button" id = "inviteButton" class="btn btn-primary">Invite User</button>
             </div>
@@ -112,7 +118,11 @@
 
     <div id="group" style = "display: none"><%=group%></div>
     <script src= "/socket.io/socket.io.js"></script>
-    <script> var socket = io(); </script>
+    <script> 
+        var socket = io();
+        let gId = JSON.parse(document.getElementById("group").innerHTML);
+        socket.on(gId.group.group_id, (inviteRequest) => { userInvited(inviteRequest)});
+    </script>
     <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js"></script>
     <script src="/js/groupHomePage.js"></script>

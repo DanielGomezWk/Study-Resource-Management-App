@@ -1,6 +1,5 @@
 // TODO:
 // - Add post creation
-// - Add pagination
 // - Add post reacting
 // - Add post deletion
 
@@ -22,21 +21,21 @@ window.onload = () => {
     maxPages = Math.ceil(length / postsPerPage);
     currentPage = Math.ceil(length / postsPerPage);
 
+    // Set the current page number
+    document.getElementById("currentPageAnch").innerText = currentPage;
+
     // If there is only one page, there are no other pages to navigate to
     if (currentPage === 1) {
-        document.getElementById("nextPageAnch").className = "page-item disabled";
-        document.getElementById("prevPageAnch").className = "page-item disabled";
+        document.getElementById("nextPageBtn").className = "page-item disabled";
+        document.getElementById("prevPageBtn").className = "page-item disabled";
     }
 
     showPosts();
 
-    // Builds EVERY post in the board - excessive
-    //data.posts.forEach((p) => buildPost(p));
-
     // Set the timeout - refreshes post content
-    //setTimeout(async () => {
-    //    await refreshPage();
-    //}, 15000);
+    setTimeout(async () => {
+        await refreshPage();
+    }, 15000);
 };
 
 // Displays posts according to the current page and the posts per page the user wishes to see
@@ -65,15 +64,37 @@ function showPosts() {
 
 function showNext() {
     currentPage++;
+    // (Re-)Enable the previous button: Enable button and (re)add onclick to anchor
+    document.getElementById("prevPageBtn").className = "page-item";
+    document.getElementById("prevPageAnch").setAttribute("onclick", "showPrevious()");
+
+    // Change the current page
+    document.getElementById("currentPageAnch").innerText = currentPage;
+
+    // Disable the next button (if on the last page)
     if (currentPage === maxPages) {
-        document.getElementById("nextPageAnch").className = "page-item disabled";
+        // Remove the onclick from the anchor
+        document.getElementById("nextPageAnch").onclick = "";
+        // Disable the button
+        document.getElementById("nextPageBtn").className = "page-item disabled";
     }
     showPosts();
 }
 function showPrevious() {
     currentPage--;
+    // (Re-)Enable the next button: Enable button and (re)add onclick to anchor
+    document.getElementById("nextPageBtn").className = "page-item";
+    document.getElementById("nextPageAnch").setAttribute("onclick", "showNext()");
+
+    // Change the current page in the current page anchor
+    document.getElementById("currentPageAnch").innerText = currentPage;
+
+    // Disable the previous button (if on the first page)
     if (currentPage === 1) {
-        document.getElementById("prevPageAnch").className = "page-item disabled";
+        // Remove the onclick from the anchor
+        document.getElementById("prevPageAnch").onclick = "";
+        // Disable the button
+        document.getElementById("prevPageBtn").className = "page-item disabled";
     }
     showPosts();
 }
@@ -83,16 +104,29 @@ async function refreshPage() {
     let args = url.split("/");
     let groupID = args[args.length - 2];
     let boardID = args[args.length - 1];
-    let data = await $.get("/groupPage/" + groupID + "/" + boardID);
-
+    console.log("refreshing")
+    document.outerHTML = await $.get("/groupPage/" + groupID + "/groupBoardPage/" + boardID);
+    
+    /*
+    console.log("refresh data: " + data);
     // Wipe the post list
     document.getElementById("postList").innerHTML("");
 
-    // Header post
-    buildBoardHeader(data.board);
+    // Build the persistent header post [board title & description]
+    buildBoardHeader(data.boardInfo[0]);
 
-    // Build them again
-    data.forEach((p) => buildPost(p));
+    // Find the beginning post index for the current page
+    let begin = (currentPage - 1) * postsPerPage;
+    let end = begin + (postsPerPage - 1);
+
+    // Prevent out-of-bounds errors by using whichever comes sooner
+    end = Math.min(end, length - 1);
+
+    // Build the posts
+    for (let i = begin; i < end; i++) {
+        buildPost(data.posts[i]);
+    }
+    */
 }
 
 function buildPost (post) {
@@ -142,6 +176,8 @@ function buildPost (post) {
     scoreDiv.appendChild(reactButton);
     scoreDiv.appendChild(deleteButton);
 
+    scoreCol.appendChild(scoreDiv);
+
     // The right column of the row - contains the post's author, date/time, and post text
     let contentCol = document.createElement("div");
     contentCol.className = "col-11";
@@ -178,6 +214,13 @@ function buildPost (post) {
 
     contentCol.appendChild(postInfo);
     contentCol.appendChild(postContent);
+
+    row.appendChild(scoreCol);
+    row.appendChild(contentCol);
+
+    card.appendChild(row);
+
+    document.getElementById("postList").appendChild(card);
 }
 
 function buildBoardHeader (board) {

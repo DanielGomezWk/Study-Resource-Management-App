@@ -33,52 +33,36 @@ $('#tempForm').click(function (e) {
     return false;
 });
 
-$('#tempForm').click(function (e) {
+$('#inviteButton').click(function (e) {
     e.preventDefault();
-    let msg = document.getElementById("messageTemp").value;
-    let userEmail = document.getElementById("emailTemp").value;
-    let bId = document.getElementById("boardIDTemp").value;
-    let gId = document.getElementById("groupIDTemp").value;
+    let inviteEmail = document.getElementById("inviteEmailInvite").value;
+    let userEmail = document.getElementById("userEmailInvite").value;
+    let groupID = document.getElementById("groupIDInvite").value;
+    let reqTypeInvite = document.getElementById("reqTypeInvite").value;
     $.ajax({
         type: 'POST',
-        url: '/groupPageCreatePost/1',
+        url: '/groupInviteUser',
         data: {
-            message: msg,
-            email: userEmail,
-            boardID: bId,
-            groupID: gId
+            inviteEmail: inviteEmail,
+            userEmail: userEmail,
+            groupID: groupID,
+            reqTypeInvite
         },
         success: (result) => {
-            console.log("Message successfully sent to the server and returned!");
+            console.log("Invite Request was successfully Sent!");
             console.log(result);
         },
         error: () => {
-            console.log("Message was not successfully sent and/or returned!");
+            console.log("Invite Request was unsuccessfully Sent");
         }
     });
     return false;
 });
 
-// $('#inviteButton').click(function (e) {
-//     e.preventDefault();
-//     let email = document.getElementById("email").value;
-//     $.ajax({
-//         type: 'POST',
-//         url: '/groupPage/1/',
-//         data: {
-//             message: msg,
-//             email: userEmail,
-//         },
-//         success: (result) => {
-//             console.log("Message successfully sent to the server and returned!");
-//             console.log(result);
-//         },
-//         error: () => {
-//             console.log("Message was not successfully sent and/or returned!");
-//         }
-//     });
-//     return false;
-// });
+function userInvited(data) {
+    console.log(data);
+    //todo: display notification to user
+}
 
 function addIdToForm() {
     let data =document.getElementById("group").innerHTML;
@@ -94,8 +78,12 @@ function addIdToForm() {
     let boardID = document.getElementById("boardIDTemp");
     let groupID = document.getElementById("groupIDTemp");
     let inviteGroupID = document.getElementById("groupIDInvite");
+    let userEmailInvite = document.getElementById("userEmailInvite");
+    let reqTypeInvite = document.getElementById("reqTypeInvite");
 
+    reqTypeInvite.value = "userInviteGroup";
     inviteGroupID.value = 1;
+    userEmailInvite.value = "john@joe";
     email.value = "john@joe";
     boardID.value = 40;
     groupID.value = 1;
