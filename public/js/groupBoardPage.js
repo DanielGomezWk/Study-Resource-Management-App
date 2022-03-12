@@ -1,6 +1,5 @@
 // TODO:
 // - Add post creation
-// - Add pagination
 // - Add post reacting
 // - Add post deletion
 
@@ -27,8 +26,8 @@ window.onload = () => {
 
     // If there is only one page, there are no other pages to navigate to
     if (currentPage === 1) {
-        document.getElementById("nextPageAnch").className = "page-item disabled";
-        document.getElementById("prevPageAnch").className = "page-item disabled";
+        document.getElementById("nextPageBtn").className = "page-item disabled";
+        document.getElementById("prevPageBtn").className = "page-item disabled";
     }
 
     showPosts();
@@ -65,12 +64,12 @@ function showPosts() {
 
 function showNext() {
     currentPage++;
-    // Enable the previous button
-    document.getElementById("prevPageAnch").className = "page-item";
+    // (Re-)Enable the previous button: Enable button and (re)add onclick to anchor
+    document.getElementById("prevPageBtn").className = "page-item";
     document.getElementById("prevPageAnch").setAttribute("onclick", "showNext()");
 
     // Change the current page
-    document.getElementById("currentPageBtn").innerText = currentPage;
+    document.getElementById("currentPageAnch").innerText = currentPage;
 
     console.log("currentPage: " + currentPage);
     console.log("maxPages: " + maxPages);
@@ -79,28 +78,25 @@ function showNext() {
     if (currentPage === maxPages) {
         console.log("in");
         document.getElementById("nextPageAnch").onclick = "";
-        document.getElementById("nextPageAnch").className = "page-item disabled";
+        document.getElementById("nextPageBtn").className = "page-item disabled";
     }
     showPosts();
 }
 function showPrevious() {
     currentPage--;
-    // Enable the next button
-    document.getElementById("nextPageAnch").className = "page-item";
+    // (Re-)Enable the next button: Enable button and (re)add onclick to anchor
+    document.getElementById("nextPageBtn").className = "page-item";
     document.getElementById("nextPageAnch").setAttribute("onclick", "showNext()");
 
-    // Change the current page
-    document.getElementById("currentPageBtn").innerText = currentPage;
-
-    console.log("currentPage: " + currentPage);
-    console.log("maxPages: " + maxPages);
-    console.log(currentPage === 1);
+    // Change the current page in the current page anchor
+    document.getElementById("currentPageAnch").innerText = currentPage;
 
     // Disable the previous button (if on the first page)
     if (currentPage === 1) {
-        console.log("in");
+        // Remove the onclick from the anchor
         document.getElementById("prevPageAnch").onclick = "";
-        document.getElementById("prevPageAnch").className = "page-item disabled";
+        // Disable the button
+        document.getElementById("prevPageBtn").className = "page-item disabled";
     }
     showPosts();
 }
