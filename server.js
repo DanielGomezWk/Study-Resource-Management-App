@@ -36,6 +36,7 @@ const io = socket(server);
 io.sockets.on('connection', function(socket) {
   // once a client has connected, we force them to join a room labeled as their own session id
   console.log("USER HAS CONNECTED TO SOCKET SERVER");
+  console.log(socket);
   socket.on('user', function(session) {
     console.log("CREATING ROOM: " + session);
     socket.join(session);
