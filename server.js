@@ -120,7 +120,7 @@ app.get("/groupMenuPage", (req, res) => {
 
 app.post("/groupMenuPage", (req, res) => {
   let id = req.body.group_id;
-
+  req.session.reqType = req.body.reqType;
   res.redirect("/groupPage/" + id);
 });
 app.get("/groupPage/:groupID", (req, res) => {
