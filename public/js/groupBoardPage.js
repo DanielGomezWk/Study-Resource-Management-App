@@ -66,18 +66,16 @@ function showNext() {
     currentPage++;
     // (Re-)Enable the previous button: Enable button and (re)add onclick to anchor
     document.getElementById("prevPageBtn").className = "page-item";
-    document.getElementById("prevPageAnch").setAttribute("onclick", "showNext()");
+    document.getElementById("prevPageAnch").setAttribute("onclick", "showPrevious()");
 
     // Change the current page
     document.getElementById("currentPageAnch").innerText = currentPage;
 
-    console.log("currentPage: " + currentPage);
-    console.log("maxPages: " + maxPages);
-    console.log(currentPage === maxPages);
     // Disable the next button (if on the last page)
     if (currentPage === maxPages) {
-        console.log("in");
+        // Remove the onclick from the anchor
         document.getElementById("nextPageAnch").onclick = "";
+        // Disable the button
         document.getElementById("nextPageBtn").className = "page-item disabled";
     }
     showPosts();
