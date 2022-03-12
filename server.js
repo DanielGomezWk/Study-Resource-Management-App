@@ -64,12 +64,23 @@ app.get("/home", (req, res) => {
           if (err) console.log(err.stack);
           else {
             groups = response.rows;
-            const obj = {
-              user: user,
-              groups: groups
-            }
-            console.log(obj);
-            res.render("homePage", {obj: obj});
+
+            // getting the events they are a part of
+            const query3 = "WITH events AS (SELECT * FROM attend WHERE email = $1 and attending = true) " +
+                "SELECT * FROM event_ natural join events";
+            client.query(query3, values, (err, response) => {
+              if (err) console.log(err.stack);
+              else {
+                events = response.rows;
+                const obj = {
+                  user: user,
+                  groups: groups,
+                  events: events
+                }
+                console.log(obj);
+                res.render("homePage", {obj: obj});
+              }
+            });
           }
         });
       }
@@ -341,6 +352,8 @@ function login_register(req, res){
   let regPass = req.body.registerPassword;
   let first = req.body.first;
   let last = req.body.last;
+
+  console.log(req.body);
 
   // did the user register?
   if (Object.keys(req.body).includes("registerBtn")){

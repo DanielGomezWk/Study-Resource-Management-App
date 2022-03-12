@@ -18,14 +18,13 @@
     body{
       background: rgb(156, 102, 209);
     }
-    .row{
+    .main{
       background: rgb(132, 74, 187);
       border-radius: 30px;
       box-shadow: 12px 12px 22px grey;
     }
     img{
-      border-top-left-radius: 30px;
-      border-bottom-left-radius: 30px;
+      border-radius: 30px;
     }
     .btn1{
       border: none;
@@ -47,11 +46,11 @@
 <body>
 <section class="Form my-4 mx-5">
   <div class="container">
-    <div class="row no-gutters">
+    <div class="row no-gutters main">
       <div class="col-lg-5">
         <img src="/pictures/psu.jpg" class= "img-fluid mt-5" alt="">
       </div>
-      <div class="col-lg-7 px-5 pt-5">
+      <div id="login-form" class="col-lg-7 px-5 pt-7 pb-3" style="display: block">
         <h1 class="font-weight-bold py-3">Cubchat</h1>
         <h4>Sign into your account</h4>
         <form action = "/" method = "post">
@@ -70,9 +69,39 @@
               <button type="submit" class="btn1 mt-3 mb-5">Login</button>
             </div>
           </div>
-          <a href="#">Forgot password</a>
-          <p> Don't have an account <a href="#" >Register here</a></p>
+          <h6>Need an Account?</h6>
         </form>
+        <button name="loginBtn" class="btn btn-outline-light" onclick="changeForm();" style="padding-bottom: 5px">Register Here</button>
+      </div>
+
+      <div id="register-form" class="col-lg-7 px-5 pt-7 pb-3" style="display:none">
+        <h1 class="font-weight-bold py-3">Cubchat</h1>
+        <h4>Register an account</h4>
+        <form action = "/" method = "post">
+          <div class="form-row row my-3">
+            <div class="col-lg-7">
+              <input type="email" name = "registerEmail" placeholder="Email Address" class="form-control p-4">
+            </div>
+            <div class="col-lg-5">
+              <input type="text" placeholder="John"  name = "first" class="form-control p-4">
+            </div>
+          </div>
+          <div class="form-row row mb-3">
+            <div class="col-lg-7">
+              <input type="password" placeholder="*******"  name = "registerPassword" class="form-control p-4">
+            </div>
+            <div class="col-lg-5">
+              <input type="password" placeholder="Wick"  name = "last" class="form-control p-4">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-lg-7">
+              <button name="registerBtn" type="submit" class="btn1 mt-3 mb-5">Register</button>
+            </div>
+          </div>
+          <h6>Have an Account?</h6>
+        </form>
+        <button class="btn btn-outline-light" onclick="changeForm();" style="padding-bottom: 5px">Login Here</button>
       </div>
     </div>
   </div>
@@ -80,5 +109,24 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+
+<script>
+function changeForm(){
+  if (document.getElementById("login-form").style.display === "none"){
+    document.getElementById("register-form").style.display = "none";
+    document.getElementById("login-form").style.display = "block";
+  }
+  else {
+    document.getElementById("login-form").style.display = "none";
+    document.getElementById("register-form").style.display = "block";
+  }
+}
+
+// function showLogin(){
+//   document.getElementById("register-form").style.display = "none";
+//   document.getElementById("login-form").style.display = "block";
+// }
+</script>
+
 </body>
 </html>
