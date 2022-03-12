@@ -184,23 +184,9 @@
 <script>
   var socket = io();
   console.log(document.getElementById("user").innerHTML);
+  let d = document.getElementById("user").innerHTML;
+  console.log(d.user);
   let user = JSON.parse(document.getElementById("user").innerHTML);
-
-  function foo(obj) {
-
-    let email = obj.email
-    let password = obj.password
-    let first = obj.first
-    let last = obj.last
-    let bio = obj.bio
-    let status = obj.status
-    let location = obj.location
-    let cubvotes = obj.cubvotes
-
-    document.getElementById("nameBanner").innerText = "Hello, " + first + "!"
-    document.getElementById("bioText").innerText = bio
-    document.getElementById("cubvotes").innerText = "My cubvotes: " + cubvotes
-  }
 
   window.onload = () => {
     let user  = document.getElementById("user").innerHTML;
@@ -210,7 +196,6 @@
       // Connected, let's sign-up for to receive messages for this room
       socket.emit('user', session);
     });
-    foo(user);
   }
 
 </script>
