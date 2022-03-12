@@ -86,7 +86,7 @@ app.get("/home", (req, res) => {
                   events: events
                 }
                 console.log(obj);
-                res.render("homePage", {obj: obj});
+                res.render("homePage", {obj: JSON.stringify(obj)});
               }
             });
           }
