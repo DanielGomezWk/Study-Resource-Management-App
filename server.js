@@ -756,6 +756,9 @@ function userInviteGroup(req, res, userEmail, inviteEmail, groupID) {
                     inviteDate: inviteDate
                   }
 
+                  console.log("1111+++++++++++=111+++++++++++++");
+                  console.log("I AM ABOUT TO SEND AN INVITE TO " + inviteEmail);
+                  console.log("1111+++++++++++=111+++++++++++++");
                   //sending notification to invited user
                   io.sockets.in(inviteEmail).emit('invitedToGroup', invObj);
 
