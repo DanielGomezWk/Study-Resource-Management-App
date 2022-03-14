@@ -32,23 +32,23 @@ const server = app.listen(port, function() {
 });
 const io = socket(server);
 
-// handle incoming connections from clients
-io.sockets.on('connection', function(socket) {
-    // once a client has connected, we expect to get a ping from them saying what room they want to join
-    console.log("IN CONNECTION NAMESPACE");
-  console.log("stringified socket: " + JSON.parse(socket));
-  console.log("socket obj: " + socket);
-  console.log("socket[0] obj: " + socket[0]);
-    console.log("about to to enter socket.on user");
-    socket.on('user', function(session) {
-      console.log("Made it to after socket.on user");
-        console.log("session obj?: " + session);
-        console.log("session[0] obj?: " + session[0]);
-        socket.join(session);
+// // handle incoming connections from clients
+// io.sockets.on('connection', function(socket) {
+//     // once a client has connected, we expect to get a ping from them saying what room they want to join
+//     console.log("IN CONNECTION NAMESPACE");
+//   console.log("stringified socket: " + JSON.parse(socket));
+//   console.log("socket obj: " + socket);
+//   console.log("socket[0] obj: " + socket[0]);
+//     console.log("about to to enter socket.on user");
+//     socket.on('user', function(session) {
+//       console.log("Made it to after socket.on user");
+//         console.log("session obj?: " + session);
+//         console.log("session[0] obj?: " + session[0]);
+//         socket.join(session);
       
-      console.log(session + " room created!");
-    });
-});
+//       console.log(session + " room created!");
+//     });
+// });
 
 // user login/register Page
 app.get("/", (req, res) => {
