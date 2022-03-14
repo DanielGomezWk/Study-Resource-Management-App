@@ -529,7 +529,7 @@ function createPost(req, res) {
           }
           //sending post to any user currently using the homepage
           console.log("what is happening!?!!!!!!!!!!????");
-          io.emit('post', newMessage);
+//           io.emit('post', newMessage);
           //sending object back to user
           res.json(newMessage);
         }
@@ -770,7 +770,7 @@ function userInviteGroup(req, res, userEmail, inviteEmail, groupID) {
                   console.log("I AM ABOUT TO SEND AN INVITE TO " + inviteEmail);
                   console.log("1111+++++++++++=111+++++++++++++");
                   //sending notification to invited user
-                  io.sockets.in(inviteEmail).emit('invitedToGroup', invObj);
+//                   io.sockets.in(inviteEmail).emit('invitedToGroup', invObj);
 
                   //notifying user that a request was sent to the invited user
                   let data = { requestSent: true }
