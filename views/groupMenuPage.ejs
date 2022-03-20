@@ -10,12 +10,62 @@
   <body>
   <%-include("partials/navAndSidebar")-%>
     <h1>All Groups</h1>
+    <button style="position: fixed; bottom: 10%; right: 5%" data-bs-toggle="modal" data-bs-target="#createModal" class="btn btn-lg btn-outline-success">Create a Group</button>
 
+  <!-- Create Group Modal -->
+  <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Create Group</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id ="postReq" action = "/createGroup" method = "post">
+            <div class="form-group">
+              <label for="exampleInputEmail1">Group Name</label>
+              <input type= "text" name = "groupName" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Group name">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1">Group Description</label>
+              <input type="text" name = "groupDesc" class="form-control" id="exampleInputPassword1" placeholder="Enter Group Desc">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1">Privacy</label>
+              <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked value="false">
+                <label class="btn btn-outline-info" for="btnradio1">Public</label>
+
+                <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" value="true">
+                <label class="btn btn-outline-dark" for="btnradio2">Private</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1">Group Main Tag</label>
+              <select class="form-control" name="tag">
+                <option value="Course">Course</option>
+                <option value="Extracurricular">Extracurricular</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1">Group Picture (URL)</label>
+              <input type="text" name = "grouppic" class="form-control" id="pic" placeholder="Enter Board Desc">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <h2>Courses</h2>
     <div class="container-fluid">
       <% let counter = 0;%>
       <% let rowClosed; %>
       <% groups.forEach((group) => { %>
-         <%# if we hit a 6th item, create a new row  %>
+        <% if (group.tagnames != "Course") return;%>
+         <%# if we hit a 4th? item, create a new row  %>
         <% if (counter % 4 == 0) { %>
         <div class="row justify-content-center">
           <% rowClosed = false; %>
@@ -41,6 +91,72 @@
           <% counter++; %>
       <%});%>
     </div>
+
+  <h2>Extracurriculars</h2>
+  <div class="container-fluid">
+    <% counter = 0;%>
+    <% rowClosed = false; %>
+    <% groups.forEach((group) => { %>
+      <% if (group.tagnames != "Extracurricular") return;%>
+      <%# if we hit a 4th? item, create a new row  %>
+      <% if (counter % 4 == 0) { %>
+      <div class="row justify-content-center">
+        <% rowClosed = false; %>
+        <% } %>
+        <%# start of group card   %>
+        <div class="col-sm">
+          <div class="card mb-3" style="width: 18rem; height: 15rem">
+            <div class="card-body">
+              <h2 class="card-title"><%=group.group_name%></h2>
+              <p class="card-text"><%=group.group_desc%></p>
+              <form action="/groupMenuPage" method="post">
+                <input type="text" name="group_id" style="display:none" value=<%=group.group_id%>>
+                <input type="text" name="reqType" style="display:none" value= "groupMenuPage">
+                <button type="submit" style = "width: 100%" name="button" class="btn btn-primary btn-block">Join</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <% if (counter % 4 == 3) {%>
+          <% rowClosed = true %>
+      </div>
+      <%}%>
+      <% counter++; %>
+    <%});%>
+  </div>
+
+  <h2>Other</h2>
+  <div class="container-fluid">
+    <% counter = 0;%>
+    <% rowClosed = false; %>
+    <% groups.forEach((group) => { %>
+      <% if (group.tagnames != "Other") return;%>
+      <%# if we hit a 4th? item, create a new row  %>
+      <% if (counter % 4 == 0) { %>
+      <div class="row justify-content-center">
+        <% rowClosed = false; %>
+        <% } %>
+        <%# start of group card   %>
+        <div class="col-sm">
+          <div class="card mb-3" style="width: 18rem; height: 15rem">
+            <div class="card-body">
+              <h2 class="card-title"><%=group.group_name%></h2>
+              <p class="card-text"><%=group.group_desc%></p>
+              <form action="/groupMenuPage" method="post">
+                <input type="text" name="group_id" style="display:none" value=<%=group.group_id%>>
+                <input type="text" name="reqType" style="display:none" value= "groupMenuPage">
+                <button type="submit" style = "width: 100%" name="button" class="btn btn-primary btn-block">Join</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <% if (counter % 4 == 3) {%>
+          <% rowClosed = true %>
+      </div>
+      <%}%>
+      <% counter++; %>
+    <%});%>
+  </div>
 
   <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js"></script>

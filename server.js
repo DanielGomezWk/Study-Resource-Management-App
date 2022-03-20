@@ -101,7 +101,7 @@ app.post("/group", (req, res) => {
 });
 
 app.get("/groupMenuPage", (req, res) => {
-  const query = "SELECT * FROM group_ WHERE private = false";
+  const query = "SELECT * FROM group_ natural join grouptags WHERE private = false";
   client.query(query, (err, response) => {
     if (err) console.log(err.stack);
     else {
@@ -115,6 +115,12 @@ app.post("/groupMenuPage", (req, res) => {
 
   res.redirect("/groupPage/" + id);
 });
+
+// creating a group from the group menu page
+app.post("/createGroup", (req, res) => {
+  makeGroup(req, res);
+})
+
 app.get("/groupPage/:groupID", (req, res) => {
 
   // save the group_id
@@ -574,7 +580,11 @@ function makeGroup(req, res) {
   let leaderEmail = req.session.email;
   let gDesc = req.body.groupDesc;
   let gName = req.body.groupName;
-  let priv = false;
+  let priv = req.body.btnradio === "true";
+  let tag = req.body.tag;
+  let pic = req.body.grouppic;
+
+  console.log(req.body);
 
   //Creating new group
   const query = "INSERT INTO group_(group_id, leader, group_name, group_desc, private) VALUES($1, $2, $3, $4, $5)";
@@ -589,13 +599,15 @@ function makeGroup(req, res) {
       console.log(err.stack)
       res.redirect("/group")
     } else {
+
+      // insert user into the member table
       let joinDate = new Date;
       let inviteDate = joinDate;
       let status = true;
       const query = "INSERT INTO member_(email, groupid, status, joindate, invitedate) VALUES($1, $2, $3, $4, $5)";
       const values = [leaderEmail, gId, status, joinDate, inviteDate];
-
       client.query(query, values, (err, response) => {
+        // failed member insertion
         if (err) {
           console.log("makeGroup broke! again");
           console.log(err.stack);
@@ -611,8 +623,17 @@ function makeGroup(req, res) {
           } catch (e) {
             console.log(e.stack);
           }
+          // successful member insertion
         } else {
-          res.redirect("/home");
+          // insert group and tag into grouptags
+          const query = "INSERT INTO grouptags(group_id, tagnames) VALUES ($1, $2)";
+          const values = [gId, tag];
+          client.query(query, values, (err, response) => {
+            if (err) console.log(err)
+            else {
+              res.redirect("/groupMenuPage");
+            }
+          });
         }
       });
     }
