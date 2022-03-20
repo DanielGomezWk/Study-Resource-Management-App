@@ -119,7 +119,7 @@ app.get("/groupPage/:groupID", (req, res) => {
 
   // save the group_id
   const groupID = req.url.split("/groupPage/")[1];
-  let group, posts, events, boards;
+  let group, posts, events, boards, tags;
 
   // the user has joined the group
   joinGroup(req, groupID);
@@ -147,16 +147,24 @@ app.get("/groupPage/:groupID", (req, res) => {
             if (err) console.log(err.stack);
             else {
               boards = response.rows;
-
-              //json data to send back to group home page
-              const groupObj = {
-                group: group,
-                events: events,
-                boards: boards
-              };
-
-              //sending data to groupHomePage
-              res.render("groupHomePage", {group: JSON.stringify(groupObj)});
+              
+              // get grouptags
+              const query4 = "SELECT tagnames FROM grouptags WHERE group_id = $1"
+              client.query(query4, values, (err, response) => {
+                if (err) console.log(err.stack);
+                else {
+                  tags = response.rows;
+                  //json data to send back to group home page
+                  const groupObj = {
+                    group: group,
+                    events: events,
+                    boards: boards,
+                    tags: tags
+                  };
+                  //sending data to groupHomePage
+                  res.render("groupHomePage", {group: JSON.stringify(groupObj)});
+                }
+              })
             }
           });
         }
