@@ -569,13 +569,6 @@ function deletePost(req, res) {
     }
   });
 }
-function cubvote(req, res) {
-  let pID = req.body.postID;
-  let email = req.body.email;
-  let sID = req.session.email;
-
-  //TODO: need to create table that tracks people who cubvoted already before querying
-}
 function makeGroup(req, res) {
   let gId = Math.floor(Math.random() * 100000000);
   let leaderEmail = req.session.email;
@@ -862,4 +855,39 @@ function showInvites(req, res){
       });
     }
   });
+}
+
+function addCubvoteToPost(req, res){
+  let email = req.body.email;
+  let pId = req.body.postID;
+
+  //verifying to see if current user is session holder
+  //session does not match
+  if (email !== req.session.email) {
+    console.log("Cannot cubvote post, current user does not match session!");
+  }
+  //session matches
+  else {
+    //Verifying to see if current user cubvoted
+    let query =
+            "SELECT * " +
+            "FROM cubvoted " +
+            "WHERE email = $1 AND postid = $2";
+    let values = [email, pId];
+
+    client.query(query, values, (err, response) => {
+      if (err) {
+        console.log("Cannot cubvote post for user. User already cubvoted post!");
+        console.log("****************************************************");
+        console.log(err.stack);
+        console.log("****************************************************");
+      }
+      //User verified, checking to see if user cubvoted
+      else {
+        if (response.query) {
+
+        }
+      }
+    });
+  }
 }
