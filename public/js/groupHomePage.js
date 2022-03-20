@@ -108,7 +108,7 @@ function createEvent (event) {
     console.log(event);
     
     let date = event.startdate + " " + event.starttime + " - " + event.enddate + " " + event.endtime;
-    let url = "http://cubchat3.herokuapp.com/eventHomePage/" + event.eventid;
+    let url = "eventHomePage/" + event.eventid;
 
     let eventAnchor = document.createElement("a");
     eventAnchor.className = "list-group-item list-group-item-action";
