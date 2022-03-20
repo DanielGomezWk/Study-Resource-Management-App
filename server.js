@@ -830,7 +830,7 @@ function addCubvoteToPost(req, res){
       }
       //User didn't upvote, inserting cubvote
       else {
-        if (response.rows[0] === null) {
+        if (response.rows.length === 0) {
           let query =
               "INSERT INTO cubvoted(postid, email) VALUES($1, $2)";
           let values = [pId, email];
@@ -864,7 +864,27 @@ function createTag(req, res) {
           err.stack;
           console.log("------------------------------");
         } else {
-          res.redirect("groupHome/" + gId);
+          query =
+              "SELECT * " +
+              "FROM grouptags " +
+              "where tagnames = $1 AND group_id = $2";
+          values = [tagname, gId];
+          client.query(query, values, (err, response) => {
+            //INSERTING tag into grouptags
+            if(response.rows.length === 0) {
+              query = "INSERT INTO grouptags(group_id, tagnames) VALUES ($1,$2)";
+              values = [gId, tagname];
+              client.query(query, values, (err, response) => {
+                if (err) {
+                  console.log(err.stack);
+                } else {
+                  res.redirect("groupPage/" + gId);
+                }
+              })
+            } else {
+              console.log("tag is already in grouptags");
+            }
+          });
         }
       });
     } else {
