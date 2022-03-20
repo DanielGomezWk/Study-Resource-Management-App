@@ -882,10 +882,18 @@ function addCubvoteToPost(req, res){
         console.log(err.stack);
         console.log("****************************************************");
       }
-      //User verified, checking to see if user cubvoted
+      //User didn't upvote, inserting cubvote
       else {
-        if (response.query) {
-
+        if (response.rows[0] === null) {
+          let query =
+              "INSERT INTO cubvoted(postid, email) VALUES($1, $2)";
+          let values = [pId, email];
+          client.query(query, values, (err, response) => {
+            if (err) {
+            } else {
+              //successfully cubvoted
+            }
+          });
         }
       }
     });
