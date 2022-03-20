@@ -101,7 +101,7 @@ app.post("/group", (req, res) => {
 });
 
 app.get("/groupMenuPage", (req, res) => {
-  const query = "SELECT * FROM group_ WHERE private = false";
+  const query = "SELECT * FROM group_ natural join grouptags WHERE private = false";
   client.query(query, (err, response) => {
     if (err) console.log(err.stack);
     else {
