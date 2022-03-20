@@ -32,24 +32,6 @@ const server = app.listen(port, function() {
 });
 const io = socket(server);
 
-// // handle incoming connections from clients
-// io.sockets.on('connection', function(socket) {
-//     // once a client has connected, we expect to get a ping from them saying what room they want to join
-//     console.log("IN CONNECTION NAMESPACE");
-//   console.log("stringified socket: " + JSON.parse(socket));
-//   console.log("socket obj: " + socket);
-//   console.log("socket[0] obj: " + socket[0]);
-//     console.log("about to to enter socket.on user");
-//     socket.on('user', function(session) {
-//       console.log("Made it to after socket.on user");
-//         console.log("session obj?: " + session);
-//         console.log("session[0] obj?: " + session[0]);
-//         socket.join(session);
-      
-//       console.log(session + " room created!");
-//     });
-// });
-
 // user login/register Page
 app.get("/", (req, res) => {
   let login_reg_status = {
@@ -96,7 +78,7 @@ app.get("/home", (req, res) => {
                   events: events
                 }
                 console.log(obj);
-                res.render("homePage", { obj: obj, email: obj.user.email, sObj: JSON.stringify(obj)});
+                res.render("homePage", {sObj: JSON.stringify(obj), obj: obj, email: req.session.email});
               }
             });
           }
@@ -130,71 +112,57 @@ app.get("/groupMenuPage", (req, res) => {
 
 app.post("/groupMenuPage", (req, res) => {
   let id = req.body.group_id;
-  req.session.reqType = req.body.reqType;
+
   res.redirect("/groupPage/" + id);
 });
 app.get("/groupPage/:groupID", (req, res) => {
-  let reqType = req.session.reqType;
-  console.log("*********************************");
-  console.log(reqType);
-  console.log("**********************************");
-  if (reqType === "groupMenuPage") {
-    req.session.reqType = null;
-    // save the group_id
-    const groupID = req.url.split("/groupPage/")[1];
-    let group, posts, events, boards;
 
-    // the user has joined the group
-    joinGroup(req, groupID);
+  // save the group_id
+  const groupID = req.url.split("/groupPage/")[1];
+  let group, posts, events, boards;
 
-    // get the group info
-    const query = "SELECT * FROM group_ WHERE group_id = $1";
-    const values = [groupID];
-    client.query(query, values, (err, response) => {
-      if (err) console.log(err.stack);
-      else {
-        group = response.rows[0];
+  // the user has joined the group
+  joinGroup(req, groupID);
 
-        // get the events
-        const query2 = "SELECT * FROM event_ WHERE groupid = $1";
-        client.query(query2, values, (err, response) => {
-          if (err) console.log(err.stack);
-          else {
-            events = response.rows;
+  // get the group info
+  const query = "SELECT * FROM group_ WHERE group_id = $1";
+  const values = [groupID];
+  client.query(query, values, (err, response) => {
+    if (err) console.log(err.stack);
+    else {
+      group = response.rows[0];
 
-            // get the boards
-            const query3 = "WITH boardTemp AS (" +
-                "SELECT boardid FROM boardlist WHERE groupid = $1)" +
-                "SELECT * FROM board natural join boardTemp";
-            client.query(query3, values, (err, response) => {
-              if (err) console.log(err.stack);
-              else {
-                boards = response.rows;
+      // get the events
+      const query2 = "SELECT * FROM event_ WHERE groupid = $1";
+      client.query(query2, values, (err, response) => {
+        if (err) console.log(err.stack);
+        else {
+          events = response.rows;
 
-                //json data to send back to group home page
-                const groupObj = {
-                  group: group,
-                  events: events,
-                  boards: boards
-                };
+          // get the boards
+          const query3 = "WITH boardTemp AS (" +
+              "SELECT boardid FROM boardlist WHERE groupid = $1)" +
+              "SELECT * FROM board natural join boardTemp";
+          client.query(query3, values, (err, response) => {
+            if (err) console.log(err.stack);
+            else {
+              boards = response.rows;
 
-                //sending data to groupHomePage
-                res.render("groupHomePage", {group: JSON.stringify(groupObj)});
-              }
-            });
-          }
-        });
-      }
-    });
-  } else {
-    req.session.reqType = null;
-    let groupID = (req.url.split("/"))[2];
-    let userEmail = req.session.userEmail;
-    let inviteEmail = req.session.inviteEmail;
-    req.session.userEmail = null;
-    req.session.inviteEmail = null;
-    userInviteGroup(req, res, userEmail, inviteEmail, groupID);
-  }
+              //json data to send back to group home page
+              const groupObj = {
+                group: group,
+                events: events,
+                boards: boards
+              };
+
+              //sending data to groupHomePage
+              res.render("groupHomePage", {group: JSON.stringify(groupObj)});
+            }
+          });
+        }
+      });
+    }
+  });
 });
 // Send Notification API
 // app.post('/createPost', (req, res) => {
@@ -231,12 +199,22 @@ app.post("/addBoard",(req, res) => {
 
 //post request handling for giving a user a group invite
 app.post("/groupInviteUser", (req, res) => {
-  req.session.reqType = req.body.reqType;
-  console.log("reqType from body: " + req.body.reqType);
-  console.log("reqType from Session: " + req.body.reqType);
-  req.session.userEmail = req.body.userEmail;
-  req.session.inviteEmail = req.body.inviteEmail;
-  res.redirect("/groupPage/" + req.body.groupID);
+  let userEmail = req.body.userEmail;
+  let inviteEmail = req.body.inviteEmail;
+  let groupID = req.body.groupID;
+  req.body.userEmail = email;
+  req.body.inviteEmail = inviteEmail;
+  res.redirect("/groupPage/" + groupID);
+});
+//get request handling for returning a notification for a group invite for a user
+app.get("/groupPage/:groupID", (req, res) => {
+  let groupID = (req.url.split("/"))[2];
+  let userEmail = req.body.userEmail;
+  let inviteEmail = req.body.inviteEmail;
+  req.body.userEmail = null;
+  req.body.inviteEmail = null;
+
+  groupInviteUser(req, res, userEmail, inviteEmail, groupID);
 });
 
 
@@ -528,8 +506,8 @@ function createPost(req, res) {
             date: date
           }
           //sending post to any user currently using the homepage
-          console.log("what is happening!?!!!!!!!!!!????");
-//           io.emit('post', newMessage);
+          io.emit('post', newMessage);
+
           //sending object back to user
           res.json(newMessage);
         }
@@ -568,6 +546,13 @@ function deletePost(req, res) {
       });
     }
   });
+}
+function cubvote(req, res) {
+  let pID = req.body.postID;
+  let email = req.body.email;
+  let sID = req.session.email;
+
+  //TODO: need to create table that tracks people who cubvoted already before querying
 }
 function makeGroup(req, res) {
   let gId = Math.floor(Math.random() * 100000000);
@@ -674,6 +659,7 @@ function createBoard(req, res) {
     }
   });
 }
+
 function deleteBoard(req, res) {
   let gId = req.body.groupID;
   let bId = req.body.boardID;
@@ -697,7 +683,7 @@ function deleteBoard(req, res) {
   });
 }
 
-function userInviteGroup(req, res, userEmail, inviteEmail, groupID) {
+function groupInviteUser(req, res, userEmail, inviteEmail, groupID) {
   let sId = req.session.email;
 
   if (userEmail === sId) {
@@ -708,71 +694,17 @@ function userInviteGroup(req, res, userEmail, inviteEmail, groupID) {
     let banned = false;
 
 
-    //querying to see if user who is sending invite is in the group member table
     let query =
         "SELECT email " +
-        "FROM member_ " +
-        "WHERE groupid = $1 AND email = $2";
-    let values = [groupID, userEmail];
+        "FROM members_ " +
+        "WHERE groupid = ";
+    let values = [];
+
     client.query(query, values, (err, response) => {
       if (err) {
-        console.log("email: " + userEmail + ", groupID: " + groupID + " => could not query for email in members_ table with previous values");
-        console.log(err.stack);
+
       } else {
-        //the user inviting the person is NOT in the group
-        console.log(response.rows[0].email);
-        if (response.rows[0].email === null) {
-          console.log("Could not query user email from \"member_\"!");
-          console.log("-----------------------------------------------------");
-        }
-        //the user inviting the person IS in the group
-        else {
-          //inserting user into members_ table
-          let query =
-              "INSERT INTO member_ VALUES($1, $2, $3, $4, $5, $6, $7)";
-          let values = [inviteEmail, groupID, status, inviteDate, joinDate, moderator, banned];
-          client.query(query, values, (err, response) => {
-            if (err) {
-              console.log("User: " + inviteEmail + "=> cannot be insert into member_ table");
-              console.log("----------------------------------");
-              console.log(err.stack);
-              console.log("----------------------------------");
-            }
-            else {
-              let query =
-                  "SELECT group_name " +
-                  "FROM group_ " +
-                  "WHERE group_id = $1";
-              let values = [groupID];
-              client.query(query, values, (err, response) => {
-                if (err) {
-                  console.log("group_id: " + groupID + " => not in group_ table");
-                  console.log("----------------------------------");
-                  console.log(err.stack);
-                  console.log("----------------------------------");
-                } else {
-                  let groupname = response.rows[0];
-                  let invObj = {
-                    type: "groupInvite",
-                    groupName: groupname,
-                    groupID: groupID,
-                    inviteDate: inviteDate
-                  }
 
-                  console.log("1111+++++++++++=111+++++++++++++");
-                  console.log("I AM ABOUT TO SEND AN INVITE TO " + inviteEmail);
-                  console.log("1111+++++++++++=111+++++++++++++");
-                  //sending notification to invited user
-//                   io.sockets.in(inviteEmail).emit('invitedToGroup', invObj);
-
-                  //notifying user that a request was sent to the invited user
-                  let data = { requestSent: true }
-                  res.json(data);
-                }
-              });
-            }
-          });
-        }
       }
     });
   } else {

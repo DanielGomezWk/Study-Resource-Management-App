@@ -76,6 +76,9 @@ function addIdToForm() {
     postRoute.value = obj.group.group_id;
     console.log(obj.group.group_id);
 
+    // add to event form
+    document.getElementById("eGroupID").value = obj.group.group_id;
+
     //TEMPORARY CODE FOR SHOWING OFF MESSAGING
     //TODO: create proper containers/handling for messages
     let email = document.getElementById("emailTemp");
