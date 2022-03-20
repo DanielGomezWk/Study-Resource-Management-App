@@ -156,6 +156,7 @@ app.get("/groupPage/:groupID", (req, res) => {
                   tags = response.rows;
                   //json data to send back to group home page
                   const groupObj = {
+                    session: req.session.email,
                     group: group,
                     events: events,
                     boards: boards,
@@ -225,6 +226,11 @@ app.get("/groupPage/:groupID", (req, res) => {
   groupInviteUser(req, res, userEmail, inviteEmail, groupID);
 });
 
+// Adding cubvote to a post
+app.post("/cubvotePost", (req, res) => {
+  console.log("i made it to the route!");
+  addCubvoteToPost(req, res);
+});
 
 // invite a user to an event
 app.post("/eventInviteUser", (req, res) =>{
@@ -439,7 +445,9 @@ function displayBoard(req, res, boardID, groupID) {
           "FROM postlist WHERE boardid = $1) " +
           "SELECT email, first, last, users.cubvotes as uservotes, postid, postcontent, postdate, posttime, post.cubvotes as postvotes " +
           "FROM boardPostIDs natural join post, users " +
-          "WHERE email = postowner";
+          "WHERE email = postowner " +
+          "ORDER BY postdate ASC, " +
+          "posttime ASC";
       const values = [bId];
       client.query(query, values, (err, response) => {
         if (err) {
@@ -447,8 +455,9 @@ function displayBoard(req, res, boardID, groupID) {
         } else {
           let postss = response.rows;
           let data = {
+            session: req.session.email,
             boardInfo: boardInfo,
-            posts: postss
+            posts: postss,
           }
           res.render("groupBoardPage",{data: JSON.stringify(data)});
         }
@@ -467,6 +476,7 @@ function createPost(req, res) {
   const query = "INSERT INTO post(postid, postcontent, postowner, postdate, posttime, cubvotes) VALUES($1, $2, $3, $4, $5, $6)";
   const values = [pId, msg, email, date, time, cubVotes];
 
+
   client.query(query, values, (err, response) => {
     let bId = req.body.boardID;
     if (err) {
@@ -475,6 +485,7 @@ function createPost(req, res) {
       console.log(err.stack);
       console.log("------------------------------------------------------");
     } else {
+      console.log("about to insert into postlist!");
       //inserting post into postlist
       const query = "INSERT INTO postlist(boardid, postid) VALUES($1, $2)";
       const values = [bId, pId];
@@ -488,42 +499,32 @@ function createPost(req, res) {
           //querying for firstname of user to send back to group home page
           let query = "SELECT first FROM users WHERE email = $1";
           let values = [email];
-          let firstname;
           client.query(query, values, (err, response) => {
             if (err) {
               console.log("Error stack, could not successfully query user first name");
               console.log("------------------------------------------------------");
               console.log(err.stack);
               console.log("------------------------------------------------------");
-            } else { firstname = response.rows[0]; }
+            } else {
+
+              firstname = response.rows[0].first;
+              lastname = response.rows[0].last;
+
+              //putting post information into object
+              let newMessage = {
+                first: firstname.first,
+                last: lastname.last,
+                message: msg,
+                time: time,
+                date: date
+              }
+              //sending post to any user currently using the homepage
+              io.emit('post', newMessage);
+
+              //sending object back to user
+              res.json(newMessage);
+            }
           });
-
-          //querying for lastname of user to send back to group home page
-          query = "SELECT last FROM users WHERE email = $1";
-          values = [email];
-          let lastname;
-          client.query(query, values, (err, response) => {
-            if (err) {
-              console.log("Error stack, could not successfully query user last name");
-              console.log("------------------------------------------------------");
-              console.log(err.stack);
-              console.log("------------------------------------------------------");
-            } else { lastname = response.rows[0]; }
-          });
-
-          //putting post information into object
-          let newMessage = {
-            first: firstname.first,
-            last: lastname.last,
-            message: msg,
-            time: time,
-            date: date
-          }
-          //sending post to any user currently using the homepage
-          io.emit('post', newMessage);
-
-          //sending object back to user
-          res.json(newMessage);
         }
       });
     }
@@ -708,17 +709,71 @@ function groupInviteUser(req, res, userEmail, inviteEmail, groupID) {
     let banned = false;
 
 
+    //querying to see if user who is sending invite is in the group member table
     let query =
         "SELECT email " +
-        "FROM members_ " +
-        "WHERE groupid = ";
-    let values = [];
-
+        "FROM member_ " +
+        "WHERE groupid = $1 AND email = $2";
+    let values = [groupID, userEmail];
     client.query(query, values, (err, response) => {
       if (err) {
-
+        console.log("email: " + userEmail + ", groupID: " + groupID + " => could not query for email in members_ table with previous values");
+        console.log(err.stack);
       } else {
+        //the user inviting the person is NOT in the group
+        console.log(response.rows[0].email);
+        if (response.rows[0].email === null) {
+          console.log("Could not query user email from \"member_\"!");
+          console.log("-----------------------------------------------------");
+        }
+        //the user inviting the person IS in the group
+        else {
+          //inserting user into members_ table
+          let query =
+              "INSERT INTO member_ VALUES($1, $2, $3, $4, $5, $6, $7)";
+          let values = [inviteEmail, groupID, status, inviteDate, joinDate, moderator, banned];
+          client.query(query, values, (err, response) => {
+            if (err) {
+              console.log("User: " + inviteEmail + "=> cannot be insert into member_ table");
+              console.log("----------------------------------");
+              console.log(err.stack);
+              console.log("----------------------------------");
+            }
+            else {
+              let query =
+                  "SELECT group_name " +
+                  "FROM group_ " +
+                  "WHERE group_id = $1";
+              let values = [groupID];
+              client.query(query, values, (err, response) => {
+                if (err) {
+                  console.log("group_id: " + groupID + " => not in group_ table");
+                  console.log("----------------------------------");
+                  console.log(err.stack);
+                  console.log("----------------------------------");
+                } else {
+                  let groupname = response.rows[0];
+                  let invObj = {
+                    type: "groupInvite",
+                    groupName: groupname,
+                    groupID: groupID,
+                    inviteDate: inviteDate
+                  }
 
+                  console.log("1111+++++++++++=111+++++++++++++");
+                  console.log("I AM ABOUT TO SEND AN INVITE TO " + inviteEmail);
+                  console.log("1111+++++++++++=111+++++++++++++");
+                  //sending notification to invited user
+                  io.sockets.in(inviteEmail).emit('invitedToGroup', invObj);
+
+                  //notifying user that a request was sent to the invited user
+                  let data = { requestSent: true }
+                  res.json(data);
+                }
+              });
+            }
+          });
+        }
       }
     });
   } else {
@@ -804,7 +859,9 @@ function showInvites(req, res){
 }
 
 function addCubvoteToPost(req, res){
-  let email = req.body.email;
+  let email = req.body.userID;
+  let gId = req.body.groupID;
+  let bId = req.body.boardID;
   let pId = req.body.postID;
 
   //verifying to see if current user is session holder
@@ -828,8 +885,8 @@ function addCubvoteToPost(req, res){
         console.log(err.stack);
         console.log("****************************************************");
       }
-      //User didn't upvote, inserting cubvote
       else {
+        //User didn't upvote, inserting cubvote
         if (response.rows.length === 0) {
           let query =
               "INSERT INTO cubvoted(postid, email) VALUES($1, $2)";
@@ -837,7 +894,37 @@ function addCubvoteToPost(req, res){
           client.query(query, values, (err, response) => {
             if (err) {
             } else {
-              //successfully cubvoted
+              let query =
+                  "SELECT cubvotes " +
+                  "FROM post " +
+                  "WHERE postid = $1";
+              let values = [pId];
+              client.query(query, values, (err, response) => {
+                if (err) {
+                  console.log("************1*****************");
+                  console.log(err.stack);
+                  console.log("*****************************");
+                } else {
+                  let cubvoteNum = response.rows[0].cubvotes;
+                  console.log("cubvoteNum: " + cubvoteNum);
+                  let query =
+                        "UPDATE post " +
+                        "SET cubvotes = $1 " +
+                        "WHERE postid = $2";
+                  let cbv = cubvoteNum + 1;
+                  console.log(cbv);
+                  let values = [cbv, pId];
+                  client.query(query, values, (err, response) => {
+                    if (err) {
+                      console.log("*************2****************");
+                      console.log(err.stack);
+                      console.log("*****************************");
+                    } else {
+                       res.status("200").send({cubvote: true});
+                    }
+                  });
+                }
+              });
             }
           });
         }
