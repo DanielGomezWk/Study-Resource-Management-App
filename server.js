@@ -831,3 +831,70 @@ function addCubvoteToPost(req, res){
     });
   }
 }
+function createTag(req, res) {
+  let tagname = req.body.tagname;
+  letquery =
+      "SELECT tagnames " +
+      "FROM tags " +
+      "where tagnames = $1";
+  let values = [tagname];
+  client.query(query, values, (err, response) => {
+    //if tagname does not exist, then we insert tag
+    if (response.rows[0] === null) {
+      query = "INSERT INTO tags (tagnames) VALUES($1) "
+      values = [tagname];
+      client.query(query, values, (err, response) => {
+        if (err) {
+          console.log("------------------------------");
+          err.stack;
+          console.log("------------------------------");
+        }
+      });
+    } else {
+      console.log("tagname already exists");
+    }
+  });
+}
+
+function addGroupTag(req, res){
+  let groupTag = req.body.tagname;
+  let gId = req.body.groupID;
+
+  let query =
+      "SELECT tagnames " +
+      "FROM tags " +
+      "where tagnames = $1";
+  let values = [groupTag];
+  client.query(query, values, (err, response) => {
+    if (err) {
+
+    } else {
+      //if group doesnt have tagname
+      if (response.rows[0] === null) {
+        query =
+            "SELECT * " +
+            "FROM grouptags " +
+            "where tagnames = $1 AND group_id = $2";
+        values = [tagnames, gId];
+        client.query(query, values, (err, response) => {
+          //INSERTING tag into grouptags
+          if(response.rows[0] === null) {
+            query = "INSERT INTO grouptag(group_id, tagnames) VALUES ($1,$2)";
+            values = [gId, tagnames];
+            client.query(query, values, (err, response) => {
+              if (err) {
+                console.log(err.stack);
+              } else {
+                console.log("Succesfully inserte tag into grouptags!");
+              }
+            })
+          } else {
+            console.log("tag is already in grouptags");
+          }
+        });
+      } else {
+        console.log("tag is already in group");
+      }
+    }
+  });
+}
