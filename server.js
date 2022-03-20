@@ -294,6 +294,12 @@ app.get("/eventHomePage/:eventID", (req, res) =>{
   });
 });
 
+app.post("/addGroupTag", (req, res) => {
+  addGroupTag(req, res);
+});
+app.post("/createTag", (req, res) => {
+  createTag(req, res);
+});
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!! INVITE PAGE RELATED GET AND POST ROUTES !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //invite page for the user
 app.get("/invites", (req, res) => {
