@@ -10,7 +10,7 @@ let data;
 let length;
 
 // Functions to run at the beginning of the page
-window.onload = () => {
+window.onload = async () => {
     // Parse the data initially sent to the page
     data = JSON.parse(document.getElementById("data").innerText);
     console.log(data);
@@ -31,11 +31,12 @@ window.onload = () => {
     }
 
     showPosts();
+    await setOnClicks();
 
     // Set the timeout - refreshes post content
-    setTimeout(async () => {
+    /*setTimeout(async () => {
         await refreshPage();
-    }, 15000);
+    }, 15000);*/
 };
 
 // Displays posts according to the current page and the posts per page the user wishes to see
@@ -58,11 +59,68 @@ function showPosts() {
 
         // Build the posts
         for (let i = begin; i < end; i++) {
-            buildPost(data.posts[i]);
+            buildPost(data.posts[i], data.session);
         }
 }
 
-function showNext() {
+// Sets on click events for the voting buttons
+async function setOnClicks() {
+
+    // Find the beginning post index for the current page
+    let begin = (currentPage - 1) * postsPerPage;
+    let end = begin + (postsPerPage - 1);
+
+    // Prevent out-of-bounds errors by using whichever comes sooner
+    end = Math.min(end, length - 1);
+
+    // Iterate through the posts
+    for (let i = begin; i < end; i++) {
+        let id = "cubvote" + data.posts[i].postid;
+
+        $('#' + id).click(function (e) {
+
+            let url = window.location.pathname;
+            let args = url.split("/");
+            let groupID = args[args.length - 3];
+            let boardID = args[args.length - 1];
+            let postID = data.posts[i].postid;
+            console.log(data.session);
+            let userID = data.session;
+            e.preventDefault();
+                $.ajax({
+                type: 'POST',
+                url: '/cubvotePost',
+                data: {
+                    groupID: groupID,
+                    boardID: boardID,
+                    postID: postID,
+                    userID: userID
+                },
+                success: (result) => {
+                    let scoreCont = document.getElementById("postvotes" + data.posts[i].postid);
+                    let score = Number(scoreCont.innerText);
+                    if (result.cubvote) {
+                        scoreCont.innerText = String(score + 1);
+                        console.log("Post voted successfully!");
+                        console.log(result);
+                    } else {
+                        scoreCont.innerText = String(score - 1);
+                        console.log("Post unvoted successfully!");
+                        console.log(result);
+                    }
+                },
+                error: () => {
+                    console.log("Post vote was unsuccessfully sent");
+                }
+            });
+            return false;
+        });
+
+    }
+}
+
+
+async function showNext() {
     currentPage++;
     // (Re-)Enable the previous button: Enable button and (re)add onclick to anchor
     document.getElementById("prevPageBtn").className = "page-item";
@@ -79,8 +137,9 @@ function showNext() {
         document.getElementById("nextPageBtn").className = "page-item disabled";
     }
     showPosts();
+    await setOnClicks();
 }
-function showPrevious() {
+async function showPrevious() {
     currentPage--;
     // (Re-)Enable the next button: Enable button and (re)add onclick to anchor
     document.getElementById("nextPageBtn").className = "page-item";
@@ -97,6 +156,7 @@ function showPrevious() {
         document.getElementById("prevPageBtn").className = "page-item disabled";
     }
     showPosts();
+    await setOnClicks();
 }
 
 async function refreshPage() {
@@ -129,7 +189,7 @@ async function refreshPage() {
     */
 }
 
-function buildPost (post) {
+function buildPost (post, email) {
     console.log(post);
     // Give the card an ID so that it can be referenced later (for voting/deleting)
     // Parent card element
@@ -151,6 +211,7 @@ function buildPost (post) {
     let reactButton = document.createElement("button");
     reactButton.type = "button";
     reactButton.className = "btn btn-primary btn-sm";
+    reactButton.id = "cubvote" + post.postid;
 
     // TODO - Make the delete button appear only for the author of the post, admins, and moderators
     let deleteButton = document.createElement("button");
@@ -160,6 +221,7 @@ function buildPost (post) {
     // Set the score in this container to the post's current score
     let cubVoteContainer = document.createElement("small");
     cubVoteContainer.innerText = post.postvotes;
+    cubVoteContainer.id = "postvotes" + post.postid;
 
     let reactIcon = document.createElement("i");
     reactIcon.className="bi bi-hand-thumbs-up-fill";
@@ -173,8 +235,8 @@ function buildPost (post) {
     reactButton.appendChild(reactIcon);
     deleteButton.appendChild(delIcon);
     scoreDiv.appendChild(cubVoteContainer);
-    scoreDiv.appendChild(reactButton);
     scoreDiv.appendChild(deleteButton);
+    scoreDiv.appendChild(reactButton);
 
     scoreCol.appendChild(scoreDiv);
 

@@ -478,6 +478,8 @@ function createPost(req, res) {
   let date = new Date;
   let time = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
   let cubVotes = 0;
+  let firstname;
+  let lastname;
   let gId = req.body.groupID;
   const query = "INSERT INTO post(postid, postcontent, postowner, postdate, posttime, cubvotes) VALUES($1, $2, $3, $4, $5, $6)";
   const values = [pId, msg, email, date, time, cubVotes];
@@ -503,7 +505,7 @@ function createPost(req, res) {
           console.log("------------------------------------------------------");
         } else {
           //querying for firstname of user to send back to group home page
-          let query = "SELECT first FROM users WHERE email = $1";
+          let query = "SELECT first, last FROM users WHERE email = $1";
           let values = [email];
           client.query(query, values, (err, response) => {
             if (err) {
@@ -885,8 +887,7 @@ function addCubvoteToPost(req, res){
   let bId = req.body.boardID;
   let pId = req.body.postID;
 
-  //verifying to see if current user is session holder
-  //session does not match
+  // Verify that the req is done by the session holder
   if (email !== req.session.email) {
     console.log("Cannot cubvote post, current user does not match session!");
   }
@@ -942,6 +943,45 @@ function addCubvoteToPost(req, res){
                       console.log("*****************************");
                     } else {
                        res.status("200").send({cubvote: true});
+                    }
+                  });
+                }
+              });
+            }
+          });
+        } else {
+          query = "DELETE FROM cubvoted WHERE postid = $1 AND email = $2";
+          values =[pId, email];
+          client.query(query, values, (err, response) => {
+            if (err) {
+              console.log("*************3****************");
+              console.log(err.stack);
+              console.log("*****************************");
+            } else {
+              let query =
+                  "SELECT cubvotes " +
+                  "FROM post " +
+                  "WHERE postid = $1";
+              values = [pId];
+              client.query(query, values, (err, response) => {
+                let cubVoteNum = response.rows[0].cubvotes;
+                if (err) {
+                  console.log("***********4******************");
+                  console.log(err.stack);
+                  console.log("*****************************");
+                } else {
+                  let query =
+                      "UPDATE post " +
+                      "SET cubvotes = $1 " +
+                      "WHERE postid = $2";
+                  values = [cubVoteNum - 1, pId];
+                  client.query(query, values, (err, response) => {
+                    if (err) {
+                      console.log("*************5****************");
+                      console.log(err.stack);
+                      console.log("*****************************");
+                    } else {
+                      res.status("200").send({cubvote: false});
                     }
                   });
                 }
