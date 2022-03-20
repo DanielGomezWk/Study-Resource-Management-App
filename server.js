@@ -838,15 +838,16 @@ function addCubvoteToPost(req, res){
   }
 }
 function createTag(req, res) {
+  let gId = req.body.groupID;
   let tagname = req.body.tagname;
-  letquery =
+  let query =
       "SELECT tagnames " +
       "FROM tags " +
       "where tagnames = $1";
   let values = [tagname];
   client.query(query, values, (err, response) => {
     //if tagname does not exist, then we insert tag
-    if (response.rows[0] === null) {
+    if (response.rows.length === 0) {
       query = "INSERT INTO tags (tagnames) VALUES($1) "
       values = [tagname];
       client.query(query, values, (err, response) => {
@@ -854,6 +855,8 @@ function createTag(req, res) {
           console.log("------------------------------");
           err.stack;
           console.log("------------------------------");
+        } else {
+          res.redirect("groupHome/" + gId);
         }
       });
     } else {
@@ -876,7 +879,7 @@ function addGroupTag(req, res){
 
     } else {
       //if group doesnt have tagname
-      if (response.rows[0] === null) {
+      if (response.rows.length === 0) {
         query =
             "SELECT * " +
             "FROM grouptags " +
@@ -884,7 +887,7 @@ function addGroupTag(req, res){
         values = [tagnames, gId];
         client.query(query, values, (err, response) => {
           //INSERTING tag into grouptags
-          if(response.rows[0] === null) {
+          if(response.rows.length === 0) {
             query = "INSERT INTO grouptag(group_id, tagnames) VALUES ($1,$2)";
             values = [gId, tagnames];
             client.query(query, values, (err, response) => {

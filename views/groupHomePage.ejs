@@ -42,7 +42,10 @@
         <!-- Spacer to the Right of Events-->
         <div id="rightSpacer" class="col-sm-0 col-md-1 col-lg-1"> </div>
     </div>
-
+<!--    button for creating tags-->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createTag">
+        Create Board
+    </button>
     <!-- temp place for sending messages -->
     <form id ="postReq1" action = "/groupPage/1" method = "post">
         <div class="form-group">
@@ -156,7 +159,27 @@
         </div>
     </div>
 </div>
-
+<!-- INSERT tags/edit -->
+<div class="modal fade" id="createTag" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Create Event</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id ="postReq" action = "/createTag" method = "post">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Tagname</label>
+                        <input type= "text" name = "tagname" class="form-control" id="tagnameCreate" aria-describedby="emailHelp" placeholder="Enter tagname">
+                        <input type= "text" style = "display: none" name = "groupID" class="form-control" id="groupIDCreate" aria-describedby="emailHelp" placeholder="Enter tagname">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
     <div id="group" style = "display: none"><%=group%></div>
     <script src= "/socket.io/socket.io.js"></script>
     <script> 
@@ -169,7 +192,6 @@
     <script src="/js/groupHomePage.js"></script>
 <script type="text/javascript" src="/js/moment.min.js"></script>
 <script type="text/javascript" src="/js/daterangepicker.min.js"></script>
-
 <script>
     $(function() {
         $('input[name="datetimes"]').daterangepicker({

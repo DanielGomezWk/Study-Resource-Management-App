@@ -87,7 +87,9 @@ function addIdToForm() {
     let inviteGroupID = document.getElementById("groupIDInvite");
     let userEmailInvite = document.getElementById("userEmailInvite");
     let reqTypeInvite = document.getElementById("reqTypeInvite");
+    let groupIDCreate = document.getElementById("groupIDCreate");
 
+    groupIDCreate.value = 1;
     reqTypeInvite.value = "userInviteGroup";
     inviteGroupID.value = 1;
     userEmailInvite.value = "john@joe";
