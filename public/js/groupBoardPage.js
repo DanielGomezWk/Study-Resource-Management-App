@@ -63,7 +63,7 @@ function showPosts() {
         }
 }
 
-// Sets on click events for the voting buttons
+// Sets on click events for the voting and delete buttons
 async function setOnClicks() {
 
     // Find the beginning post index for the current page
@@ -75,19 +75,20 @@ async function setOnClicks() {
 
     // Iterate through the posts
     for (let i = begin; i < end; i++) {
-        let id = "cubvote" + data.posts[i].postid;
+        let cubvoteID = "cubvote" + data.posts[i].postid;
+        let deleteID = "delete" + data.posts[i].postid;
 
-        $('#' + id).click(function (e) {
+        let url = window.location.pathname;
+        let args = url.split("/");
+        let groupID = args[args.length - 3];
+        let boardID = args[args.length - 1];
+        let postID = data.posts[i].postid;
+        let userID = data.session;
 
-            let url = window.location.pathname;
-            let args = url.split("/");
-            let groupID = args[args.length - 3];
-            let boardID = args[args.length - 1];
-            let postID = data.posts[i].postid;
-            console.log(data.session);
-            let userID = data.session;
+        // Set cubvote click functions
+        $('#' + cubvoteID).click(function (e) {
             e.preventDefault();
-                $.ajax({
+            $.ajax({
                 type: 'POST',
                 url: '/cubvotePost',
                 data: {
@@ -111,6 +112,47 @@ async function setOnClicks() {
                 },
                 error: () => {
                     console.log("Post vote was unsuccessfully sent");
+                }
+            });
+            return false;
+        });
+
+        // Set delete post functions
+
+        $('#' + deleteID).click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '/deletePost',
+                data: {
+                    groupID: groupID,
+                    boardID: boardID,
+                    postID: postID,
+                    userID: userID
+                },
+                success: (result) => {
+                    alert("Successfully deleted");
+
+                    if (i == 0) {
+                        data = data.slice(1, data.length);
+                    }
+                    else if (i == data.length - 1) {
+                        data = data.slice(0, data.length - 1);
+                    }
+                    else {
+                        let part1 = data.slice(0,i);
+                        let part2 = data.slice(i + 1, data.length);
+                        data = part1.concat(part2);
+                    }
+
+                    // Update length
+                    length = data.posts.length;
+
+                    // Show posts
+                    showPosts();
+                },
+                error: () => {
+                    console.log("Post was unsuccessfully deleted");
                 }
             });
             return false;
@@ -217,6 +259,7 @@ function buildPost (post, email) {
     let deleteButton = document.createElement("button");
     deleteButton.type = "button";
     deleteButton.className = "btn btn-danger btn-sm";
+    deleteButton.id = "delete" + post.postid;
 
     // Set the score in this container to the post's current score
     let cubVoteContainer = document.createElement("small");

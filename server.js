@@ -551,6 +551,8 @@ function createPost(req, res) {
 function deletePost(req, res) {
   let email = req.body.userID;
   let pId = req.body.postID;
+  let gId = req.body.groupID;
+  let bId = req.body.boardID;
 
   // Verify that the req is done by the session holder
   if (email !== req.session.email) {
@@ -644,13 +646,7 @@ function deletePost(req, res) {
     });
   }
 }
-function cubvote(req, res) {
-  let pID = req.body.postID;
-  let email = req.body.email;
-  let sID = req.session.email;
 
-  //TODO: need to create table that tracks people who cubvoted already before querying
-}
 function makeGroup(req, res) {
   let gId = Math.floor(Math.random() * 100000000);
   let leaderEmail = req.session.email;
