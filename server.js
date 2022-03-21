@@ -583,7 +583,7 @@ function deletePost(req, res) {
           //removing post from postlist
           const query =
               "SELECT email, postid " +
-              "FROM posts " +
+              "FROM post " +
               "WHERE email = $1";
           const values = [email];
 
