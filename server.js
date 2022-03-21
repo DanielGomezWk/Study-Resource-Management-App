@@ -569,7 +569,7 @@ function deletePost(req, res) {
       //user is not in group
       console.log("response.rows object:");
       console.log(response);
-      if (response.rows.length === 0) {
+      if (response === undefined) {
         console.log("User not in group");
       }
       //user is in group
