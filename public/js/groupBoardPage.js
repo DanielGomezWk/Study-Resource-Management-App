@@ -15,7 +15,10 @@ window.onload = async () => {
     data = JSON.parse(document.getElementById("data").innerText);
     console.log(data);
 
-    // Calculate the current page
+    // Retrieve which page we're on
+    // and how many pages of posts exist
+    length = data.posts.length;
+    maxPages = Math.ceil(length / postsPerPage);
     currentPage = Math.ceil(length / postsPerPage);
 
     showPosts();
