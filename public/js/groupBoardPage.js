@@ -7,7 +7,7 @@ let currentPage;
 let maxPages;
 let postsPerPage = 10;
 let data;
-let length;
+let length = 0;
 
 // Functions to run at the beginning of the page
 window.onload = async () => {
