@@ -581,7 +581,10 @@ function deletePost(req, res) {
         //user is in group
         else {
           //removing post from postlist
-          const query = "SELECT email, postid FROM post WHERE email = $1";
+          const query =
+              "SELECT email, postid " +
+              "FROM posts " +
+              "WHERE email = $1";
           const values = [email];
 
           client.query(query, values, (err, response) => {
