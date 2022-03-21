@@ -107,14 +107,16 @@ async function setOnClicks() {
                     userID: userID
                 },
                 success: (result) => {
-                    let scoreCont = document.getElementById("postvotes" + data.posts[i].postid);
-                    let score = Number(scoreCont.innerText);
                     if (result.cubvote) {
-                        scoreCont.innerText = String(score + 1);
+                        data.posts[i].postvotes++;
+                        showPosts();
+                        setOnClicks();
                         console.log("Post voted successfully!");
                         console.log(result);
                     } else {
-                        scoreCont.innerText = String(score - 1);
+                        data.posts[i].postvotes--;
+                        showPosts();
+                        setOnClicks();
                         console.log("Post unvoted successfully!");
                         console.log(result);
                     }
