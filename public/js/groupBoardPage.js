@@ -47,6 +47,10 @@ function showPosts() {
         maxPages = Math.ceil(length / postsPerPage);
         currentPage = Math.ceil(length / postsPerPage);
 
+        console.log("maxPages: " + maxPages);
+        console.log("currentPage: " + currentPage);
+        console.log("data.posts.length: " + length);
+
         // Find the beginning post index for the current page
         let begin = (currentPage - 1) * postsPerPage;
         let end = begin + (postsPerPage - 1);
