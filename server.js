@@ -610,13 +610,11 @@ function deletePost(req, res) {
                     console.log(err.stack);
                     console.log("------------------------------------");
                   } else {
-                    //removing post from post
-                    const query = "DELETE FROM post WHERE postid = $1";
+                    const query = "DELETE FROM cubvoted WHERE postid = $1";
                     const values = [pId];
                     client.query(query, values, (err, response) => {
                       if (err) {
-                        console.log("Failed to delete post from post");
-                        console.log("----------------4--------------------");
+                        console.log("-----------------5-------------------");
                         console.log(err.stack);
                         console.log("------------------------------------");
                       } else {
@@ -625,19 +623,12 @@ function deletePost(req, res) {
                         const values = [pId];
                         client.query(query, values, (err, response) => {
                           if (err) {
-
+                            console.log("Failed to delete post from post");
+                            console.log("----------------4--------------------");
+                            console.log(err.stack);
+                            console.log("------------------------------------");
                           } else {
-                            const query = "DELETE FROM cubvoted WHERE postid = $1";
-                            const values = [pId];
-                            client.query(query, values, (err, response) => {
-                              if (err) {
-                                console.log("-----------------5-------------------");
-                                console.log(err.stack);
-                                console.log("------------------------------------");
-                              } else {
-                                res.status("200").send();
-                              }
-                            });
+                            res.status("200").send();
                           }
                         });
                       }
