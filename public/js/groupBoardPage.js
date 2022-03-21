@@ -15,12 +15,6 @@ window.onload = async () => {
     data = JSON.parse(document.getElementById("data").innerText);
     console.log(data);
 
-    // Retrieve which page we're on
-    // and how many pages of posts exist
-    length = data.posts.length;
-    maxPages = Math.ceil(length / postsPerPage);
-    currentPage = Math.ceil(length / postsPerPage);
-
     // Set the current page number
     document.getElementById("currentPageAnch").innerText = currentPage;
 
@@ -46,6 +40,12 @@ function showPosts() {
 
         // Build the persistent header post [board title & description]
         buildBoardHeader(data.boardInfo[0]);
+
+        // Retrieve which page we're on
+        // and how many pages of posts exist
+        length = data.posts.length;
+        maxPages = Math.ceil(length / postsPerPage);
+        currentPage = Math.ceil(length / postsPerPage);
 
         // Find the beginning post index for the current page
         let begin = (currentPage - 1) * postsPerPage;
