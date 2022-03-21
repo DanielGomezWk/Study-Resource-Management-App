@@ -562,7 +562,7 @@ function deletePost(req, res) {
     const query =
         "SELECT email " +
         "FROM member_ " +
-        "WHERE group_id = $1 AND email = $2";
+        "WHERE groupid = $1 AND email = $2";
     const values = [gId, email];
 
     client.query(query, values, (err, response) => {
