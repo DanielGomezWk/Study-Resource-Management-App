@@ -138,14 +138,15 @@ async function setOnClicks() {
                         //2nd post to last post
                         data.posts = data.posts.slice(1, data.posts.length);
                     }
-                    else if (i == data.length - 1) {
-                        data = data.slice(0, data.length - 1);
+                    //deleting normal post
+                    else if (i === data.length - 1) {
+                        data.posts = data.posts.slice(0, data.posts.length - 1);
                     }
                     //deleting last post
                     else {
-                        let part1 = data.slice(0,i);
-                        let part2 = data.slice(i + 1, data.length);
-                        data = part1.concat(part2);
+                        let part1 = data.posts.slice(0,i);
+                        let part2 = data.posts.slice(i + 1, data.posts.length);
+                        data.posts = part1.concat(part2);
                     }
 
                     // Update length
