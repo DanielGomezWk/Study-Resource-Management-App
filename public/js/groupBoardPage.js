@@ -152,8 +152,9 @@ async function setOnClicks() {
                     // Update length
                     length = data.posts.length;
 
-                    // Show posts
+                    // Show posts and set on click
                     showPosts();
+                    setOnClicks();
                 },
                 error: () => {
                     console.log("Post was unsuccessfully deleted");
