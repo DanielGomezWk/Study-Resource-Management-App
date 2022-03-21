@@ -568,7 +568,7 @@ function deletePost(req, res) {
     client.query(query, values, (err, response) => {
       //user is not in group
       console.log("response.rows object:");
-      console.log(response.rows);
+      console.log(response);
       if (response.rows.length === 0) {
         console.log("User not in group");
       }
