@@ -21,6 +21,9 @@ window.onload = async () => {
     maxPages = Math.ceil(length / postsPerPage);
     currentPage = Math.ceil(length / postsPerPage);
 
+    // Change the current page
+    document.getElementById("currentPageAnch").innerText = currentPage;
+
     // If there is only one page, there are no other pages to navigate to
     if (currentPage === 1) {
         document.getElementById("nextPageBtn").className = "page-item disabled";
