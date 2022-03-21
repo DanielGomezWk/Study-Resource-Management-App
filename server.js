@@ -582,9 +582,9 @@ function deletePost(req, res) {
         else {
           //removing post from postlist
           const query =
-              "SELECT owner, postid " +
+              "SELECT postowner, postid " +
               "FROM post " +
-              "WHERE owner = $1";
+              "WHERE postowner = $1";
           const values = [email];
 
           client.query(query, values, (err, response) => {
