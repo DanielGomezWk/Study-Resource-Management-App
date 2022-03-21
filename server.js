@@ -586,7 +586,7 @@ function deletePost(req, res) {
 
           client.query(query, values, (err, response) => {
             if (err) {
-              console.log("------------------------------------");
+              console.log("-----------------2-------------------");
               console.log(err.stack);
               console.log("------------------------------------");
             }
@@ -603,7 +603,7 @@ function deletePost(req, res) {
                 client.query(query, values, (err, response) => {
                   if (err) {
                     console.log("Failed to delete post from postlist");
-                    console.log("------------------------------------");
+                    console.log("----------------3--------------------");
                     console.log(err.stack);
                     console.log("------------------------------------");
                   } else {
@@ -613,7 +613,7 @@ function deletePost(req, res) {
                     client.query(query, values, (err, response) => {
                       if (err) {
                         console.log("Failed to delete post from post");
-                        console.log("------------------------------------");
+                        console.log("----------------4--------------------");
                         console.log(err.stack);
                         console.log("------------------------------------");
                       } else {
@@ -628,7 +628,7 @@ function deletePost(req, res) {
                             const values = [pId];
                             client.query(query, values, (err, response) => {
                               if (err) {
-                                console.log("------------------------------------");
+                                console.log("-----------------5-------------------");
                                 console.log(err.stack);
                                 console.log("------------------------------------");
                               } else {
