@@ -566,19 +566,19 @@ function deletePost(req, res) {
     const values = [gId, email];
 
     client.query(query, values, (err, response) => {
-      //user is not in group
-      console.log("response.rows object:");
-      console.log(response);
-      if (response === undefined) {
-        console.log("User not in group");
-      }
-      //user is in group
-      else {
-        if (err) {
-          console.log("------------------------------------");
-          console.log(err.stack);
-          console.log("------------------------------------");
-        } else {
+      if (err) {
+        console.log("------------------------------------");
+        console.log(err.stack);
+        console.log("------------------------------------");
+      } else {
+        //user is not in group
+        console.log("response.rows object:");
+        console.log(response);
+        if (response === undefined) {
+          console.log("User not in group");
+        }
+        //user is in group
+        else {
           //removing post from postlist
           const query = "SELECT email, postid FROM post WHERE email = $1";
           const values = [email];
