@@ -101,7 +101,8 @@ app.post("/group", (req, res) => {
 });
 
 app.get("/groupMenuPage", (req, res) => {
-  const query = "SELECT * FROM group_ natural join grouptags WHERE private = false";
+  const query = "WITH temptable AS(SELECT * FROM group_ NATURAL JOIN grouptags WHERE private = false) " +
+      " SELECT * FROM temptable LEFT JOIN grouppictures gp USING(group_id)";
   client.query(query, (err, response) => {
     if (err) console.log(err.stack);
     else {
@@ -706,7 +707,13 @@ function makeGroup(req, res) {
           client.query(query, values, (err, response) => {
             if (err) console.log(err)
             else {
-              res.redirect("/groupMenuPage");
+              // insert group photo url into grouppics
+              const query = "INSERT INTO grouppictures(group_id, pic) VALUES ($1, $2)";
+              const values = [gId, pic];
+              client.query(query, values, (err, response) => {
+                if (err) console.log(err.stack);
+                else  res.redirect("/groupMenuPage");
+              });
             }
           });
         }

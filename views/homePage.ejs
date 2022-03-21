@@ -54,7 +54,7 @@
       <% let rowClosed; %>
       <% obj.groups.forEach((group) => { %>
         <%# if we hit a 6th item, create a new row  %>
-        <% if (counter % 3 == 0) { %>
+        <% if (counter % 2 == 0) { %>
         <div class="row justify-content-center">
           <% rowClosed = false; %>
           <% } %>
@@ -71,8 +71,8 @@
               </div>
             </div>
           </div>
-          <% if (counter % 3 == 1) {%>
-            <% rowClosed = true %>
+          <% if (counter % 2 == 1) {%>
+            <% rowClosed = true; %>
         </div>
         <%}%>
         <% counter++; %>
