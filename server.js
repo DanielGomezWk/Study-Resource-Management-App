@@ -101,7 +101,7 @@ app.post("/group", (req, res) => {
 });
 
 app.get("/groupMenuPage", (req, res) => {
-  const query = "WITH temptable AS(SELECT * FROM group_ NATURAL JOIN grouptags WHERE private = false) " +
+  const query = "WITH temptable AS(SELECT * FROM group_ join users on group_.leader = users.email NATURAL JOIN grouptags WHERE private = false) " +
       " SELECT * FROM temptable LEFT JOIN grouppictures gp USING(group_id)";
   client.query(query, (err, response) => {
     if (err) console.log(err.stack);
