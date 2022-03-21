@@ -567,7 +567,8 @@ function deletePost(req, res) {
 
     client.query(query, values, (err, response) => {
       if (err) {
-        console.log("------------------------------------");
+        console.log("email from member_ error");
+        console.log("-----------------1-------------------");
         console.log(err.stack);
         console.log("------------------------------------");
       } else {
