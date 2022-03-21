@@ -21,6 +21,12 @@ window.onload = async () => {
     maxPages = Math.ceil(length / postsPerPage);
     currentPage = Math.ceil(length / postsPerPage);
 
+    // If there is only one page, there are no other pages to navigate to
+    if (currentPage === 1) {
+        document.getElementById("nextPageBtn").className = "page-item disabled";
+        document.getElementById("prevPageBtn").className = "page-item disabled";
+    }
+
     showPosts();
     await setOnClicks();
 
@@ -46,18 +52,6 @@ function showPosts() {
         console.log("maxPages: " + maxPages);
         console.log("currentPage: " + currentPage);
         console.log("data.posts.length: " + length);
-
-        // Set the current page number
-        document.getElementById("currentPageAnch").innerText = currentPage;
-
-        // Set the current page number
-        document.getElementById("currentPageAnch").innerText = currentPage;
-
-        // If there is only one page, there are no other pages to navigate to
-        if (currentPage === 1) {
-            document.getElementById("nextPageBtn").className = "page-item disabled";
-            document.getElementById("prevPageBtn").className = "page-item disabled";
-        }
 
         // Find the beginning post index for the current page
         let begin = (currentPage - 1) * postsPerPage;
