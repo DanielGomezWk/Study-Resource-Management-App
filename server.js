@@ -185,10 +185,10 @@ app.get("/groupPage/:groupID", (req, res) => {
 //   socket.emit('notification', notify); // Updates Live Notification
 //   res.send(notify);
 // });
-app.post("/groupPageCreatePost/:groupID", (req, res) => {
+app.post("/createPost", (req, res) => {
   createPost(req, res);
 });
-app.post("/groupPageDeletePost/:groupID", (req, res) => {
+app.post("/deletePost", (req, res) => {
   deletePost(req, res);
 });
 
@@ -364,6 +364,13 @@ app.get("/declineEvent/:eventID", (req, res) => {
     if (err) console.log(err.stack);
     else res.redirect("/invites");
   });
+});
+app.post("groupInfoPage", (req, res) => {
+  let gId = req.body.groupID;
+  res.redirect("groupPage/" + gId + "/groupInfo");
+});
+app.get("groupPage/:groupID/groupInfo", (req, res) => {
+  displayGroupInfo(req, res);
 });
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!! INVITE PAGE RELATED GET AND POST ROUTES !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -541,34 +548,100 @@ function createPost(req, res) {
 }
 //TODO: need to update once table that keeps track of cubvotes is created (maybe)
 function deletePost(req, res) {
+  let email = req.body.userID;
   let pId = req.body.postID;
 
-  //removing post from postlist
-  const query = "DELETE FROM postlist WHERE postid = $1";
-  const values = [pId];
+  // Verify that the req is done by the session holder
+  if (email !== req.session.email) {
+    console.log("Cannot delete post, current user does not match session!");
+  }
+  else {
+    const query =
+        "SELECT email " +
+        "FROM member_ " +
+        "WHERE group_id = $1 AND email = $2";
+    const values = [gId, email];
 
-  client.query(query, values, (err, response) => {
-    if (err) {
-      console.log("Failed to delete post from postlist");
-      console.log("------------------------------------");
-      console.log(err.stack);
-      console.log("------------------------------------");
-    } else {
-      //removing post from post
-      const query = "DELETE FROM post WHERE postid = $1";
-      const values = [pId];
-      client.query(query, values, (err, response) => {
+    client.query(query, values, (err, response) => {
+      //user is not in group
+      if (response.rows.length === 0) {
+        console.log("User not in group");
+      }
+      //user is in group
+      else {
         if (err) {
-          console.log("Failed to delete post from post");
           console.log("------------------------------------");
           console.log(err.stack);
           console.log("------------------------------------");
         } else {
-          //handle response properly
+          //removing post from postlist
+          const query = "SELECT email, postid FROM post WHERE email = $1";
+          const values = [email];
+
+          client.query(query, values, (err, response) => {
+            if (err) {
+              console.log("------------------------------------");
+              console.log(err.stack);
+              console.log("------------------------------------");
+            }
+            else {
+              //user not owner of post
+              if (response.rows.length === 0) {
+                console.log("Current user is not the owner of this post!");
+              //user is owner of post
+              } else {
+                //removing post from postlist
+                const query = "DELETE FROM postlist WHERE postid = $1";
+                const values = [pId];
+
+                client.query(query, values, (err, response) => {
+                  if (err) {
+                    console.log("Failed to delete post from postlist");
+                    console.log("------------------------------------");
+                    console.log(err.stack);
+                    console.log("------------------------------------");
+                  } else {
+                    //removing post from post
+                    const query = "DELETE FROM post WHERE postid = $1";
+                    const values = [pId];
+                    client.query(query, values, (err, response) => {
+                      if (err) {
+                        console.log("Failed to delete post from post");
+                        console.log("------------------------------------");
+                        console.log(err.stack);
+                        console.log("------------------------------------");
+                      } else {
+                        //removing post from post
+                        const query = "DELETE FROM post WHERE postid = $1";
+                        const values = [pId];
+                        client.query(query, values, (err, response) => {
+                          if (err) {
+
+                          } else {
+                            const query = "DELETE FROM cubvoted WHERE postid = $1";
+                            const values = [pId];
+                            client.query(query, values, (err, response) => {
+                              if (err) {
+                                console.log("------------------------------------");
+                                console.log(err.stack);
+                                console.log("------------------------------------");
+                              } else {
+                                res.status("200").send();
+                              }
+                            });
+                          }
+                        });
+                      }
+                    });
+                  }
+                });
+              }
+            }
+          });
         }
-      });
-    }
-  });
+      }
+    });
+  }
 }
 function cubvote(req, res) {
   let pID = req.body.postID;
@@ -1082,4 +1155,8 @@ function addGroupTag(req, res){
       }
     }
   });
+}
+
+function displayGroupInfo(req, res) {
+
 }
