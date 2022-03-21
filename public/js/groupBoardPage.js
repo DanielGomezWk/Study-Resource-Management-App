@@ -133,12 +133,15 @@ async function setOnClicks() {
                 success: (result) => {
                     alert("Successfully deleted");
 
-                    if (i == 0) {
-                        data = data.slice(1, data.length);
+                    //deleting first post
+                    if (i === 0) {
+                        //2nd post to last post
+                        data.posts = data.posts.slice(1, data.posts.length);
                     }
                     else if (i == data.length - 1) {
                         data = data.slice(0, data.length - 1);
                     }
+                    //deleting last post
                     else {
                         let part1 = data.slice(0,i);
                         let part2 = data.slice(i + 1, data.length);
