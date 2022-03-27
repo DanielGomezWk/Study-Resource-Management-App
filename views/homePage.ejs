@@ -53,11 +53,11 @@
       <% let counter = 0;%>
       <% let rowClosed; %>
       <% obj.groups.forEach((group) => { %>
-        <%# if we hit a 6th item, create a new row  %>
+        <%# if we hit a 3rd item, create a new row  %>
         <% if (counter % 2 == 0) { %>
         <div class="row justify-content-center">
           <% rowClosed = false; %>
-          <% } %>
+        <% } %>
           <%# start of group card   %>
           <div class="col-sm">
             <div class="card mb-3" style="width: 15rem; height: 12rem">
@@ -71,12 +71,16 @@
               </div>
             </div>
           </div>
+          <%# end of group card %>
           <% if (counter % 2 == 1) {%>
             <% rowClosed = true; %>
         </div>
-        <%}%>
+          <%}%>
         <% counter++; %>
       <%});%>
+      <% if (!rowClosed) { %>
+    </div>
+      <% }%>
     </div>
     <div class="col-6 calendar">
       <div class="content" style="padding: 0!important">
