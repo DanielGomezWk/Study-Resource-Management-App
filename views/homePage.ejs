@@ -6,7 +6,88 @@
   <title>User Home Page</title>
   <!--Bootstrap & Icons-->
   <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css"  media="screen,projection"/>
+  <link type="text/css" rel="stylesheet" href="/css/groupMenu.css" media="screen,projection"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+  <style>
+
+    body {
+      background-color: #4158D0;
+      background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+    }
+
+    h1,h2 {
+      color: white;
+    }
+
+    .navbar {
+      background-color: transparent!important;
+    }
+
+    .fc-view-container {
+      border-radius: 30px;
+      /*background-color: #8BC6EC;*/
+      /*background-image: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%);*/
+      background-color: #FBAB7E!important;
+      background-image: linear-gradient(62deg, #FBAB7E 0%, #F7CE68 100%)!important;
+    }
+
+    .card {
+      min-height: 15rem!important;
+    }
+
+    .card-img-top {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card-row {
+      margin-bottom: 1rem;
+    }
+
+    .fc-button-primary {
+      background-color: #8BC6EC;
+      background-image: linear-gradient(180deg, #8BC6EC 0%, #9599E2 100%);
+      border-color: transparent!important;
+    }
+
+    td {
+      border-color: transparent!important;
+    }
+
+    .fc-today {
+      border-radius: 15px;
+      /*background-color: #FBAB7E!important;*/
+      /*background-image: linear-gradient(62deg, #FBAB7E 0%, #F7CE68 100%)!important;*/
+      background-color: #8BC6EC!important;
+      background-image: linear-gradient(270deg, #8BC6EC 0%, #9599E2 100%)!important;
+    }
+
+
+    .fc-event {
+      background-color: #8BC6EC!important;
+      background-image: linear-gradient(0deg, #8BC6EC 0%, #9599E2 100%)!important;
+
+
+
+
+
+
+      border: #9D66F7!important;
+    }
+
+    .btn-success {
+      background-color: #8BC6EC!important;
+      background-image: linear-gradient(270deg, #8BC6EC 0%, #9599E2 100%)!important;
+      border: transparent!important;
+    }
+    .btn-primary {
+      background-color: #8BC6EC!important;
+      background-image: linear-gradient(90deg, #8BC6EC 0%, #9599E2 100%)!important;
+      border: transparent!important;
+    }
+
+  </style>
 
 <!--  calendar stuff-->
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -23,6 +104,7 @@
 <body>
 
 <%-include("partials/navAndSidebar")-%>
+
 
 <div class="row align-items-center">
   <h1 class="text-center" id="nameBanner">Welcome, <%=obj.user.first%>!</h1>
@@ -55,22 +137,48 @@
       <% obj.groups.forEach((group) => { %>
         <%# if we hit a 3rd item, create a new row  %>
         <% if (counter % 2 == 0) { %>
-        <div class="row justify-content-center">
+        <div class="row card-row justify-content-center">
           <% rowClosed = false; %>
         <% } %>
           <%# start of group card   %>
-          <div class="col-sm">
-            <div class="card mb-3" style="width: 15rem; height: 12rem">
-              <div class="card-body">
-                <h2 class="card-title"><%=group.group_name%></h2>
-                <p class="card-text"><%=group.group_desc%></p>
-                <form action="/groupMenuPage" method="post">
-                  <input type="text" name="group_id" style="display:none" value=<%=group.group_id%>>
-                  <button type="submit" style = "width: 100%" name="button" class="btn btn-primary btn-block">Enter</button>
-                </form>
+
+          <% if (group.pic != null) {%>
+          <div class="col-md-6"><div onclick="enterGroup('<%=group.group_id%>')" class="card text-white card-has-bg click-col" style="background-image:url('<%=group.pic%>');">
+              <%} else {%>
+                <%let newUrl = "https://source.unsplash.com/600x900/?" + randURL(2);%>
+              <div class="col-md-6"><div onclick="enterGroup('<%=group.group_id%>')" class="card text-white card-has-bg click-col" style="background-image:url('<%=newUrl%>');">
+                  <%}%>
+                  <img class="card-img d-none" src="" alt="Goverment Lorem Ipsum Sit Amet Consectetur dipisi?">
+                  <div class="card-img-overlay d-flex flex-column">
+                    <div class="card-body">
+                      <small class="card-meta mb-2"><%=group.tagnames%></small>
+                      <h4 class="card-title mt-0 "><a class="text-white" herf="#"><%=group.group_name%></a></h4>
+                      <small><i class="far fa-clock"></i><%=group.group_desc%> </small>
+                    </div>
+                    <div class="card-footer">
+                      <div class="media">
+                        <img class="mr-3 rounded-circle" src="https://cdn0.iconfinder.com/data/icons/user-pictures/100/male-512.png" alt="Generic placeholder image" style="max-width:50px">
+                        <div class="media-body">
+                          <h6 class="my-0 text-white d-block"><%=group.first%> <%=group.last%></h6>
+                          <small>Reputation Level: <%=group.cubvotes%></small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+<!--          <div class="col-sm">-->
+<!--            <div class="card mb-3" style="width: 15rem; height: 12rem">-->
+<!--              <div class="card-body">-->
+<!--                <h2 class="card-title"><%=group.group_name%></h2>-->
+<!--                <p class="card-text"><%=group.group_desc%></p>-->
+<!--                <form action="/groupMenuPage" method="post">-->
+<!--                  <input type="text" name="group_id" style="display:none" value=<%=group.group_id%>>-->
+<!--                  <button type="submit" style = "width: 100%" name="button" class="btn btn-primary btn-block">Enter</button>-->
+<!--                </form>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
           <%# end of group card %>
           <% if (counter % 2 == 1) {%>
             <% rowClosed = true; %>
@@ -83,65 +191,76 @@
       <% }%>
     </div>
     <div class="col-6 calendar">
-      <div class="content" style="padding: 0!important">
-        <div id='calendar'></div>
+      <div class="row">
+        <div class="content" style="padding: 0!important">
+          <div id='calendar'></div>
+        </div>
+
+        <!--      <script src="js/jquery-3.3.1.min.js"></script>-->
+        <script src="/js/popper.min.js"></script>
+        <!--      <script src="js/bootstrap.min.js"></script>-->
+
+        <script src='/fullcalendar/packages/core/main.js'></script>
+        <script src='/fullcalendar/packages/interaction/main.js'></script>
+        <script src='/fullcalendar/packages/daygrid/main.js'></script>
+        <div id="sObj" style="display:none"><%=sObj%></div>
+        <script>
+
+
+
+          document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var obj = JSON.parse(document.getElementById("sObj").innerHTML);
+            console.log(document.getElementById("sObj").innerHTML);
+
+            var eventList = [];
+
+            // create the event list for the calendar
+            obj.events.forEach((event) => {
+              eventList.push({
+                title: event.eventname,
+                start: event.startunix,
+                end: event.endunix
+              });
+            });
+
+            var curr = new Date();
+            var formatted = curr.toISOString();
+            console.log(eventList);
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+              plugins: [ 'interaction', 'dayGrid' ],
+              defaultDate: formatted,
+              editable: true,
+              eventLimit: false, // allow "more" link when too many events
+              events: eventList
+            });
+
+            calendar.render();
+          });
+
+        </script>
       </div>
 
-<!--      <script src="js/jquery-3.3.1.min.js"></script>-->
-      <script src="/js/popper.min.js"></script>
-<!--      <script src="js/bootstrap.min.js"></script>-->
-
-      <script src='/fullcalendar/packages/core/main.js'></script>
-      <script src='/fullcalendar/packages/interaction/main.js'></script>
-      <script src='/fullcalendar/packages/daygrid/main.js'></script>
-<div id="sObj" style="display:none"><%=sObj%></div>
-      <script>
-
-
-
-        document.addEventListener('DOMContentLoaded', function() {
-          var calendarEl = document.getElementById('calendar');
-          var obj = JSON.parse(document.getElementById("sObj").innerHTML);
-          console.log(document.getElementById("sObj").innerHTML);
-
-          var eventList = [];
-
-          // create the event list for the calendar
-          obj.events.forEach((event) => {
-            eventList.push({
-              title: event.eventname,
-              start: event.startunix,
-              end: event.endunix
-            });
-          });
-
-          var curr = new Date();
-          var formatted = curr.toISOString();
-          console.log(eventList);
-
-          var calendar = new FullCalendar.Calendar(calendarEl, {
-            plugins: [ 'interaction', 'dayGrid' ],
-            defaultDate: formatted,
-            editable: true,
-            eventLimit: false, // allow "more" link when too many events
-            events: eventList
-          });
-
-          calendar.render();
-        });
-
-      </script>
+      <div class="row justify-content-center" style="margin-top: 3rem;">
+        <div class="col-4">
+          <a href="/group"><button type="submit" name="createGrpBtn" value="logging" class="btn btn-lg btn-success">Create a Group</button></a>
+        </div>
+        <div class="col-4">
+          <a href="/groupMenuPage"><button type="submit" name="joinGrpBtn" value="logging" class="btn btn-lg btn-primary">Join a Group</button></a>
+        </div>
+      </div>
     </div>
+
   </div>
 
 
-  <div class="row justify-content-left">
-    <div class="col-3">
-        <a href="/group"><button type="submit" name="createGrpBtn" value="logging" class="btn btn-primary">Create a Group</button></a>
-        <a href="/groupMenuPage"><button type="submit" name="joinGrpBtn" value="logging" class="btn btn-primary">Join a Group</button></a>
-    </div>
-  </div>
+
 </div>
+  <form id="enterGroup" action="/groupMenuPage" method="post">
+    <input id="groupID" type="text" name="group_id" style="display:none" value="">
+    <input type="text" name="reqType" style="display:none" value="groupMenuPage">
+  </form>
 
 <div id="user" style="display:none"><%=email%></div>
 <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
@@ -158,6 +277,12 @@
        // Connected, let's sign-up for to receive messages for this room
        socket.emit('user', user);
     });
+  }
+
+  function enterGroup(group){
+    console.log(group);
+    document.getElementById("groupID").value = group;
+    document.getElementById("enterGroup").submit();
   }
 
 </script>
