@@ -36,8 +36,8 @@ io.on('connection', (socket) => {
   console.log(socket.handshake.headers.referer);
   console.log("Successfully connected, userID = " + socket.id + " to socket server");
   let data = socket.handshake.headers.referer.split("/");
-  let groupID = data[data.length - 1];
-  let boardID = data[data.length - 3];
+  let groupID = data[data.length - 3];
+  let boardID = data[data.length - 1];
   console.log(groupID);
   console.log(boardID);
   console.log("User has joined room: " + groupID + "/" + boardID);
@@ -547,7 +547,8 @@ function createPost(req, res) {
                 date: date
               }
               //sending post to any user currently using the homepage
-              io.to(gId + bId).emit(newMessage);
+              console.log(gId + "/" + bId);
+              io.to(gId + "/" + bId).emit(newMessage);
 
               //sending object back to user
               res.json(newMessage);
