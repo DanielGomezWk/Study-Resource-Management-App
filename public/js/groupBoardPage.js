@@ -123,9 +123,12 @@ function showPosts() {
         // Prevent out-of-bounds errors by using whichever comes sooner
         end = Math.min(end, length - 1);
 
+        console.log(end);
+
         // Build the posts
-        for (let i = begin; i < end; i++) {
+        for (let i = begin; i <= end; i++) {
             buildPost(data.posts[i], data.session);
+            console.log("post num: " + i);
         }
 }
 
