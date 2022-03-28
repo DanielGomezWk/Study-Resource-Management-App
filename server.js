@@ -538,23 +538,40 @@ function createPost(req, res) {
               console.log("------------------------------------------------------");
             } else {
               console.log("result of query for first and last name: " + response.rows[0]);
-              firstname = response.rows[0].first;
-              lastname = response.rows[0].last;
+              let name = response.rows[0];
+              console.log("made it here!");
+              let query =
+                  "SELECT cubvotes " +
+                  "FROM users " +
+                  "where email = $1";
+              console.log("made it after!");
+              let values = [email];
+              client.query(query, values, (err, response) => {
+                if (err) {
+                  console.log("------------------------------------------------------");
+                  console.log(err.stack);
+                  console.log("------------------------------------------------------");
+                } else {
+                  let userCubVotes = response.rows[0];
+                  //putting post information into object
+                  let newMessage = {
+                    first: name.first,
+                    last: name.last,
+                    postcontent: msg,
+                    postdime: time,
+                    postdate: date,
+                    postid: pId,
+                    postvotes: 0,
+                    uservotes: userCubVotes.cubvotes
+                  }
+                  //sending post to any user currently using the homepage
+                  console.log(gId + "/" + bId);
+                  io.to(gId + "/" + bId).emit("newMessage", newMessage);
 
-              //putting post information into object
-              let newMessage = {
-                first: firstname.first,
-                last: lastname.last,
-                message: msg,
-                time: time,
-                date: date
-              }
-              //sending post to any user currently using the homepage
-              console.log(gId + "/" + bId);
-              io.to(gId + "/" + bId).emit("newMessage", newMessage);
-
-              //sending object back to user
-              res.json(newMessage);
+                  //sending object back to user
+                  res.json(newMessage);
+                }
+              });
             }
           });
         }

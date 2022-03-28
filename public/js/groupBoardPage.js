@@ -34,7 +34,7 @@ document.getElementById("formPost").addEventListener("click", function (e) {
             message: document.getElementById("messagePost").value
         },
         success: (result) => {
-            console.log(result);
+            // console.log(result);
         },
         error: () => {
             console.log("message was unsuccessfully sent");
@@ -68,12 +68,27 @@ window.onload = async () => {
 
     showPosts();
     await setOnClicks();
-
-    // Set the timeout - refreshes post content
-    /*setTimeout(async () => {
-        await refreshPage();
-    }, 15000);*/
 };
+
+function onPost (d) {
+    data.posts.push({
+        email: d.email,
+        first: d.first,
+        last: d.last,
+        postcontent: d.postcontent,
+        postdate: d.postdate,
+        postid: d.postid,
+        posttime: d.posttime,
+        postvotes: d.postvotes,
+        uservotes: d.postvotes,
+    });
+
+    length = data.posts.length;
+    maxPages = Math.ceil(length / postsPerPage);
+
+    showPosts();
+    setOnClicks();
+}
 
 // Displays posts according to the current page and the posts per page the user wishes to see
 function showPosts() {
