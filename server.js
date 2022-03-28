@@ -555,10 +555,11 @@ function createPost(req, res) {
                   let userCubVotes = response.rows[0];
                   //putting post information into object
                   let newMessage = {
+                    email: email,
                     first: name.first,
                     last: name.last,
                     postcontent: msg,
-                    postdime: time,
+                    posttime: time,
                     postdate: date,
                     postid: pId,
                     postvotes: 0,
