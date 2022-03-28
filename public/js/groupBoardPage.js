@@ -54,7 +54,7 @@ window.onload = async () => {
     // Retrieve which page we're on
     // and how many pages of posts exist
     length = data.posts.length;
-    maxPages = Math.ceil(length / postsPerPage);
+    maxPages = Math.floor(length / postsPerPage) + 1;
     currentPage = Math.ceil(length / postsPerPage);
 
     // Change the current page
@@ -83,8 +83,14 @@ function onPost (d) {
         uservotes: d.postvotes,
     });
 
+    console.log(data);
+
     length = data.posts.length;
-    maxPages = Math.ceil(length / postsPerPage);
+    maxPages = Math.floor(length / postsPerPage) + 1;
+
+    if (maxPages > currentPage) {
+        document.getElementById("nextPageBtn").class("page-item");
+    }
 
     showPosts();
     setOnClicks();
@@ -101,7 +107,7 @@ function showPosts() {
         // Retrieve which page we're on
         // and how many pages of posts exist
         length = data.posts.length;
-        maxPages = Math.ceil(length / postsPerPage);
+        maxPages = Math.floor(length / postsPerPage) + 1;
 
         console.log("maxPages: " + maxPages);
         console.log("currentPage: " + currentPage);
@@ -299,7 +305,7 @@ async function refreshPage() {
 }
 
 function buildPost (post, email) {
-    console.log(post);
+    // console.log(post);
     // Give the card an ID so that it can be referenced later (for voting/deleting)
     // Parent card element
     let card = document.createElement("div");

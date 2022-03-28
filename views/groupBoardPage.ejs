@@ -78,7 +78,7 @@
     <script>
         var socket = io();
         socket.on("newMessage", (d)=> {
-            console.log(d);
+            //console.log(d);
             onPost(d);
         });
         socket.emit("connection");
