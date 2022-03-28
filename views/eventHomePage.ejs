@@ -10,19 +10,31 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 </head>
 <body>
-   <%-include("partials/navAndSidebar")-%>
+<%-include("partials/navAndSidebar")-%>
+<h1 class="text-center"><%=obj.event.eventname%></h1>
+<div class="container">
+    <div class="row">
+        <div class="row"><h3>Details:</h3></div>
+        <div class="row"><h4><%=obj.event.eventdesc%></h4></div>
+        <div class="row">
+            <div class="col-2">
+                <div class="row"><h4>Start:</h4></div>
+                <div class="row"><h6><%=obj.event.startdate%></h6> </div>
+                <div class="row"><h6><%=obj.event.starttime%> </h6></div>
+            </div>
+            <div class="col-6">
+                <div class="row"><h4>End:</h4></div>
+                <div class="row"><h6><%=obj.event.enddate%> </h6></div>
+                <div class="row"><h6><%=obj.event.endtime%> </h6></div>
+            </div>
+        </div>
+        <div class="row-cols-4">  <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#inviteModal">Invite Members</button>
+        </div>
+    </div>
+</div>
+</div>
+<h3 class="text-center">Attending:</h3>
 
-<!-- Title -->
-<h1>Event Title: <%=obj.event.eventname%></h1>
-<!-- Host info -->
-<h1>Host: <%=obj.host.first%> <%=obj.host.last%>   Power Level: <%=obj.host.cubvotes%></h1>
-<!-- Desc -->
-<h2>Description: <%=obj.event.eventdesc%></h2>
-<!-- Start and End times -->
-<h1>Start Date: <%=obj.event.startdate%> End Date: <%=obj.event.enddate%></h1>
-<h1>Start Time: <%=obj.event.starttime%> - End Time: <%=obj.event.endtime%></h1>
-<h1>Attendees</h1>
-    <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#inviteModal">Invite Members</button>
 
 <div class="container-fluid">
     <% let counter = 0;%>
@@ -35,14 +47,15 @@
             <% } %>
             <%# start of group card   %>
             <div class="col-sm">
-                <div class="card mb-3" style="width: 25rem; height: 15rem">
+                <div class="card mb-3" style="width: 12rem; height: 12rem">
                     <div class="card-body">
-                        <h2 class="card-title"><%=user.first%> <%=user.last%> Power Level: <%=user.cubvotes%></h2>
+                        <h2 class="card-title"><%=user.first%> <%=user.last%></h2>
+                        <h5>Power Level: <%=user.cubvotes%></h5>
                         <p class="card-text"><%=user.bio%></p>
-<!--                        <form action="/groupMenuPage" method="post">-->
-<!--                            <input type="text" name="group_id" style="display:none" value=>-->
-<!--                            <button type="submit" style = "width: 100%" name="button" class="btn btn-primary btn-block">Join</button>-->
-<!--                        </form>-->
+                        <!--                        <form action="/groupMenuPage" method="post">-->
+                        <!--                            <input type="text" name="group_id" style="display:none" value=>-->
+                        <!--                            <button type="submit" style = "width: 100%" name="button" class="btn btn-primary btn-block">Join</button>-->
+                        <!--                        </form>-->
                     </div>
                 </div>
             </div>
@@ -54,36 +67,46 @@
     <%});%>
 </div>
 
-    <!-- Create Invite Modal -->
-    <div class="modal fade" id="inviteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Send Invite</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id ="postReq" action = "/eventInviteUser" method = "post">
-                        <div class="form-group fields">
-                            <label for="exampleInputEmail1">Name of User</label>
-                            <select class="form-control" name="userEmail">
-                                <% obj.notInvited.forEach((person) =>{ %>
-                                <option value="<%=person.email%>"><%=person.first%> <%=person.last%></option>
-                                <%});%>
-                            </select>
-                        </div>
-                        <div class="form-group" style = "display: none" style = "visibility: collapse">
-                            <input id = "eventID" type="text" name = "eventID" class="form-control" value="<%=obj.event.eventid%>">
-                        </div>
+<!-- Create Invite Modal -->
+<div class="modal fade" id="inviteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Send Invite</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id ="postReq" action = "/eventInviteUser" method = "post">
+                    <div class="form-group fields">
+                        <label for="exampleInputEmail1">Name of User</label>
+                        <select class="form-control" name="userEmail">
+                            <% obj.notInvited.forEach((person) =>{ %>
+                            <option value="<%=person.email%>"><%=person.first%> <%=person.last%></option>
+                            <%});%>
+                        </select>
+                    </div>
+                    <div class="form-group" style = "display: none" style = "visibility: collapse">
+                        <input id = "eventID" type="text" name = "eventID" class="form-control" value="<%=obj.event.eventid%>">
+                    </div>
 
-                        <button type="submit" class="btn btn-primary">Invite</button>
-                    </form>
-                </div>
+                    <button type="submit" class="btn btn-primary">Invite</button>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
+
+<script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js"></script>
+<script src= "/socket.io/socket.io.js"></script>
+<script>
+    var socket = io.connect();
+    document.addEventListener('DOMContentLoaded', function() {
+        var obj = JSON.parse(document.getElementById("event").innerHTML);
+        console.log(document.getElementById("event").innerHTML);
+    })
+</script>
 
 </body>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js"></script>
 </html>
