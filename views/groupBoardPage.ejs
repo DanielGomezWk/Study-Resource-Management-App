@@ -77,7 +77,7 @@
     <script src= "/socket.io/socket.io.js"></script>
     <script>
         var socket = io();
-        socket.on("connection", (data)=> {
+        socket.on("newMessage", (data)=> {
             console.log(data);
         });
         socket.emit("connection");

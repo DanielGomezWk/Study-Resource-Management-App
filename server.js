@@ -551,7 +551,7 @@ function createPost(req, res) {
               }
               //sending post to any user currently using the homepage
               console.log(gId + "/" + bId);
-              io.to(gId + "/" + bId).emit(newMessage);
+              io.to(gId + "/" + bId).emit("newMessage", newMessage);
 
               //sending object back to user
               res.json(newMessage);
