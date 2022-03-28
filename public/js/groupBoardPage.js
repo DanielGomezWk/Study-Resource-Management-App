@@ -54,7 +54,7 @@ window.onload = async () => {
     // Retrieve which page we're on
     // and how many pages of posts exist
     length = data.posts.length;
-    maxPages = Math.floor(length / postsPerPage) + 1;
+    maxPages = Math.floor(length / (postsPerPage + 1)) + 1;
     currentPage = Math.ceil(length / postsPerPage);
 
     // Change the current page
@@ -83,10 +83,8 @@ async function onPost (d) {
         uservotes: d.postvotes,
     });
 
-    console.log(data);
-
     length = data.posts.length;
-    maxPages = Math.floor(length / postsPerPage) + 1;
+    maxPages = Math.floor(length / (postsPerPage + 1)) + 1;
 
     if (maxPages > currentPage) {
         document.getElementById("nextPageBtn").classname = "page-item";
@@ -107,7 +105,7 @@ function showPosts() {
         // Retrieve which page we're on
         // and how many pages of posts exist
         length = data.posts.length;
-        maxPages = Math.floor(length / postsPerPage) + 1;
+        maxPages = Math.floor(length / (postsPerPage + 1)) + 1;
 
         console.log("maxPages: " + maxPages);
         console.log("currentPage: " + currentPage);
@@ -247,6 +245,7 @@ async function showNext() {
     // Change the current page
     document.getElementById("currentPageAnch").innerText = currentPage;
 
+    console.log("maxPages in showNext(): " + maxPages);
     // Disable the next button (if on the last page)
     if (currentPage === maxPages) {
         // Remove the onclick from the anchor
