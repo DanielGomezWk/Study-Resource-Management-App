@@ -89,7 +89,7 @@ function onPost (d) {
     maxPages = Math.floor(length / postsPerPage) + 1;
 
     if (maxPages > currentPage) {
-        document.getElementById("nextPageBtn").class("page-item");
+        document.getElementById("nextPageBtn").classname = "page-item";
     }
 
     showPosts();
