@@ -13,6 +13,19 @@
       height: 100%;
       object-fit: cover;
     }
+    h1, h2, h3 {
+      color: white!important;
+    }
+    body {
+      background-color: #FFE53B;
+      background-image: linear-gradient(204deg, #FFE53B 0%, #FF2525 74%);
+
+    }
+    .btn-success {
+      background-color: #21D4FD!important;
+      background-image: linear-gradient(19deg, #21D4FD 0%, #B721FF 100%)!important;
+      border: transparent!important;
+    }
   </style>
 </head>
 <% randURL = function makeid(length) {
@@ -25,8 +38,6 @@
   }
   return result;
 }%>
-
-
 
   <body>
   <%-include("partials/navAndSidebar")-%>
@@ -87,17 +98,17 @@
       <% groups.forEach((group) => { %>
         <% if (group.tagnames != "Course") return;%>
         <%# if we hit a 4th? item, create a new row  %>
-        <% if (counter % 4 == 0) { %>
+        <% if (counter % 3 == 0) { %>
         <section class="wrapper">
           <div class="container">
-            <div class="row">
+            <div class="row justify-content-center">
           <% rowClosed = false; %>
           <% } %>
 
               <% if (group.pic != null) {%>
               <div class="col-md-4"><div onclick="enterGroup('<%=group.group_id%>')" class="card text-white card-has-bg click-col" style="background-image:url('<%=group.pic%>');">
               <%} else {%>
-                <%let newUrl = "https://source.unsplash.com/600x900/?" + randURL(2);%>
+                <%let newUrl = "https://source.unsplash.com/600x900/?" + randURL(1);%>
               <div class="col-md-4"><div onclick="enterGroup('<%=group.group_id%>')" class="card text-white card-has-bg click-col" style="background-image:url('<%=newUrl%>');">
               <%}%>
                   <img class="card-img d-none" src="" alt="Goverment Lorem Ipsum Sit Amet Consectetur dipisi?">
@@ -127,6 +138,11 @@
           <%}%>
           <% counter++; %>
       <%});%>
+      <% if (!rowClosed) { %>
+    </div>
+  </div>
+  </section>
+  <% }%>
     </div>
 
   <h2 class="text-center display-1">Extracurriculars</h2>
@@ -136,17 +152,17 @@
     <% groups.forEach((group) => { %>
       <% if (group.tagnames != "Extracurricular") return;%>
       <%# if we hit a 4th? item, create a new row  %>
-      <% if (counter % 4 == 0) { %>
+      <% if (counter % 3 == 0) { %>
       <section class="wrapper">
         <div class="container">
-          <div class="row">
+          <div class="row justify-content-center">
             <% rowClosed = false; %>
             <% } %>
 
             <% if (group.pic != null) {%>
             <div class="col-md-4"><div onclick="enterGroup('<%=group.group_id%>')" class="card text-white card-has-bg click-col" style="background-image:url('<%=group.pic%>');">
                 <%} else {%>
-                  <%let newUrl = "https://source.unsplash.com/600x900/?" + randURL(2);%>
+                  <%let newUrl = "https://source.unsplash.com/600x900/?" + randURL(1);%>
                 <div class="col-md-4"><div onclick="enterGroup('<%=group.group_id%>')" class="card text-white card-has-bg click-col" style="background-image:url('<%=newUrl%>');">
                     <%}%>
                     <img class="card-img d-none" src="" alt="Goverment Lorem Ipsum Sit Amet Consectetur dipisi?">
@@ -176,6 +192,11 @@
       <%}%>
       <% counter++; %>
     <%});%>
+    <% if (!rowClosed) { %>
+              </div>
+            </div>
+      </section>
+    <% }%>
   </div>
 
   <h2 class="text-center display-1">Other</h2>
@@ -188,7 +209,7 @@
       <% if (counter % 4 == 0) { %>
       <section class="wrapper">
         <div class="container">
-          <div class="row">
+          <div class="row justify-content-center">
             <% rowClosed = false; %>
             <% } %>
 
@@ -196,7 +217,7 @@
             <div class="col-md-4">
               <div onclick="enterGroup('<%=group.group_id%>')" class="card text-white card-has-bg click-col" style="background-image:url('<%=group.pic%>');">
                 <%} else {%>
-                  <%let newUrl = "https://source.unsplash.com/600x900/?" + randURL(2);%>
+                  <%let newUrl = "https://source.unsplash.com/600x900/?" + randURL(1);%>
                 <div class="col-md-4">
                   <div onclick="enterGroup('<%=group.group_id%>')" class="card text-white card-has-bg click-col" style="background-image:url('<%=newUrl%>');">
                     <%}%>
@@ -227,6 +248,11 @@
       <%}%>
       <% counter++; %>
     <%});%>
+    <% if (!rowClosed) { %>
+  </div>
+  </div>
+  </section>
+  <% }%>
   </div>
 
   <form id="enterGroup" action="/groupMenuPage" method="post">

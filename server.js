@@ -70,8 +70,11 @@ app.get("/home", (req, res) => {
       user = response.rows[0];
 
         // getting the groups they are a part of
-        const query2 = "WITH groupsInvited AS (SELECT * FROM member_ WHERE email = $1 and status = true) " +
-            "SELECT * FROM group_ JOIN groupsInvited ON group_.group_id = groupsInvited.groupid "
+        const query2 = "WITH temptable AS(SELECT * FROM group_ join users on group_.leader = users.email NATURAL JOIN grouptags WHERE private = false), " +
+      "groupsandpics AS(SELECT * FROM temptable LEFT JOIN grouppictures gp USING(group_id)), " +
+      "groupsInvited AS(SELECT * FROM member_ WHERE email = $1 AND status = true), " +
+      "usergroups AS (SELECT group_id From group_ JOIN groupsInvited ON group_.group_id = groupsInvited.groupid) " +
+      "SELECT * FROM groupsandpics NATURAL JOIN usergroups";
         client.query(query2, values, (err, response) => {
           if (err) console.log(err.stack);
           else {

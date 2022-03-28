@@ -19,9 +19,6 @@
       color: white;
     }
 
-    .navbar {
-      background-color: transparent!important;
-    }
 
     .fc-view-container {
       border-radius: 30px;
@@ -63,27 +60,20 @@
       background-image: linear-gradient(270deg, #8BC6EC 0%, #9599E2 100%)!important;
     }
 
-
     .fc-event {
       background-color: #8BC6EC!important;
       background-image: linear-gradient(0deg, #8BC6EC 0%, #9599E2 100%)!important;
-
-
-
-
-
-
       border: #9D66F7!important;
     }
 
     .btn-success {
-      background-color: #8BC6EC!important;
-      background-image: linear-gradient(270deg, #8BC6EC 0%, #9599E2 100%)!important;
+      background-color: #21D4FD!important;
+      background-image: linear-gradient(19deg, #21D4FD 0%, #B721FF 100%)!important;
       border: transparent!important;
     }
     .btn-primary {
-      background-color: #8BC6EC!important;
-      background-image: linear-gradient(90deg, #8BC6EC 0%, #9599E2 100%)!important;
+      background-color: #21D4FD!important;
+      background-image: linear-gradient(330deg, #21D4FD 0%, #B721FF 100%)!important;
       border: transparent!important;
     }
 
@@ -117,22 +107,8 @@
 
 
 <div class="row align-items-center">
-  <h1 class="text-center" id="nameBanner">Welcome, <%=obj.user.first%>!</h1>
+  <h1 class="display-4 text-center" id="nameBanner">Welcome, <%=obj.user.first%>!</h1>
 </div>
-
-<!--<div class="row justify-content-md-center">-->
-<!--  <div class="col-2">-->
-<!--    <img src="https://media.istockphoto.com/photos/professional-it-technical-support-specialist-and-software-developer-picture-id1316574211" alt="placeholder profile pic" width="200" height="200">-->
-<!--  </div>-->
-<!--  <div class="col-3">-->
-<!--    <h4> About me: </h4>-->
-<!--    <p id = "bioText"> </p>-->
-<!--    <h4 id="cubvotes"> </h4>-->
-<!--    <form action = "/" method = "post">-->
-<!--      <button type="submit" name="loginBtn" value="logging" class="btn btn-primary">Edit my personal details</button>-->
-<!--    </form>-->
-<!--  </div>-->
-<!--</div>-->
 
 <br>
 <br>
@@ -141,33 +117,34 @@
 <div class="container">
   <div class="row">
     <div class="col-6 groups">
-      <h2 class="text-center">Your Groups:</h2>
+      <h2 class="display-6 text-center" style="margin-bottom: 1rem">Your Groups:</h2>
       <% let counter = 0;%>
       <% let rowClosed; %>
       <% obj.groups.forEach((group) => { %>
+      <% if (!(group.tagnames == "Course" || group.tagnames == "Extracurricular" || group.tagnames == "Other")) return;%>
         <%# if we hit a 3rd item, create a new row  %>
         <% if (counter % 2 == 0) { %>
         <div class="row card-row justify-content-center">
           <% rowClosed = false; %>
         <% } %>
-          <%# start of group card   %>
 
+          <%# start of group card   %>
           <% if (group.pic != null) {%>
           <div class="col-md-6"><div onclick="enterGroup('<%=group.group_id%>')" class="card text-white card-has-bg click-col" style="background-image:url('<%=group.pic%>');">
-              <%} else {%>
-                <%let newUrl = "https://source.unsplash.com/600x900/?" + randURL(2);%>
+          <%} else {%>
+              <%let newUrl = "https://source.unsplash.com/600x900/?" + randURL(2);%>
               <div class="col-md-6"><div onclick="enterGroup('<%=group.group_id%>')" class="card text-white card-has-bg click-col" style="background-image:url('<%=newUrl%>');">
-                  <%}%>
+          <%}%>
                   <img class="card-img d-none" src="" alt="Goverment Lorem Ipsum Sit Amet Consectetur dipisi?">
                   <div class="card-img-overlay d-flex flex-column">
-                    <div class="card-body">
+                    <div class="card-body" style="padding: 0rem 1rem;">
                       <small class="card-meta mb-2"><%=group.tagnames%></small>
                       <h4 class="card-title mt-0 "><a class="text-white" herf="#"><%=group.group_name%></a></h4>
                       <small><i class="far fa-clock"></i><%=group.group_desc%> </small>
                     </div>
                     <div class="card-footer">
                       <div class="media">
-                        <img class="mr-3 rounded-circle" src="https://cdn0.iconfinder.com/data/icons/user-pictures/100/male-512.png" alt="Generic placeholder image" style="max-width:50px">
+                        <img class="mr-3 rounded-circle" src="https://cdn0.iconfinder.com/data/icons/user-pictures/100/male-512.png" alt="Generic placeholder image" style="max-width:2rem">
                         <div class="media-body">
                           <h6 class="my-0 text-white d-block"><%=group.first%> <%=group.last%></h6>
                           <small>Reputation Level: <%=group.cubvotes%></small>
@@ -177,18 +154,6 @@
                   </div>
                 </div>
               </div>
-<!--          <div class="col-sm">-->
-<!--            <div class="card mb-3" style="width: 15rem; height: 12rem">-->
-<!--              <div class="card-body">-->
-<!--                <h2 class="card-title"><%=group.group_name%></h2>-->
-<!--                <p class="card-text"><%=group.group_desc%></p>-->
-<!--                <form action="/groupMenuPage" method="post">-->
-<!--                  <input type="text" name="group_id" style="display:none" value=<%=group.group_id%>>-->
-<!--                  <button type="submit" style = "width: 100%" name="button" class="btn btn-primary btn-block">Enter</button>-->
-<!--                </form>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
           <%# end of group card %>
           <% if (counter % 2 == 1) {%>
             <% rowClosed = true; %>
@@ -284,6 +249,11 @@
     socket.emit('connection');
     let user  = document.getElementById("user").innerHTML;
   }
+
+
+  document.addEventListener("DOMContentLoaded", () => {
+    document.getElementsByClassName("fc-left")[0].getElementsByTagName("h2")[0].classList.add("display-6");
+  });
 
   function enterGroup(group){
     console.log(group);

@@ -15,8 +15,17 @@
       margin: 0;
       box-sizing: border-box;
     }
-    body{
+    body {
       background: rgb(156, 102, 209);
+      /*background-color: #9921e8 !important;*/
+      /*background-image: linear-gradient(90deg, #9921e8 0%, #5f72be 74%) !important;*/
+    }
+    .row {
+      /*background-color: #8BC6EC!important;*/
+      /*background-image: linear-gradient(0deg, #8BC6EC 0%, #9599E2 100%)!important;*/
+      /*border: #9D66F7!important;*/
+      /*background-color: #9921e8 !important;*/
+      /*background-image: linear-gradient(90deg, #9921e8 0%, #5f72be 74%) !important;*/
     }
     .main{
       background: rgb(132, 74, 187);
@@ -51,8 +60,8 @@
         <img src="/pictures/psu.jpg" class= "img-fluid mt-5" alt="">
       </div>
       <div id="login-form" class="col-lg-7 px-5 pt-7 pb-3" style="display: block">
-        <h1 class="font-weight-bold py-3">Cubchat</h1>
-        <h4>Sign into your account</h4>
+        <h1 class="font-weight-bold py-3" style="color:white;">Cubchat</h1>
+        <h4 style="color:white;">Sign into your account</h4>
         <form action = "/" method = "post">
           <div class="form-row">
             <div class="col-lg-7">
@@ -69,14 +78,14 @@
               <button type="submit" class="btn1 mt-3 mb-5">Login</button>
             </div>
           </div>
-          <h6>Need an Account?</h6>
+          <h6 style="color:white;">Need an Account?</h6>
         </form>
         <button name="loginBtn" class="btn btn-outline-light" onclick="changeForm();" style="padding-bottom: 5px">Register Here</button>
       </div>
 
       <div id="register-form" class="col-lg-7 px-5 pt-7 pb-3" style="display:none">
-        <h1 class="font-weight-bold py-3">Cubchat</h1>
-        <h4>Register an account</h4>
+        <h1 class="font-weight-bold py-3" style="color:white;">Cubchat</h1>
+        <h4 style="color:white;">Register an account</h4>
         <form action = "/" method = "post">
           <div class="form-row row my-3">
             <div class="col-lg-7">
@@ -99,7 +108,7 @@
               <button name="registerBtn" type="submit" class="btn1 mt-3 mb-5">Register</button>
             </div>
           </div>
-          <h6>Have an Account?</h6>
+          <h6 style="color:white;">Have an Account?</h6>
         </form>
         <button class="btn btn-outline-light" onclick="changeForm();" style="padding-bottom: 5px">Login Here</button>
       </div>
