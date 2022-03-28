@@ -132,7 +132,7 @@
           <% if (group.pic != null) {%>
           <div class="col-md-6"><div onclick="enterGroup('<%=group.group_id%>')" class="card text-white card-has-bg click-col" style="background-image:url('<%=group.pic%>');">
           <%} else {%>
-              <%let newUrl = "https://source.unsplash.com/600x900/?" + randURL(2);%>
+              <%let newUrl = "https://source.unsplash.com/600x900/?" + randURL(1);%>
               <div class="col-md-6"><div onclick="enterGroup('<%=group.group_id%>')" class="card text-white card-has-bg click-col" style="background-image:url('<%=newUrl%>');">
           <%}%>
                   <img class="card-img d-none" src="" alt="Goverment Lorem Ipsum Sit Amet Consectetur dipisi?">
