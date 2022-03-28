@@ -70,7 +70,7 @@ window.onload = async () => {
     await setOnClicks();
 };
 
-function onPost (d) {
+async function onPost (d) {
     data.posts.push({
         email: d.email,
         first: d.first,
@@ -93,7 +93,7 @@ function onPost (d) {
     }
 
     showPosts();
-    setOnClicks();
+    await setOnClicks();
 }
 
 // Displays posts according to the current page and the posts per page the user wishes to see
@@ -143,7 +143,7 @@ async function setOnClicks() {
     end = Math.min(end, length - 1);
 
     // Iterate through the posts
-    for (let i = begin; i < end; i++) {
+    for (let i = begin; i <= end; i++) {
         let cubvoteID = "cubvote" + data.posts[i].postid;
         let deleteID = "delete" + data.posts[i].postid;
 
