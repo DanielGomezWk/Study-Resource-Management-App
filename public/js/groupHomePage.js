@@ -4,13 +4,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
     fillGroups();
 });
 
-socket.on('post', (newMessage) => {
-   console.log(newMessage);
-});
-
-socket.on('invitedToGroup', (invObj) => {
-    console.log(invObj);
-});
+// socket.on('post', (newMessage) => {
+//    console.log(newMessage);
+// });
+//
+// socket.on('invitedToGroup', (invObj) => {
+//     console.log(invObj);
+// });
 $('#tempForm').click(function (e) {
     e.preventDefault();
     let msg = document.getElementById("messageTemp").value;

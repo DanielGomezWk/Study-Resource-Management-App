@@ -9,11 +9,47 @@ let postsPerPage = 10;
 let data;
 let length = 0;
 
+let urltemp = window.location.pathname;
+let args1 = urltemp.split("/");
+let GID = args1[args1.length - 3];
+let BID = args1[args1.length - 1];
+
+data = JSON.parse(document.getElementById("data").innerText);
+console.log(data);
+let url = window.location.pathname;
+let args = url.split("/");
+let gID = args[args.length - 3];
+let bID = args[args.length - 1];
+let uID = data.session;
+
+document.getElementById("formPost").addEventListener("click", function (e) {
+    e.preventDefault();
+    $.ajax({
+        type: 'POST',
+        url: '/createPost',
+        data: {
+            groupID: gID,
+            boardID: bID,
+            email: uID,
+            message: document.getElementById("messagePost").value
+        },
+        success: (result) => {
+            console.log(result);
+        },
+        error: () => {
+            console.log("message was unsuccessfully sent");
+        }
+    });
+    return false;
+});
+
 // Functions to run at the beginning of the page
 window.onload = async () => {
     // Parse the data initially sent to the page
     data = JSON.parse(document.getElementById("data").innerText);
     console.log(data);
+    socket.emit("connection");
+    let url = window.location.pathname;
 
     // Retrieve which page we're on
     // and how many pages of posts exist

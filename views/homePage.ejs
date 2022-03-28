@@ -277,16 +277,12 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js"></script>
 <script src= "/socket.io/socket.io.js"></script>
 <script>
-  var socket = io.connect();
+  // const socket = io();
+  // socket.on('connection');
 
   window.onload = () => {
+    socket.emit('connection');
     let user  = document.getElementById("user").innerHTML;
-    console.log("this is user: " + user);
-    console.log(typeof user);
-    socket.on('connection', function() {
-       // Connected, let's sign-up for to receive messages for this room
-       socket.emit('user', user);
-    });
   }
 
   function enterGroup(group){

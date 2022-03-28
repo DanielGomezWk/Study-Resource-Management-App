@@ -12,25 +12,37 @@ const client = new Client({
 client.connect();
 const express = require("express");
 const bodyParser = require("body-parser");
+const ejs = require("ejs");
 const session = require("express-session");
-const socket = require("socket.io");
 const app = express();
-
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + "/public/"));
 app.use(session({secret: 'ssshhhhhh'}));
-const ejs = require("ejs");
+
 
 // added server port
 let port = process.env.PORT;
 if (port == null || port == "") {
   port = 3000;
 }
-const server = app.listen(port, function() {
+server.listen(port, function() {
   console.log("Server has started on port 3000");
 });
-const io = socket(server);
+
+io.on('connection', (socket) => {
+  console.log(socket.handshake.headers.referer);
+  console.log("Successfully connected, userID = " + socket.id + " to socket server");
+  let data = socket.handshake.headers.referer.split("/");
+  let groupID = data[data.length - 1];
+  let boardID = data[data.length - 3];
+  console.log(groupID);
+  console.log(boardID);
+  console.log("User has joined room: " + groupID + "/" + boardID);
+  socket.join(groupID+ "/" + boardID);
+});
 
 // user login/register Page
 app.get("/", (req, res) => {
@@ -192,7 +204,6 @@ app.post("/createPost", (req, res) => {
 app.post("/deletePost", (req, res) => {
   deletePost(req, res);
 });
-
 
 app.get("/groupBoardPage/:groupID/:boardID", (req, res) => {
  let groupobj = req.url.split("/");
@@ -387,7 +398,7 @@ function login_register(req, res){
   let first = req.body.first;
   let last = req.body.last;
 
-  console.log(req.body);
+  //console.log(req.body);
 
   // did the user register?
   if (Object.keys(req.body).includes("registerBtn")){
@@ -489,9 +500,9 @@ function createPost(req, res) {
   let firstname;
   let lastname;
   let gId = req.body.groupID;
+  let bId = req.body.boardID;
   const query = "INSERT INTO post(postid, postcontent, postowner, postdate, posttime, cubvotes) VALUES($1, $2, $3, $4, $5, $6)";
   const values = [pId, msg, email, date, time, cubVotes];
-
 
   client.query(query, values, (err, response) => {
     let bId = req.body.boardID;
@@ -515,6 +526,7 @@ function createPost(req, res) {
           //querying for firstname of user to send back to group home page
           let query = "SELECT first, last FROM users WHERE email = $1";
           let values = [email];
+          console.log("email: " + email);
           client.query(query, values, (err, response) => {
             if (err) {
               console.log("Error stack, could not successfully query user first name");
@@ -522,7 +534,7 @@ function createPost(req, res) {
               console.log(err.stack);
               console.log("------------------------------------------------------");
             } else {
-
+              console.log("result of query for first and last name: " + response.rows[0]);
               firstname = response.rows[0].first;
               lastname = response.rows[0].last;
 
@@ -535,7 +547,7 @@ function createPost(req, res) {
                 date: date
               }
               //sending post to any user currently using the homepage
-              io.emit('post', newMessage);
+              io.to(gId + bId).emit(newMessage);
 
               //sending object back to user
               res.json(newMessage);

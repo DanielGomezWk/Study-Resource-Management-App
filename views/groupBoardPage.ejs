@@ -53,9 +53,34 @@
         </div>
         <div id="rightButtonSpacer" class="col-sm-0 col-md-3 col-lg-4"> </div>
     </div>
+    <!-- temp place for sending messages -->
+    <form id ="createPost" action = "/createPost" method = "post">
+        <div class="form-group">
+            <label for="exampleInputPassword1">Send Message here</label>
+            <input type="text" name = "message" class="form-control" id="messagePost" placeholder="Enter Board Desc">
+        </div>
+        <div class="form-group" style = "display: none" style = "visibility: collapse">
+            <input id = "emailPost" type="text" name = "email" class="form-control">
+        </div>
+        <div class="form-group" style = "display: none" style = "visibility: collapse">
+            <input id = "boardIDPost" type="text" name = "boardID" class="form-control">
+        </div>
+        <div class="form-group" style = "display: none" style = "visibility: collapse">
+            <input id = "groupIDPost" type="text" name = "groupID" class="form-control">
+        </div>
+        <button type="button" id = "formPost" class="btn btn-primary">Submit</button>
+    </form>
     <div style = "display: none" id = "data"> <%=data %></div>
     <script type="text/javascript" src="/js/groupBoardPage.js"></script>
     <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+    <script src= "/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+        socket.on("connection", (data)=> {
+            console.log(data);
+        });
+        socket.emit("connection");
+    </script>
 </body>
 </html>
