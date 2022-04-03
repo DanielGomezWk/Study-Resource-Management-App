@@ -7,57 +7,148 @@
     <!--Bootstrap & Icons-->
     <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css"  media="screen,projection"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link type="text/css" rel="stylesheet" href="/css/groupMenu.css" media="screen,projection"/>
+    <style>
+        body {
+            background-color: rgb(34,193,195)!important;
+            background-image: linear-gradient(270deg, rgba(34,193,195,1) 0%, rgba(253,187,45,1) 100%)!important;
+        }
+
+        .card-img-top {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+
+
+    </style>
 </head>
+<% randURL = function makeid(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() *
+                charactersLength));
+    }
+    return result;
+}%>
 <body>
 
 <%-include("partials/navAndSidebar")-%>
 
 <div class="row align-items-center">
-    <h1 class="text-center" id="nameBanner">All Invites</h1>
+    <h1 class="text-center" id="nameBanner" style="color: white;">All Invites</h1>
 </div>
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-6">
-            <h1>Group Invitations</h1>
+            <h1 class="text-center" style="color: white;">Group Invitations</h1>
             <!--display every group invite in its own card-->
             <% obj.groups.forEach((group) => { %>
-                <div class="card mb-3" style="width: 18rem; height: 15rem">
-                    <div class="card-body">
-                        <h2 class="card-title"><%=group.group_name%></h2>
-                        <p class="card-text"><%=group.group_desc%></p>
-                        <form  action="/joinGroup/<%=group.group_id%>">
-                            <button type="submit" style = "width: 100%" name="button" class="btn btn-primary btn-block">Join</button>
-                        </form>
-                        <form  action="/declineGroup/<%=group.group_id%>">
-                            <button type="submit" class = "btn btn-danger">Decline</button>
-                        </form>
+                <%# start of group card   %>
+            <% if (group.pic != null) {%>
+            <div class="col-md-6" style="margin:auto"><div onclick="enterGroup('<%=group.group_id%>')" class="card text-white card-has-bg click-col" style="background-image:url('<%=group.pic%>');">
+                    <%} else {%>
+                        <%let newUrl = "https://source.unsplash.com/600x900/?" + randURL(1);%>
+                    <div class="col-md-6" style="margin:auto"><div onclick="enterGroup('<%=group.group_id%>')" class="card text-white card-has-bg click-col" style="background-image:url('<%=newUrl%>');">
+                            <%}%>
+                            <img class="card-img d-none" src="" alt="Goverment Lorem Ipsum Sit Amet Consectetur dipisi?">
+                            <div class="card-img-overlay d-flex flex-column">
+                                <div class="card-body" style="padding: 0rem 1rem;">
+                                    <small class="card-meta mb-2"><%=group.tagnames%></small>
+                                    <h4 class="card-title mt-0 "><a class="text-white" herf="#"><%=group.group_name%></a></h4>
+                                    <small><i class="far fa-clock"></i><%=group.group_desc%> </small>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="media-body">
+                                        <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h6 class="my-0 text-white d-block">John  Wick</h6>
+                                            <small>Reputation Level: <%=group.cubvotes%></small>
+                                        </div>
+                                        <div class="d-flex justify-content-end">
+                                            <form action="/joinGroup/<%=group.group_id%>" style="margin: auto 5%;">
+                                                <button type="submit" class="btn btn-outline-light align" >Join</button>
+                                            </form>
+                                            <form action="/declineGroup/<%=group.group_id%>" style="margin: auto 5%;">
+                                                <button type="submit" class="btn btn-outline-light align">Decline</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                    <%# end of group card %>
             <%});%>
         </div>
 
-        <div class="col-lg-6">
-            <h1>Event Invitations</h1>
+        <div class="col-lg-6 justify-content-center">
+            <h1 class="text-center" style="color: white;">Event Invitations</h1>
             <!--display every group invite in its own card-->
             <% obj.events.forEach((event) => { %>
-                <div class="card mb-3" style="width: 18rem; height: 15rem">
-                    <div class="card-body">
-                        <h2 class="card-title"><%=event.eventname%></h2>
-                        <h3 class="card-title"><%=event.startdate%> <%=event.starttime%></h3>
-                        <p class="card-text"><%=event.eventdesc%></p>
-                        <form  action="/joinEvent/<%=event.eventid%>">
-                            <button type="submit" style = "width: 100%" name="button" class="btn btn-primary btn-block">Join</button>
-                        </form>
-                        <form  action="/declineEvent/<%=event.eventid%>">
-                            <button type="submit" class = "btn btn-danger">Decline</button>
-                        </form>
+                <%# start of group card   %>
+                    <%let newUrl = "https://source.unsplash.com/600x900/?" + randURL(1);%>
+                    <div class="col-md-6" style="margin:auto"><div onclick="enterEvent('<%=event.eventid%>')" class="card text-white card-has-bg click-col" style="background-image:url('<%=newUrl%>');">
+                            <img class="card-img d-none" src="" alt="Goverment Lorem Ipsum Sit Amet Consectetur dipisi?">
+                            <div class="card-img-overlay d-flex flex-column">
+                                <div class="card-body" style="padding: 0rem 1rem;">
+                                    <small class="card-meta mb-2"><%=event.starttime%> <%=event.startdate%> - <%=event.endtime%> <%=event.enddate%></small>
+                                    <h4 class="card-title mt-0 "><a class="text-white" herf="#"><%=event.eventname%></a></h4>
+                                    <small><i class="far fa-clock"></i><%=event.eventdesc%> </small>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="media-body">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h6 class="my-0 text-white d-block">John  Wick</h6>
+                                                <small>Reputation Level: 0</small>
+                                            </div>
+                                            <div class="d-flex justify-content-end">
+                                                <form action="/joinEvent/<%=event.eventid%>" style="margin: auto 5%;">
+                                                    <button type="submit" class="btn btn-outline-light align" >Join</button>
+                                                </form>
+                                                <form action="/declineEvent/<%=event.eventid%>" style="margin: auto 5%;">
+                                                    <button type="submit" class="btn btn-outline-light align">Decline</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                    <%# end of group card %>
             <%});%>
         </div>
     </div>
 </div>
+
+        <form id="enterGroup" action="/groupMenuPage" method="post">
+            <input id="groupID" type="text" name="group_id" style="display:none" value="">
+            <input type="text" name="reqType" style="display:none" value="groupMenuPage">
+        </form>
+        <form id="enterEvent" action="/groupMenuPage" method="post">
+            <input id="groupID" type="text" name="group_id" style="display:none" value="">
+            <input type="text" name="reqType" style="display:none" value="groupMenuPage">
+        </form>
+
+        <script>
+            function enterGroup(group){
+                console.log(group);
+                document.getElementById("groupID").value = group;
+                document.getElementById("enterGroup").submit();
+            }
+            function enterEvent(event){
+                console.log(event);
+                document.getElementById("eventID").value = eventj;
+                document.getElementById("enterEvent").submit();
+            }
+        </script>
 
 <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js"></script>

@@ -144,7 +144,7 @@ app.get("/groupPage/:groupID", (req, res) => {
   let group, posts, events, boards, tags;
 
   // the user has joined the group
-  joinGroup(req, groupID);
+  //joinGroup(req, groupID);
 
   // get the group info
   const query = "SELECT * FROM group_ WHERE group_id = $1";
@@ -962,13 +962,14 @@ function showInvites(req, res){
       client.query(query2, values, (err, response) => {
         if (err) console.log(err.stack);
         else {
-          console.log(values[0]);
-          console.log(response.rows);
           events = response.rows;
 
           // getting the groups they have been invited to // can change
-          const query3 = "WITH groupsInvited AS (SELECT * FROM member_ WHERE email = $1 and status = false) " +
-              "SELECT * FROM group_ JOIN groupsInvited ON group_.group_id = groupsInvited.groupid "
+          const query3 = "WITH temptable AS(SELECT * FROM group_ join users on group_.leader = users.email NATURAL JOIN grouptags WHERE private = false), " +
+          "groupsandpics AS(SELECT * FROM temptable LEFT JOIN grouppictures gp USING(group_id)), " +
+          "groupsInvited AS(SELECT * FROM member_ WHERE email = $1 AND status = false), " +
+          "usergroups AS (SELECT group_id From group_ JOIN groupsInvited ON group_.group_id = groupsInvited.groupid) " +
+          "SELECT * FROM groupsandpics NATURAL JOIN usergroups";
           client.query(query3, values, (err, response) => {
             if (err) console.log(err.stack);
             else {
@@ -978,7 +979,7 @@ function showInvites(req, res){
                 events: events,
                 groups: groups
               }
-              console.log(obj);
+              console.log(obj.groups);
               res.render("invites", {obj: obj});
             }
           });
