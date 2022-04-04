@@ -39,13 +39,13 @@
 <%-include("partials/navAndSidebar")-%>
 
 <div class="row align-items-center">
-    <h1 class="text-center" id="nameBanner" style="color: white;">All Invites</h1>
+    <h1 class="text-center display-3" id="nameBanner" style="color: white;">All Invites</h1>
 </div>
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-6">
-            <h1 class="text-center" style="color: white;">Group Invitations</h1>
+            <h1 class="text-center display-5" style="color: white;">Group Invitations</h1>
             <!--display every group invite in its own card-->
             <% obj.groups.forEach((group) => { %>
                 <%# start of group card   %>
@@ -88,7 +88,7 @@
         </div>
 
         <div class="col-lg-6 justify-content-center">
-            <h1 class="text-center" style="color: white;">Event Invitations</h1>
+            <h1 class="text-center display-5" style="color: white;">Event Invitations</h1>
             <!--display every group invite in its own card-->
             <% obj.events.forEach((event) => { %>
                 <%# start of group card   %>
