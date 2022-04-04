@@ -219,7 +219,7 @@
 
       <div class="row justify-content-center" style="margin-top: 3rem;">
         <div class="col-4">
-          <a href="/group"><button type="submit" name="createGrpBtn" value="logging" class="btn btn-lg btn-success">Create a Group</button></a>
+          <button type="submit" name="createGrpBtn" value="logging" class="btn btn-lg btn-success" data-bs-toggle="modal" data-bs-target="#createModal">Create a Group</button>
         </div>
         <div class="col-4">
           <a href="/groupMenuPage"><button type="submit" name="joinGrpBtn" value="logging" class="btn btn-lg btn-primary">Join a Group</button></a>
@@ -228,6 +228,52 @@
     </div>
 
   </div>
+    <!-- Create Group Modal -->
+    <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Create Group</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id ="postReq" action = "/createGroup" method = "post">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Group Name</label>
+                <input type= "text" name = "groupName" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Group name">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword1">Group Description</label>
+                <input type="text" name = "groupDesc" class="form-control" id="exampleInputPassword1" placeholder="Enter Group Desc">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword1">Privacy</label>
+                <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                  <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked value="false">
+                  <label class="btn btn-outline-info" for="btnradio1">Public</label>
+
+                  <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" value="true">
+                  <label class="btn btn-outline-dark" for="btnradio2">Private</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword1">Group Main Tag</label>
+                <select class="form-control" name="tag">
+                  <option value="Course">Course</option>
+                  <option value="Extracurricular">Extracurricular</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword1">Group Picture (URL)</label>
+                <input type="text" name = "grouppic" class="form-control" id="pic" placeholder="Enter Board Desc">
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
 
 
