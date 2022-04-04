@@ -6,60 +6,84 @@
     <!--Bootstrap & Icons-->
     <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css"  media="screen,projection"/>
     <link type="text/css" rel="stylesheet" href="/css/daterangepicker.css"  media="screen,projection"/>
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: rgb(34,193,195)!important;
+            background-image: linear-gradient(270deg, rgba(34,193,195,1) 0%, rgba(253,187,45,1) 100%)!important;
+        }
+        .card-img-top {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
 </head>
 
 <body>
 <%-include("partials/navAndSidebar")-%>
-<h1 class="text-center"><%=obj.event.eventname%></h1>
+<div class="container-fluid" style="padding: 0px 0px 0px 30%">
+<div class="card mb-3" style="width: 60%; padding: 20px; border-radius: 2rem; background-color: lightblue; color:white">
+<div class="col"><h1 class="text-center" style="width: auto"><%=obj.event.eventname%></h1></div>
 <div class="container">
     <div class="row">
         <div class="row"><h3>Details:</h3></div>
         <div class="row"><h4><%=obj.event.eventdesc%></h4></div>
-        <div class="row">
-            <div class="col-2">
+
+        <div class="row" style="justify-content: center">
+            <div class="col-4" style="padding:20px">
                 <div class="row"><h4>Start:</h4></div>
                 <div class="row"><h6><%=obj.event.startdate%></h6> </div>
                 <div class="row"><h6><%=obj.event.starttime%> </h6></div>
             </div>
-            <div class="col-6">
+            <div class="col-4" style="padding:20px">
                 <div class="row"><h4>End:</h4></div>
                 <div class="row"><h6><%=obj.event.enddate%> </h6></div>
                 <div class="row"><h6><%=obj.event.endtime%> </h6></div>
             </div>
         </div>
-        <div class="row-cols-4">  <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#inviteModal">Invite Members</button>
+        <div class="row" style="padding:0px 180px">
+            <div class="col-6" style="padding: 20px"><button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#inviteModal" style="background: rgba(255, 255, 255, 0); border: 1px solid white">Invite Members</button></div>
+            <div class="col-6" style="padding: 20px"><button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#editEventInfo" style="background: rgba(255, 255, 255, 0); border: 1px solid white">Edit Event Information</button></div>
         </div>
+
     </div>
 </div>
 </div>
-<h3 class="text-center">Attending:</h3>
+</div>
+</div>
+
+
 
 
 <div class="container-fluid">
+    <h3 class="text-center" style="padding:2rem; color:white">Attending:</h3>
     <% let counter = 0;%>
     <% let rowClosed; %>
     <% obj.attendees.forEach((user) => { %>
         <%# if we hit a 6th item, create a new row  %>
-        <% if (counter % 4 == 0) { %>
+        <% if (counter % 4== 0) { %>
         <div class="row justify-content-center">
             <% rowClosed = false; %>
             <% } %>
             <%# start of group card   %>
+
             <div class="col-sm">
-                <div class="card mb-3" style="width: 12rem; height: 12rem">
-                    <div class="card-body">
-                        <h2 class="card-title"><%=user.first%> <%=user.last%></h2>
-                        <h5>Power Level: <%=user.cubvotes%></h5>
-                        <p class="card-text"><%=user.bio%></p>
-                        <!--                        <form action="/groupMenuPage" method="post">-->
-                        <!--                            <input type="text" name="group_id" style="display:none" value=>-->
-                        <!--                            <button type="submit" style = "width: 100%" name="button" class="btn btn-primary btn-block">Join</button>-->
-                        <!--                        </form>-->
+                <div class="card mb-3" style="width: 12rem; height: 12rem; border-radius: 2rem; color: white; background-color: lightblue; padding: 1rem 0px">
+                    <div class="card-body" >
+                        <div class="media">
+                            <div class="row justify-content-center">
+                            <img class="mr-3 rounded-circle" src="https://cdn0.iconfinder.com/data/icons/user-pictures/100/male-512.png" alt="Generic placeholder image" style="width:5rem">
+                            <div class="media-body">
+                                <h2 class="card-title"><%=user.first%> <%=user.last%></h2>
+                                <h6 class="my-0 text-white d-block">Reputation Level: <%=user.cubvotes%></h6>
+                            </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+
             <% if (counter % 4 == 3) {%>
                 <% rowClosed = true %>
         </div>
@@ -91,6 +115,32 @@
                     </div>
 
                     <button type="submit" class="btn btn-primary">Invite</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Invite Modal -->
+<div class="modal fade" id="editEventInfo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Event Info</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id ="postReq" action = "/editEventInfo" method = "post">
+                    <div class="form-group fields">
+                    </div>
+                    <div class="form-group">
+                        <input id = "eventID" style = "display:none" type="text" name = "eventID" class="form-control" value="<%=obj.event.eventid%>">
+                        <label for="eventDesc">Event Name</label>
+                        <input id = "eventName" type = "text" name = "eventName" class="form-control" value="<%=obj.event.eventname%>">
+                        <label for="eventDesc">Event Description</label>
+                        <input id = "eventDesc" type = "text" name = "eventDesc" class="form-control" value="<%=obj.event.eventdesc%>">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
                 </form>
             </div>
         </div>
