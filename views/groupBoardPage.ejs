@@ -7,9 +7,34 @@
     <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css"  media="screen,projection"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 </head>
+<style>
+    body {
+        background-image: linear-gradient(to top, #30cfd0 0%, #330867 100%)!important;
+    }
+
+    #groupCard {
+        border-radius: 15px;
+        background-image: linear-gradient(to right, #eea2a2 0%, #bbc1bf 19%, #57c6e1 42%, #b49fda 79%, #7ac5d8 100%)!important;
+    }
+    div, h5, span {
+        color: white;
+    }
+    .list-group-item {
+        border-radius: 15px!important;
+        background-image: linear-gradient(to right, #eea2a2 0%, #bbc1bf 19%, #57c6e1 42%, #b49fda 79%, #7ac5d8 100%)!important;
+    }
+
+    .btn-success {
+        border-radius: 15px!important;
+        background-image: linear-gradient(to right, #eea2a2 0%, #bbc1bf 19%, #57c6e1 42%, #b49fda 79%, #7ac5d8 100%)!important;
+        border: transparent!important;
+    }
+</style>
 <body>
 
 <%-include("partials/navAndSidebar")-%>
+
+<button style="position: fixed; bottom: 10%; right: 5%; z-index:100" data-bs-toggle="modal" data-bs-target="#messageModal" class="btn btn-lg btn-success">Send a Message</button>
 
     <div id="siteContainer" class="row" style="padding-top: 50px">
         <!-- Spacer to the left-->
@@ -17,8 +42,8 @@
         <!--Container for Boards-->
         <div id="boardContainer" class="col-sm-12 col-md-10 col-lg-10">
             <div id="groupCard" class="card">
-                <div id="groupName" class="card-header">
-                    Board Name
+                <div id="groupName" class="card-header display-6" >
+                    Board Page
                 </div>
                 <div id="postList" class="card-body">
                 </div>
@@ -44,32 +69,49 @@
     </div>
 
     <!--Button container -->
-    <div id="buttonContainer" class="row">
+    <div id="buttonContainer" class="row" style="margin-top: 5%">
         <div id="leftButtonSpacer" class="col-sm-0 col-md-3 col-lg-4"> </div>
-        <div id="boardButtons" class="col-sm-12 col-md-6 col-lg-4">
-            <button type="button" class="btn btn-primary">Create Board</button>
-            <button type="button" class="btn btn-primary">Invite User</button>
-            <button type="button" class="btn btn-primary">Edit Board Info</button>
+        <div id="boardButtons" class="col-sm-12 col-md-6 col-lg-4 d-flex justify-content-center">
+            <button type="button" class="btn btn-outline-light" style="margin: 1% 1%">Invite User</button>
+            <button type="button" class="btn btn-outline-light" style="margin: 1% 1%">Edit Board Info</button>
         </div>
         <div id="rightButtonSpacer" class="col-sm-0 col-md-3 col-lg-4"> </div>
     </div>
-    <!-- temp place for sending messages -->
-    <form id ="createPost" action = "/createPost" method = "post">
-        <div class="form-group">
-            <label for="exampleInputPassword1">Send Message here</label>
-            <input type="text" name = "message" class="form-control" id="messagePost" placeholder="Enter Board Desc">
+
+<!-- Message Modal -->
+<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel" style="color: black">Send Message</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <!-- temp place for sending messages -->
+                    <form id ="createPost" action = "/createPost" method = "post">
+                        <div class="form-group">
+                            <label for="exampleInputPassword1" style="color: black">Post Content</label>
+                            <input type="text" name = "message" class="form-control" id="messagePost" placeholder="Type Post in Here">
+                        </div>
+                        <div class="form-group" style = "display: none" style = "visibility: collapse">
+                            <input id = "emailPost" type="text" name = "email" class="form-control">
+                        </div>
+                        <div class="form-group" style = "display: none" style = "visibility: collapse">
+                            <input id = "boardIDPost" type="text" name = "boardID" class="form-control">
+                        </div>
+                        <div class="form-group" style = "display: none" style = "visibility: collapse">
+                            <input id = "groupIDPost" type="text" name = "groupID" class="form-control">
+                        </div>
+                        <button type="button" id = "formPost" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="form-group" style = "display: none" style = "visibility: collapse">
-            <input id = "emailPost" type="text" name = "email" class="form-control">
-        </div>
-        <div class="form-group" style = "display: none" style = "visibility: collapse">
-            <input id = "boardIDPost" type="text" name = "boardID" class="form-control">
-        </div>
-        <div class="form-group" style = "display: none" style = "visibility: collapse">
-            <input id = "groupIDPost" type="text" name = "groupID" class="form-control">
-        </div>
-        <button type="button" id = "formPost" class="btn btn-primary">Submit</button>
-    </form>
+    </div>
+</div>
+
+
     <div style = "display: none" id = "data"> <%=data %></div>
     <script type="text/javascript" src="/js/groupBoardPage.js"></script>
     <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>

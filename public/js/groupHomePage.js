@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', (event) => {
     console.log("about to load page!");
-    addIdToForm();
     fillGroups();
 });
 
@@ -11,31 +10,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 // socket.on('invitedToGroup', (invObj) => {
 //     console.log(invObj);
 // });
-$('#tempForm').click(function (e) {
-    e.preventDefault();
-    let msg = document.getElementById("messageTemp").value;
-    let userEmail = document.getElementById("emailTemp").value;
-    let bId = document.getElementById("boardIDTemp").value;
-    let gId = document.getElementById("groupIDTemp").value;
-    $.ajax({
-        type: 'POST',
-        url: '/groupPageCreatePost/1',
-        data: {
-            message: msg,
-            email: userEmail,
-            boardID: bId,
-            groupID: gId
-        },
-        success: (result) => {
-            console.log("Message successfully sent to the server and returned!");
-            console.log(result);
-        },
-        error: () => {
-            console.log("Message was not successfully sent and/or returned!");
-        }
-    });
-    return false;
-});
+
 
 $('#inviteButton').click(function (e) {
     e.preventDefault();
@@ -68,35 +43,6 @@ function userInvited(data) {
     //todo: display notification to user
 }
 
-function addIdToForm() {
-    let data =document.getElementById("group").innerHTML;
-    let obj = JSON.parse(data);
-    console.log(obj);
-    let postRoute = document.getElementById("groupID");
-    postRoute.value = obj.group.group_id;
-    console.log(obj.group.group_id);
-
-    // add to event form
-    document.getElementById("eGroupID").value = obj.group.group_id;
-
-    //TEMPORARY CODE FOR SHOWING OFF MESSAGING
-    //TODO: create proper containers/handling for messages
-    let email = document.getElementById("emailTemp");
-    let boardID = document.getElementById("boardIDTemp");
-    let groupID = document.getElementById("groupIDTemp");
-    let inviteGroupID = document.getElementById("groupIDInvite");
-    let userEmailInvite = document.getElementById("userEmailInvite");
-    let reqTypeInvite = document.getElementById("reqTypeInvite");
-    let groupIDCreate = document.getElementById("groupIDCreate");
-
-    groupIDCreate.value = 1;
-    reqTypeInvite.value = "userInviteGroup";
-    inviteGroupID.value = 1;
-    userEmailInvite.value = "john@joe";
-    email.value = "john@joe";
-    boardID.value = 40;
-    groupID.value = 1;
-}
 function fillGroups() {
     let data = document.getElementById("group").innerHTML;
     data = JSON.parse(data);
@@ -113,6 +59,9 @@ function createEvent (event) {
     let eventAnchor = document.createElement("a");
     eventAnchor.className = "list-group-item list-group-item-action";
     eventAnchor.href = url;
+    // make every boardAnchor transparent
+    eventAnchor.style.backgroundColor = "transparent";
+    eventAnchor.style.borderRadius = "15px";
 
     let eventCard = document.createElement("div");
     eventCard.className = "d-flex w-100 justify-content-between";
@@ -120,17 +69,21 @@ function createEvent (event) {
     let eventName = document.createElement("h5");
     eventName.style.fontWeight = 600;
     eventName.innerText = event.eventname;
+    eventName.style.color = "white";
 
     let eventDate = document.createElement("small");
     eventDate.innerText = date;
+    eventDate.style.color = "white";
 
     let eventHost = document.createElement("p");
     eventHost.className = "mb-1";
     eventHost.innerText = "Host: " + event.host;
+    eventHost.style.color = "white";
     
     let eventDesc = document.createElement("p");
     eventDesc.className = "mb-1";
     eventDesc.innerText = event.eventdesc;
+    eventDesc.style.color = "white";
 
     eventCard.appendChild(eventName);
     eventCard.appendChild(eventDate);
@@ -149,6 +102,9 @@ function createBoard (board, groupID) {
     let boardAnchor = document.createElement("a");
     boardAnchor.className = "list-group-item list-group-item-action";
     boardAnchor.href = "/groupBoardPage/" + groupID + "/" + board.boardid;
+    // make every boardAnchor transparent
+    boardAnchor.style.backgroundColor = "transparent";
+    boardAnchor.style.borderRadius = "15px";
 
     // Card that holds the info
     let boardCard = document.createElement("div");
@@ -157,11 +113,13 @@ function createBoard (board, groupID) {
     // First child of the card - the board's name
     let boardName = document.createElement("h5")
     boardName.innerText = board.boardname;
+    boardName.style.color = "white";
 
     // Second child of the card - the board's description
     let boardDesc = document.createElement("span");
     boardDesc.className = "mb-1";
     boardDesc.innerText = board.boarddesc;
+    boardDesc.style.color = "white";
 
     // Third child of the card - the most recent comment
     /*
